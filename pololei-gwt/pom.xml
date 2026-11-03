@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.github.nalukit</groupId>
+    <artifactId>pololei-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>pololei-gwt</artifactId>
+  <packaging>gwt-lib</packaging>
+
+  <name>pololei-gwt</name>
+  <description>GWT module for pololei: ships the pololei sources together with the GWT module descriptor</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.github.nalukit</groupId>
+      <artifactId>pololei</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- GWT-RPC serializers; every GWT application (and GWT-RPC server) has gwt-user or gwt-servlet -->
+    <dependency>
+      <groupId>org.gwtproject</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- the EPC and creditor modules are tested in GWT here, next to the pololei tests -->
+    <dependency>
+      <groupId>io.github.nalukit</groupId>
+      <artifactId>pololei-epc</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.nalukit</groupId>
+      <artifactId>pololei-creditor</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- GWTTestCase support, only used to compile and run the tests as JavaScript -->
+    <dependency>
+      <groupId>org.gwtproject</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <!-- The GWT compiler needs the Java sources of pololei; there is exactly one code base. -->
+      <resource>
+        <directory>${project.basedir}/../pololei/src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>net.ltgt.gwt.maven</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <moduleName>io.github.nalukit.pololei.Pololei</moduleName>
+          <skipModule>true</skipModule>
+          <!-- highest level GWT 2.13 supports; guards the shared sources against Java 18+ syntax -->
+          <sourceLevel>17</sourceLevel>
+          <failOnError>true</failOnError>
+          <testArgs>
+            <arg>-style</arg>
+            <arg>PRETTY</arg>
+          </testArgs>
+          <includes>
+            <include>**/*GwtSuite.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <!-- the gwt-lib lifecycle only runs gwt:test; plain JVM tests (*Test) need surefire -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>jvm-tests</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

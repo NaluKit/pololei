@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- pololei-creditor: SEPA Creditor Identifier for GWT; needs pololei-gwt on the classpath. -->
+<module>
+  <inherits name="io.github.nalukit.pololei.Pololei"/>
+
+  <source path=""/>
+</module>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name="io.github.nalukit.pololei.Pololei"/>
+  <inherits name="io.github.nalukit.pololei.epc.PololeiEpc"/>
+  <inherits name="io.github.nalukit.pololei.creditor.PololeiCreditor"/>
+  <inherits name="com.google.gwt.junit.JUnit"/>
+
+  <source path="client"/>
+
+  <servlet path="/echo" class="io.github.nalukit.pololeitest.server.EchoServiceImpl"/>
+</module>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- pololei: IBAN and BIC validation, check digits and formatting for GWT. -->
+<module>
+  <inherits name="com.google.gwt.core.Core"/>
+  <!-- for the GWT-RPC serializers of Iban, Bic and ValidationResult; adds no code unless RPC is used -->
+  <inherits name="com.google.gwt.user.RemoteService"/>
+
+  <source path="">
+    <exclude name="**/package-info.java"/>
+  </source>
+</module>

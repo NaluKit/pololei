@@ -1,0 +1,18 @@
+target/
+**/.flattened-pom.xml
+
+# IDE
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+out/
+
+# GWT
+gwt-unitCache/
+war/
+www-test/
+
+# OS
+.DS_Store
