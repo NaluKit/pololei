@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.spi.ToolProvider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,9 +72,10 @@ class ModuleNameIT {
   @Test
   void describeModule() {
     String description = run("jar", "--describe-module", "--file", jar.toString());
-    // "No module descriptor found. Derived automatic module." followed by the name
+    // "No module descriptor found. Derived automatic module." followed by the name,
+    // with "@<version>" when the file name carries a parsable version (pololei-1.0.0.jar)
     assertTrue(description.lines()
-                          .anyMatch(line -> line.equals(module + " automatic")), description);
+                          .anyMatch(line -> line.equals(module + " automatic") || line.matches(Pattern.quote(module) + "@\\S+ automatic")), description);
     // the name comes from the manifest, not from the file name
     assertTrue(description.contains("Derived automatic module") && !description.contains("pololei.HEAD"), description);
   }
