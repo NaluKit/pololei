@@ -55,7 +55,7 @@
   </developers>
 
   <properties>
-    <revision>HEAD-SNAPSHOT</revision>
+    <revision>1.0.0-rc01</revision>
 
     <gwt.version>2.13.1</gwt.version>
     <junit.version>5.14.4</junit.version>

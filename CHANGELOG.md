@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## [1.0.0-rc01] - 2026-11-03
 
-Closes the functional gaps found by comparing pololei with iban4j (commit `b2f6be5`). Remaining differences are
+Closes the functional gaps found by comparing pololei with iban4j. Remaining differences are
 deliberate and documented in [docs/migration-iban4j.md](docs/migration-iban4j.md) (*Fields that differ*, *Behaviour
 that changes*) and [docs/registry-audit.md](docs/registry-audit.md). All API changes are additive; existing calls
 keep their results unless listed under *Changed behaviour*.
