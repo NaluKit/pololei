@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## [1.0.0-rc01] - 2026-11-03
 
-Closes the functional gaps found by comparing pololei with iban4j (commit `b2f6be5`). Remaining differences are
+Closes the functional gaps found by comparing pololei with iban4j. Remaining differences are
 deliberate and documented in [docs/migration-iban4j.md](docs/migration-iban4j.md) (*Fields that differ*, *Behaviour
 that changes*) and [docs/registry-audit.md](docs/registry-audit.md). All API changes are additive; existing calls
 keep their results unless listed under *Changed behaviour*.
@@ -43,6 +43,8 @@ keep their results unless listed under *Changed behaviour*.
   `scm:git:` form.
 - Documentation: registry audit against iban4j ([docs/registry-audit.md](docs/registry-audit.md)) and a migration
   guide for iban4j users ([docs/migration-iban4j.md](docs/migration-iban4j.md)).
+- Documentation: the [API reference for 1.0.0-rc01](docs/api/1.0.0-rc01.md) with a reproducible quickstart; every
+  release gets its own reference in `docs/api/<version>.md`.
 
 - Documentation of thread safety (README and JavaDoc) and a concurrency test.
 - README revised: sections for `Bban` validation, `IbanValidator` options, BIC rules, EPC builder rules,
