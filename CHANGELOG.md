@@ -43,6 +43,8 @@ keep their results unless listed under *Changed behaviour*.
   `scm:git:` form.
 - Documentation: registry audit against iban4j ([docs/registry-audit.md](docs/registry-audit.md)) and a migration
   guide for iban4j users ([docs/migration-iban4j.md](docs/migration-iban4j.md)).
+- Documentation: the [API reference for 1.0.0-rc01](docs/api/1.0.0-rc01.md) with a reproducible quickstart; every
+  release gets its own reference in `docs/api/<version>.md`.
 
 - Documentation of thread safety (README and JavaDoc) and a concurrency test.
 - README revised: sections for `Bban` validation, `IbanValidator` options, BIC rules, EPC builder rules,

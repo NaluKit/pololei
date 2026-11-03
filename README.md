@@ -15,6 +15,8 @@
 IBAN and BIC validation for Java and GWT: parsing, check digits, national check digits, BBAN fields,
 formatting, IBAN creation and EPC QR code (GiroCode) payloads.
 
+- [Versioned API reference and reproducible quickstart](docs/api/1.0.0-rc01.md)
+
 pololei is the successor of [iban4g](https://github.com/nalukit/iban4g): a new, smaller API, country data
 generated from the SWIFT IBAN registry, and one code base for the JVM and GWT.
 
