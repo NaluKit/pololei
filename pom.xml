@@ -62,7 +62,7 @@
     <junit4.version>4.13.2</junit4.version>
 
     <plugin.central-publishing.version>0.8.0</plugin.central-publishing.version>
-    <plugin.compiler.version>3.14.1</plugin.compiler.version>
+    <plugin.compiler.version>3.16.0</plugin.compiler.version>
     <plugin.cyclonedx.version>2.9.3</plugin.cyclonedx.version>
     <plugin.dependency-check.version>13.0.0</plugin.dependency-check.version>
     <plugin.enforcer.version>3.5.0</plugin.enforcer.version>
