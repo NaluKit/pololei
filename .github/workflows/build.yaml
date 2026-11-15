@@ -70,6 +70,10 @@ jobs:
       # regression evidence for the validation results. Its fixtures are in the repository.
       - name: Verify with Maven
         run: mvn verify -ntp -P corpus
+      # The standard JavaDoc run with doclint and failOnWarnings (pluginManagement of pom.xml): a
+      # missing @param, @return or @throws fails the build here, not only in a later release.
+      - name: Check the JavaDoc
+        run: mvn package -ntp -DskipTests -pl pololei,pololei-epc,pololei-creditor -am org.apache.maven.plugins:maven-javadoc-plugin:jar
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
@@ -100,6 +104,10 @@ jobs:
         run: |
           scripts/release/test-collect-release-files.sh
           scripts/release/test-release-publish.sh
+      - name: Check the OWASP image update and database age scripts
+        run: |
+          scripts/ci/test-update-owasp-image.sh
+          scripts/ci/test-owasp-db-age.sh
       - name: Check that external actions and images are pinned
         run: |
           scripts/ci/test-pinned-refs.sh
@@ -162,20 +170,19 @@ jobs:
           cache: maven
       - name: Copy owasp database from container to runner
         run: docker cp "$(docker ps -aqf "name=owasp-db")":/dependency-check/data ./dependency-checker-db/
+      # The age comes from the update metadata in the database (nvd.api.last.modified), not from
+      # file times, so new files next to old data do not make it look current.
       - name: Check the age of the vulnerability database
         env:
           OWASP_DB_MAX_AGE_DAYS: 14
         run: |
-          newest=$(find ./dependency-checker-db -type f -printf '%T@\n' | sort -n | tail -n 1)
-          [[ -n $newest ]] || { echo "::error::The vulnerability database is empty"; exit 1; }
-          age_days=$(( ($(date +%s) - ${newest%.*}) / 86400 ))
-          summary="Vulnerability database: newest file from $(date -u -d "@${newest%.*}" +%F) ($age_days days old, limit $OWASP_DB_MAX_AGE_DAYS), image from the digest in the workflow"
-          echo "$summary"
-          echo "$summary" >> "$GITHUB_STEP_SUMMARY"
-          if [[ $age_days -gt $OWASP_DB_MAX_AGE_DAYS ]]; then
-            echo "::error::The vulnerability database is older than $OWASP_DB_MAX_AGE_DAYS days; update the image digest (scripts/ci/update-owasp-image.sh)"
+          if ! summary=$(scripts/ci/check-owasp-db-age.sh ./dependency-checker-db "$OWASP_DB_MAX_AGE_DAYS" 2>&1); then
+            echo "$summary"
+            echo "::error::The vulnerability database is not current enough; update the image digest (scripts/ci/update-owasp-image.sh)"
             exit 1
           fi
+          echo "$summary"
+          echo "$summary (image from the digest in the workflow)" >> "$GITHUB_STEP_SUMMARY"
       - name: OWASP Check
         # the plugin version comes from the pluginManagement of the parent POM
         run: |
@@ -196,16 +203,20 @@ jobs:
           path: ${{ github.workspace }}/**/reports/dependency-check-report.html
 
   # Pushes to dev deploy HEAD-SNAPSHOT, pushes to main deploy the release version and create the
-  # GitHub release. A release is prepared completely (build, release files, OWASP report) before
-  # anything is published. Then the Central state decides: a version that is already on Central
-  # with identical JARs is not uploaded again, a differing one stops the run. So a run that failed
-  # after the Central deploy can simply be re-run: it skips the deploy and completes the GitHub
-  # release, adding only missing assets (scripts/release/central-state.sh and
-  # publish-github-release.sh).
+  # GitHub release. A release is prepared completely (build, release files, OWASP report) and kept
+  # as an artifact before anything is published. Then the Central state decides
+  # (scripts/release/central-state.sh): a version whose complete publication set is on Central is
+  # not uploaded again, a differing one stops the run, and a deployment that an earlier run started
+  # is never uploaded twice: its records (artifacts central-deployment-<version>-*, written before
+  # and after the upload) and its state on the Central Portal decide. So a failed run can be re-run:
+  # it skips the deploy and completes the GitHub release, which is published only when all assets
+  # are there and verified (scripts/release/publish-github-release.sh).
   maven-deploy:
     runs-on: ubuntu-26.04
     permissions:
       contents: write
+      # the deployment records of earlier runs
+      actions: read
       # build provenance attestations of the release artifacts
       id-token: write
       attestations: write
@@ -298,15 +309,53 @@ jobs:
         run: |
           report=$(find owasp-report -name dependency-check-report.html | head -n 1)
           scripts/release/collect-release-files.sh "$VERSION" release-files "$report"
+      # The prepared release set of this attempt, kept with the run before anything is published.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: steps.mode.outputs.release == 'true'
+        with:
+          name: release-files-${{ steps.project.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: release-files
+          retention-days: 90
+      - name: Fetch the deployment records of earlier runs
+        if: steps.mode.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.project.outputs.version }}
+        run: scripts/release/fetch-central-records.sh "$VERSION" deployment-records
       - name: Check the state on Maven Central
         id: central
         if: steps.mode.outputs.release == 'true'
         env:
           VERSION: ${{ steps.project.outputs.version }}
+          EXPECTED_COMMIT: ${{ github.sha }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
         run: |
-          state=$(scripts/release/central-state.sh "$VERSION" release-files)
+          state=$(scripts/release/central-state.sh "$VERSION" release-files deployment-records)
           echo "State on Maven Central: $state"
           echo "state=$state" >> "$GITHUB_OUTPUT"
+      # Written and kept before the upload: if the run stops after Central accepted the upload,
+      # a re-run finds this record and does not upload again.
+      - name: Record the start of the deployment
+        if: steps.mode.outputs.release == 'true' && steps.central.outputs.state == 'absent'
+        env:
+          VERSION: ${{ steps.project.outputs.version }}
+        run: |
+          mkdir -p deployment-record
+          {
+            echo "version=$VERSION"
+            echo "commit=$GITHUB_SHA"
+            echo "central_manifest=$(shasum -a 256 < release-files/central/CENTRAL-SHA256SUMS | cut -c1-64)"
+            echo "run=$GITHUB_RUN_ID"
+            echo "attempt=$GITHUB_RUN_ATTEMPT"
+          } > deployment-record/started.record
+          cp release-files/central/CENTRAL-SHA256SUMS release-files/SHA256SUMS deployment-record/
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: steps.mode.outputs.release == 'true' && steps.central.outputs.state == 'absent'
+        with:
+          name: central-deployment-${{ steps.project.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}-started
+          path: deployment-record
+          retention-days: 90
       - name: Install GPG secret key
         env:
           OSSRH_GPG_KEY: ${{ secrets.OSSRH_GPG_KEY }}
@@ -327,26 +376,24 @@ jobs:
           if [[ "$RELEASE" == true ]]; then
             args+=(-Daether.checksums.algorithms=MD5)
           fi
-          mvn "${args[@]}"
-      # The record of what was deployed, kept with the run for a later re-run or inspection.
+          set -o pipefail
+          mvn "${args[@]}" 2>&1 | tee deploy.log
+      # The deployment id from the log of the upload, also after a failed deploy, so that a re-run
+      # can ask the Central Portal for the state of this deployment.
       - name: Record the deployment
-        if: steps.mode.outputs.release == 'true'
-        env:
-          VERSION: ${{ steps.project.outputs.version }}
-          CENTRAL_STATE: ${{ steps.central.outputs.state }}
+        if: always() && steps.mode.outputs.release == 'true' && steps.central.outputs.state == 'absent'
         run: |
-          {
-            echo "version=$VERSION"
-            echo "commit=$GITHUB_SHA"
-            echo "central_state_before_deploy=$CENTRAL_STATE"
-            echo "run=$GITHUB_RUN_ID"
-            cat release-files/SHA256SUMS
-          } > deploy-record.txt
+          ids=$(grep -i deployment deploy.log 2>/dev/null | grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | sort -u || true)
+          echo "Deployment id(s): ${ids:-none found}"
+          for id in $ids; do
+            { grep -v '^deployment_id=' deployment-record/started.record; echo "deployment_id=$id"; } > "deployment-record/$id.record"
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        if: steps.mode.outputs.release == 'true'
+        if: always() && steps.mode.outputs.release == 'true' && steps.central.outputs.state == 'absent'
         with:
-          name: Deploy record
-          path: deploy-record.txt
+          name: central-deployment-${{ steps.project.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}-uploaded
+          path: deployment-record
+          retention-days: 90
       - name: Attest build provenance
         if: steps.mode.outputs.release == 'true'
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4

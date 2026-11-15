@@ -39,8 +39,10 @@ built by the same workflow from the `main` branch only:
 - **Provenance:** the JARs of a release carry a build provenance attestation of GitHub, which
   binds them to the commit and the workflow run that built them.
 - **Evidence:** the GitHub release of a version lists the JARs, the SBOMs, their SHA-256
-  checksums (`SHA256SUMS`), the OWASP Dependency-Check report of the release build, and the
-  changes from `CHANGELOG.md`.
+  checksums (`SHA256SUMS`), the OWASP Dependency-Check report of the release build with its own
+  checksum (`SCAN-SHA256SUMS`), and the changes from `CHANGELOG.md`. `SHA256SUMS` covers only the
+  reproducible build artifacts; the report depends on the vulnerability data of the day it was
+  made, so it is checked separately.
 
 ## Verifying a release
 
@@ -52,7 +54,8 @@ The build is reproducible: building the released commit again yields byte-identi
    gh attestation verify pololei-<version>.jar --repo NaluKit/pololei
    ```
 
-2. Rebuild the release with Temurin 21 and compare the checksums with those of the release:
+2. Rebuild the release with Temurin 21 and compare the checksums of the JARs and SBOMs with
+   those of the release; `diff` prints nothing if they are byte-identical:
 
    ```bash
    git checkout <version>
@@ -60,10 +63,18 @@ The build is reproducible: building the released commit again yields byte-identi
    mvn package -DskipTests -Dgpg.skip -P release -Drevision=<version> \
        -Dproject.build.outputTimestamp="$timestamp"
    scripts/release/collect-release-files.sh <version> rebuilt
-   diff rebuilt/SHA256SUMS <SHA256SUMS of the GitHub release>
+   gh release download <version> --repo NaluKit/pololei --dir published
+   diff rebuilt/SHA256SUMS published/SHA256SUMS
    ```
 
-The SBOMs are produced by the same build and can be compared the same way. Releases up to
+3. Check that the OWASP report of the release is the original one of the release build. A new
+   scan is not compared: it depends on the vulnerability data of its day.
+
+   ```bash
+   (cd published && shasum -a 256 -c SCAN-SHA256SUMS)
+   ```
+
+`scripts/release/test-collect-release-files.sh` runs these comparisons with test files. Releases up to
 `1.0.0-rc01` were built before these measures and carry neither SBOM nor attestation.
 
 ## Reporting a vulnerability

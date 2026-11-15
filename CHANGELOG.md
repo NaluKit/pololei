@@ -8,6 +8,10 @@ reference in `docs/api/<version>.md`.
 
 ### Fixed
 
+- `INVALID_NATIONAL_CHECK_DIGITS` from `IbanBuilder.build()` and `buildRandom(...)` (no valid national check
+  digits for the given BBAN) now has `nationalCheck()` `FAILED`, as from the validator; it was `NOT_PERFORMED`.
+  Such results and their `InvalidIbanException` can be serialized with Java serialization and GWT-RPC, which
+  reject inconsistent results.
 - `Iban.field(ACCOUNT_NUMBER)` of Hungarian IBANs returns the 16 character national account number of
   BBAN positions 9-24. It started at position 8 with the routing check digit and lost the last digit
   (iban4j #64, #83). The check digit over bank and branch is the new field
@@ -22,8 +26,8 @@ reference in `docs/api/<version>.md`.
 - Release evidence for audits: every module is published with its SBOM in CycloneDX format
   (`<module>-<version>-cyclonedx.json`); the build is reproducible (fixed archive timestamp, set
   to the commit time of the release); the release JARs carry a GitHub build provenance
-  attestation; the GitHub release lists the JARs, SBOMs, `SHA256SUMS`, the OWASP
-  Dependency-Check report of the release build, and the changes of the version.
+  attestation; the GitHub release lists the JARs, SBOMs, `SHA256SUMS` (JARs and SBOMs), the OWASP
+  Dependency-Check report of the release build with `SCAN-SHA256SUMS`, and the changes of the version.
   `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
   release. `SECURITY.md` describes how releases are built and how to verify them.
 - Public identifier corpus `test-pololei-corpus` (profile `corpus`, part of every CI build, never
@@ -47,13 +51,19 @@ reference in `docs/api/<version>.md`.
   `docs/api/<version>.md`; `--site <dir>` also checks the website and `--artifacts` builds the
   quickstart of the reference against the published artifacts. Pull requests against `main` run the
   static checks, so an inconsistent release is found before the merge. The deploy job of `dev` and
-  `main` is one job; the release files are prepared before anything is published, an interrupted
-  release is completed by re-running the job (no second Central upload, no second GitHub release).
+  `main` is one job; the release files are prepared and kept as an artifact before anything is
+  published, an interrupted release is completed by re-running the job: no second Central upload
+  (the complete publication set of JARs, POMs and SBOMs is compared, and the records and Portal
+  state of a started deployment are checked), no second GitHub release (it stays a draft until all
+  assets are there and their content is verified; a later OWASP report never replaces the original).
 - `check-release.sh --site` checks release and source commit in the sidebar of every pololei
   documentation page of the website, as for paniolo.
 - CI: weekly build for new vulnerabilities in unchanged dependencies, dependency updates only in
   that build, Dependabot for GitHub Actions and Maven, least-privilege permissions, and the OWASP
-  Dependency-Check version in the parent POM.
+  Dependency-Check version in the parent POM. The OWASP database image is pinned by digest
+  (`scripts/ci/update-owasp-image.sh` updates it); its NVD data must not be older than 14 days,
+  read from the update metadata of the database (`scripts/ci/check-owasp-db-age.sh`). Every build
+  runs the standard JavaDoc with doclint, so missing documentation fails before a release.
 - `pololei-gwt` is packaged by the `maven-jar-plugin`, because `gwt:package-lib` ignores the fixed
   archive timestamp. The JAR has the same entries as before.
 - README dependency snippets use the published release instead of a `${pololei.version}`

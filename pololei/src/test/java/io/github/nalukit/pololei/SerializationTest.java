@@ -82,6 +82,41 @@ class SerializationTest {
   }
 
   @Test
+  void builderNationalErrorsRoundTrip() throws Exception {
+    // NO 8601 000006 has no valid national check digit (MOD 11 remainder 1)
+    InvalidIbanException built = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                    .countryCode("NO")
+                                                                                    .bban("86010000060")
+                                                                                    .nationalCheckDigits(true)
+                                                                                    .build());
+    InvalidIbanException drawn = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                    .countryCode("NO")
+                                                                                    .bankIdentifier("8601")
+                                                                                    .field(io.github.nalukit.pololei.registry.BbanField.ACCOUNT_NUMBER, "000006")
+                                                                                    .nationalCheckDigits(true)
+                                                                                    .buildRandom(new java.util.Random(1)));
+    for (InvalidIbanException exception : java.util.List.of(built, drawn)) {
+      ValidationResult<Iban, IbanError> result = exception.result();
+      assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, exception.error());
+      assertEquals(NationalCheckStatus.FAILED, result.nationalCheck());
+      assertSameDetails(result, (ValidationResult<?, ?>) deserialize(serialize(result)));
+      InvalidIbanException copy = (InvalidIbanException) deserialize(serialize(exception));
+      assertEquals(exception.getMessage(), copy.getMessage());
+      assertSameDetails(result, copy.result());
+    }
+  }
+
+  private static void assertSameDetails(ValidationResult<?, ?> expected,
+                                        ValidationResult<?, ?> actual) {
+    assertEquals(expected.toString(), actual.toString());
+    assertEquals(expected.error(), actual.error());
+    assertEquals(expected.nationalCheck(), actual.nationalCheck());
+    assertEquals(expected.rule(), actual.rule());
+    assertEquals(expected.position(), actual.position());
+    assertEquals(expected.lastPosition(), actual.lastPosition());
+  }
+
+  @Test
   void manipulatedResultsAreRejected() throws Exception {
     NationalCheckStatus none = NationalCheckStatus.NOT_PERFORMED;
     // neither value nor error

@@ -22,9 +22,16 @@
 #   <module>-<version>.jar, -sources.jar, -javadoc.jar   the JARs of every published module; all
 #                                                        three are required
 #   <module>-<version>-cyclonedx.json                    the SBOM (CycloneDX) of every module
+#   SHA256SUMS                                           SHA-256 of the JARs and SBOMs: the
+#                                                        reproducible build artifacts
 #   pololei-<version>-dependency-check-report.html       the OWASP report, if one is passed
-#   SHA256SUMS                                           SHA-256 of the JARs, SBOMs and the report
+#   SCAN-SHA256SUMS                                      SHA-256 of the report; a report is not
+#                                                        reproducible, so it has its own manifest
 #   RELEASE-NOTES.md                                     the section of the version in CHANGELOG.md
+#   central/<artifactId>/<file>, central/CENTRAL-SHA256SUMS
+#                                                        the files that the deploy publishes on Maven
+#                                                        Central (JARs, flattened POMs, SBOMs) and
+#                                                        their SHA-256, for central-state.sh
 #
 # The directory must not exist or be empty, so files of another version or an earlier run cannot
 # be released by accident.
@@ -65,6 +72,16 @@ OUT=$(cd "$OUT" && pwd)
 
 # The modules of the reactor; the corpus tests are never published.
 modules=$(sed -n 's:.*<module>\(.*\)</module>.*:\1:p' "$ROOT/pom.xml" | grep -v -e '^test-pololei-corpus$')
+CENTRAL="$OUT/central"
+# central_file <source> <artifactId> <file name>: a file that the deploy publishes on Central
+central_file() {
+  if [[ ! -f $1 ]]; then
+    echo "Missing $1; build version $VERSION with the release profile first" >&2
+    exit 1
+  fi
+  mkdir -p "$CENTRAL/$2"
+  cp "$1" "$CENTRAL/$2/$3"
+}
 count=0
 for module in $modules; do
   target="$ROOT/$module/target"
@@ -75,6 +92,7 @@ for module in $modules; do
       exit 1
     fi
     cp "$jar" "$OUT/"
+    central_file "$jar" "$module" "$module-$VERSION$suffix.jar"
     count=$((count + 1))
   done
   if [[ ! -f $target/bom.json ]]; then
@@ -82,17 +100,24 @@ for module in $modules; do
     exit 1
   fi
   cp "$target/bom.json" "$OUT/$module-$VERSION-cyclonedx.json"
+  central_file "$target/bom.json" "$module" "$module-$VERSION-cyclonedx.json"
+  # the flatten plugin writes the POM that is deployed
+  central_file "$ROOT/$module/.flattened-pom.xml" "$module" "$module-$VERSION.pom"
 done
+central_file "$ROOT/.flattened-pom.xml" pololei-parent "pololei-parent-$VERSION.pom"
 if [[ -f $ROOT/target/bom.json ]]; then
   cp "$ROOT/target/bom.json" "$OUT/pololei-parent-$VERSION-cyclonedx.json"
+  central_file "$ROOT/target/bom.json" pololei-parent "pololei-parent-$VERSION-cyclonedx.json"
 fi
+
+(cd "$OUT" && find . -maxdepth 1 -type f \( -name '*.jar' -o -name '*-cyclonedx.json' \) | sed 's:^\./::' | LC_ALL=C sort |
+  xargs shasum -a 256 > SHA256SUMS)
+(cd "$CENTRAL" && find . -mindepth 2 -type f | sed 's:^\./::' | LC_ALL=C sort | xargs shasum -a 256 > CENTRAL-SHA256SUMS)
 
 if [[ -n $REPORT ]]; then
   cp "$REPORT" "$OUT/pololei-$VERSION-dependency-check-report.html"
+  (cd "$OUT" && shasum -a 256 "pololei-$VERSION-dependency-check-report.html" > SCAN-SHA256SUMS)
 fi
-
-(cd "$OUT" && find . -maxdepth 1 -type f \( -name '*.jar' -o -name '*-cyclonedx.json' -o -name '*.html' \) | sed 's:^\./::' | LC_ALL=C sort |
-  xargs shasum -a 256 > SHA256SUMS)
 
 # The release notes: the section '## [<version>] - <date>' of CHANGELOG.md up to the next section.
 # Link definitions at the end of the file are left out, and relative links point to the files of
@@ -113,9 +138,10 @@ fi
   echo "## Verification"
   echo
   echo "The JARs are published to Maven Central with GPG signatures. This release carries for every"
-  echo "module the SBOM (\`*-cyclonedx.json\`), the SHA-256 checksums of the JARs, the SBOMs and the"
-  echo "OWASP Dependency-Check report (\`SHA256SUMS\`), the report of the release build, and a build"
-  echo "provenance attestation of GitHub. The build is reproducible; see [Verifying a release](https://github.com/NaluKit/pololei/blob/main/SECURITY.md#verifying-a-release)."
+  echo "module the SBOM (\`*-cyclonedx.json\`), the SHA-256 checksums of the JARs and the SBOMs"
+  echo "(\`SHA256SUMS\`), the OWASP Dependency-Check report of the release build with its own checksum"
+  echo "(\`SCAN-SHA256SUMS\`), and a build provenance attestation of GitHub. The build is reproducible;"
+  echo "see [Verifying a release](https://github.com/NaluKit/pololei/blob/main/SECURITY.md#verifying-a-release)."
 } > "$OUT/RELEASE-NOTES.md"
 
 echo "Collected $count JARs of version $VERSION in $OUT"

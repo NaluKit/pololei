@@ -102,9 +102,17 @@ public final class ValidationResult<T, E extends Enum<E>>
     return new ValidationResult<>(Objects.requireNonNull(value), null, null, NONE, NONE, NONE, null, NONE, null, NationalCheckStatus.NOT_PERFORMED);
   }
 
+  /**
+   * Creates an invalid result. {@link IbanError#INVALID_NATIONAL_CHECK_DIGITS} always comes with
+   * {@link NationalCheckStatus#FAILED}, whether the validator found wrong check digits or the
+   * builder found no valid ones; every other error starts with
+   * {@link NationalCheckStatus#NOT_PERFORMED}. This keeps every result created by pololei
+   * consistent with {@link #checkConsistency()}.
+   */
   static <T, E extends Enum<E>> ValidationResult<T, E> invalid(E error,
                                                                String message) {
-    return new ValidationResult<>(null, Objects.requireNonNull(error), Objects.requireNonNull(message), NONE, NONE, NONE, null, NONE, null, NationalCheckStatus.NOT_PERFORMED);
+    NationalCheckStatus nationalCheck = Objects.requireNonNull(error) == IbanError.INVALID_NATIONAL_CHECK_DIGITS ? NationalCheckStatus.FAILED : NationalCheckStatus.NOT_PERFORMED;
+    return new ValidationResult<>(null, error, Objects.requireNonNull(message), NONE, NONE, NONE, null, NONE, null, nationalCheck);
   }
 
   /**
@@ -180,7 +188,12 @@ public final class ValidationResult<T, E extends Enum<E>>
     }
   }
 
-  /** Rejects inconsistent results read from a Java serialization stream. */
+  /**
+   * Rejects inconsistent results read from a Java serialization stream.
+   *
+   * @return this result, if its fields are consistent
+   * @throws IllegalArgumentException if the fields do not form a valid or an invalid result
+   */
   @Serial
   private Object readResolve() {
     checkConsistency();

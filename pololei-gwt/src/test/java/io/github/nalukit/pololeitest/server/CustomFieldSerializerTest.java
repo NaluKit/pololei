@@ -29,6 +29,8 @@ import io.github.nalukit.pololei.NationalCheckMode;
 import io.github.nalukit.pololei.ValidationResult;
 import io.github.nalukit.pololei.ValidationResult_CustomFieldSerializer;
 import io.github.nalukit.pololei.error.IbanError;
+import io.github.nalukit.pololei.error.InvalidIbanException;
+import io.github.nalukit.pololei.registry.BbanField;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
@@ -36,6 +38,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -112,6 +115,34 @@ public class CustomFieldSerializerTest {
     ValidationResult_CustomFieldSerializer.serialize(objectWriter(written), valid);
     assertEquals(valid.value(), ValidationResult_CustomFieldSerializer.instantiate(objectReader(written))
                                                                       .value());
+  }
+
+  @Test
+  public void builderNationalErrorRoundTrip() throws SerializationException {
+    // NO 8601 000006 has no valid national check digit
+    List<ValidationResult<Iban, IbanError>> failures = List.of(assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                                                  .countryCode("NO")
+                                                                                                                  .bban("86010000060")
+                                                                                                                  .nationalCheckDigits(true)
+                                                                                                                  .build()).result(),
+                                                               assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                                                  .countryCode("NO")
+                                                                                                                  .bankIdentifier("8601")
+                                                                                                                  .field(BbanField.ACCOUNT_NUMBER, "000006")
+                                                                                                                  .nationalCheckDigits(true)
+                                                                                                                  .buildRandom(new Random(1))).result());
+    for (ValidationResult<Iban, IbanError> original : failures) {
+      List<Object> written = new ArrayList<>();
+      ValidationResult_CustomFieldSerializer.serialize(objectWriter(written), original);
+      ValidationResult<Iban, IbanError> copy = ValidationResult_CustomFieldSerializer.instantiate(objectReader(written));
+      assertEquals(original.toString(), copy.toString());
+      assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, copy.error()
+                                                                .orElseThrow());
+      assertEquals(original.nationalCheck(), copy.nationalCheck());
+      assertEquals(original.rule(), copy.rule());
+      assertEquals(original.position(), copy.position());
+      assertEquals(original.lastPosition(), copy.lastPosition());
+    }
   }
 
   @Test
