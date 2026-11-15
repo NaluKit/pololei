@@ -60,8 +60,8 @@ jobs:
       matrix:
         java: [ '21', '25' ]
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
@@ -70,7 +70,7 @@ jobs:
       # regression evidence for the validation results. Its fixtures are in the repository.
       - name: Verify with Maven
         run: mvn verify -ntp -P corpus
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
           name: test-reports-jdk${{ matrix.java }}
@@ -85,7 +85,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           # tags and history for the tag and source commit checks
           fetch-depth: 0
@@ -96,6 +96,18 @@ jobs:
           scripts/release/check-release.sh "$version"
       - name: Check the release note links
         run: scripts/release/test-release-notes.sh
+      - name: Check the release publishing scripts
+        run: |
+          scripts/release/test-collect-release-files.sh
+          scripts/release/test-release-publish.sh
+      - name: Check that external actions and images are pinned
+        run: |
+          scripts/ci/test-pinned-refs.sh
+          scripts/ci/check-pinned-refs.sh
+      - name: Check the POM properties
+        run: |
+          scripts/ci/test-pom-properties.sh
+          scripts/ci/check-pom-properties.sh
 
   # Builds sources and JavaDoc with the release profile, without signing or publishing anything,
   # so problems with the release build show up before a merge and not only in the deploy job.
@@ -104,8 +116,8 @@ jobs:
     needs: [ verify ]
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
           java-version: '21'
@@ -120,8 +132,8 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
           java-version: '21'
@@ -134,20 +146,36 @@ jobs:
     timeout-minutes: 8
     needs: [ verify ]
     services:
-      # Not pinned on purpose: the image carries the vulnerability database, and a pinned image
-      # would freeze it.
+      # Pinned by digest, so that the executed image cannot change without a commit. The image
+      # carries the vulnerability database, so a pinned image freezes it: the step "Check the age
+      # of the vulnerability database" fails once the data is older than OWASP_DB_MAX_AGE_DAYS.
+      # Refresh with scripts/ci/update-owasp-image.sh and review the diff.
       owasp-db:
-        image: nalusolutionsgmbh/owasp-maven-action:latest
+        image: nalusolutionsgmbh/owasp-maven-action@sha256:2ff7684a918a0618e449be9153bc0f24dc20f5f1960bd6455e374ca237847bc2 # :latest on 2026-11-15
         options: --entrypoint /bin/sh --name owasp-db --hostname owasp-db
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
       - name: Copy owasp database from container to runner
         run: docker cp "$(docker ps -aqf "name=owasp-db")":/dependency-check/data ./dependency-checker-db/
+      - name: Check the age of the vulnerability database
+        env:
+          OWASP_DB_MAX_AGE_DAYS: 14
+        run: |
+          newest=$(find ./dependency-checker-db -type f -printf '%T@\n' | sort -n | tail -n 1)
+          [[ -n $newest ]] || { echo "::error::The vulnerability database is empty"; exit 1; }
+          age_days=$(( ($(date +%s) - ${newest%.*}) / 86400 ))
+          summary="Vulnerability database: newest file from $(date -u -d "@${newest%.*}" +%F) ($age_days days old, limit $OWASP_DB_MAX_AGE_DAYS), image from the digest in the workflow"
+          echo "$summary"
+          echo "$summary" >> "$GITHUB_STEP_SUMMARY"
+          if [[ $age_days -gt $OWASP_DB_MAX_AGE_DAYS ]]; then
+            echo "::error::The vulnerability database is older than $OWASP_DB_MAX_AGE_DAYS days; update the image digest (scripts/ci/update-owasp-image.sh)"
+            exit 1
+          fi
       - name: OWASP Check
         # the plugin version comes from the pluginManagement of the parent POM
         run: |
@@ -162,14 +190,18 @@ jobs:
           -DsuppressionFiles=./owasp/owasp-suppressions.xml
       - name: Upload OWASP results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: OWASP report
           path: ${{ github.workspace }}/**/reports/dependency-check-report.html
 
   # Pushes to dev deploy HEAD-SNAPSHOT, pushes to main deploy the release version and create the
-  # GitHub release. The release is created only after the deploy succeeded, so a failed deploy
-  # leaves no tag behind and the run can simply be re-run.
+  # GitHub release. A release is prepared completely (build, release files, OWASP report) before
+  # anything is published. Then the Central state decides: a version that is already on Central
+  # with identical JARs is not uploaded again, a differing one stops the run. So a run that failed
+  # after the Central deploy can simply be re-run: it skips the deploy and completes the GitHub
+  # release, adding only missing assets (scripts/release/central-state.sh and
+  # publish-github-release.sh).
   maven-deploy:
     runs-on: ubuntu-26.04
     permissions:
@@ -180,10 +212,10 @@ jobs:
     needs: [ verify, release-dry-run, owasp ]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v6
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
           java-version: '21'
@@ -230,16 +262,51 @@ jobs:
           timestamp=$(TZ=UTC0 git log -1 --format=%cd --date=format-local:%Y-%m-%dT%H:%M:%SZ)
           echo "Build timestamp: $timestamp"
           echo "value=$timestamp" >> "$GITHUB_OUTPUT"
-      - name: Check that the tag does not exist yet
+      # An existing tag is fine for a re-run of an interrupted release, if it is this commit.
+      - name: Check the tag
         if: steps.mode.outputs.release == 'true'
         env:
           VERSION: ${{ steps.project.outputs.version }}
         run: |
           if git rev-parse -q --verify "refs/tags/$VERSION" > /dev/null; then
-            echo "::error::Version $VERSION already exists! Do not release!"
-            exit 1
+            if [[ $(git rev-list -n 1 "refs/tags/$VERSION") != "$GITHUB_SHA" ]]; then
+              echo "::error::Version $VERSION already exists for another commit! Do not release!"
+              exit 1
+            fi
+            echo "Tag $VERSION exists for this commit: completing an interrupted release."
+          else
+            echo "Version $VERSION does not exist yet."
           fi
-          echo "Version $VERSION does not exist yet."
+      # The evidence of the release is prepared before anything is published: every JAR with its
+      # SBOM, the SHA-256 checksums, the OWASP report of this run and the release notes. The build
+      # is reproducible, so these JARs are the ones that the deploy below uploads.
+      - name: Build release files
+        if: steps.mode.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.project.outputs.version }}
+          TIMESTAMP: ${{ steps.timestamp.outputs.value }}
+        run: mvn package -ntp -DskipTests -Dgpg.skip -P release -Drevision="$VERSION" -Dproject.build.outputTimestamp="$TIMESTAMP"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        if: steps.mode.outputs.release == 'true'
+        with:
+          name: OWASP report
+          path: owasp-report
+      - name: Collect release files
+        if: steps.mode.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.project.outputs.version }}
+        run: |
+          report=$(find owasp-report -name dependency-check-report.html | head -n 1)
+          scripts/release/collect-release-files.sh "$VERSION" release-files "$report"
+      - name: Check the state on Maven Central
+        id: central
+        if: steps.mode.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.project.outputs.version }}
+        run: |
+          state=$(scripts/release/central-state.sh "$VERSION" release-files)
+          echo "State on Maven Central: $state"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
       - name: Install GPG secret key
         env:
           OSSRH_GPG_KEY: ${{ secrets.OSSRH_GPG_KEY }}
@@ -247,6 +314,7 @@ jobs:
           echo -e "$OSSRH_GPG_KEY" | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
       - name: Deploy to Maven Central
+        if: steps.mode.outputs.release != 'true' || steps.central.outputs.state == 'absent'
         env:
           MAVEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
@@ -260,36 +328,34 @@ jobs:
             args+=(-Daether.checksums.algorithms=MD5)
           fi
           mvn "${args[@]}"
-      # The evidence of the release: every published JAR with its SBOM, the SHA-256 checksums,
-      # the OWASP report of this run and the release notes from CHANGELOG.md.
-      - name: Collect release files
+      # The record of what was deployed, kept with the run for a later re-run or inspection.
+      - name: Record the deployment
         if: steps.mode.outputs.release == 'true'
         env:
           VERSION: ${{ steps.project.outputs.version }}
-        run: scripts/release/collect-release-files.sh "$VERSION" release-files
-      - uses: actions/download-artifact@v8
+          CENTRAL_STATE: ${{ steps.central.outputs.state }}
+        run: |
+          {
+            echo "version=$VERSION"
+            echo "commit=$GITHUB_SHA"
+            echo "central_state_before_deploy=$CENTRAL_STATE"
+            echo "run=$GITHUB_RUN_ID"
+            cat release-files/SHA256SUMS
+          } > deploy-record.txt
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: steps.mode.outputs.release == 'true'
         with:
-          name: OWASP report
-          path: owasp-report
-      - name: Add the OWASP report
-        if: steps.mode.outputs.release == 'true'
-        env:
-          VERSION: ${{ steps.project.outputs.version }}
-        run: |
-          report=$(find owasp-report -name dependency-check-report.html | head -n 1)
-          cp "$report" "release-files/pololei-$VERSION-dependency-check-report.html"
+          name: Deploy record
+          path: deploy-record.txt
       - name: Attest build provenance
         if: steps.mode.outputs.release == 'true'
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
           subject-path: release-files/*.jar
-      - name: Create GitHub release
+      - name: Create or complete the GitHub release
         if: steps.mode.outputs.release == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.project.outputs.version }}
-        run: |
-          gh release create "$VERSION" --target "$GITHUB_SHA" --title "$VERSION" \
-            --notes-file release-files/RELEASE-NOTES.md \
-            release-files/*.jar release-files/*.json release-files/*.html release-files/SHA256SUMS
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: scripts/release/publish-github-release.sh "$VERSION" release-files

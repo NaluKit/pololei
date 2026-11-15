@@ -114,7 +114,7 @@ public final class ValidationResult_CustomFieldSerializer
       NationalCheckStatus nationalCheck = NationalCheckStatus.valueOf(statusName);
       return ValidationResult.restore(value, error, message, position, expectedLength, actualLength, expectedType, lastPosition, rule, nationalCheck);
     } catch (RuntimeException e) {
-      throw new SerializationException("invalid ValidationResult: unknown constant");
+      throw new SerializationException("invalid ValidationResult: unknown constant or inconsistent fields");
     }
   }
 

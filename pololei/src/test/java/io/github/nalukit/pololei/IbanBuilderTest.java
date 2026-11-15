@@ -22,6 +22,7 @@ import io.github.nalukit.pololei.error.InvalidIbanException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IbanBuilderTest {
@@ -128,6 +129,57 @@ class IbanBuilderTest {
   void unsupportedCountry() {
     assertEquals(IbanError.UNSUPPORTED_COUNTRY, assertThrows(InvalidIbanException.class, () -> Iban.of("US", "123")).error());
     assertEquals(IbanError.INVALID_COUNTRY_CODE, assertThrows(InvalidIbanException.class, () -> Iban.of(null, "123")).error());
+  }
+
+  @Test
+  void invalidCountryInputIsNotEchoed() {
+    String iban = "DE89370400440532013000\nINJECTED";
+    InvalidIbanException exception = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                         .countryCode(iban)
+                                                                                         .bban("370400440532013000")
+                                                                                         .build());
+    assertEquals(IbanError.INVALID_COUNTRY_CODE, exception.error());
+    assertFalse(exception.getMessage().contains("DE89"));
+    assertFalse(exception.getMessage().contains("INJECTED"));
+    assertFalse(exception.getMessage().contains("\n"));
+    assertFalse(exception.result().message().orElseThrow().contains("DE89"));
+    for (String code : new String[] { "DEU", "12", "D", " ", "D1", "DE89370400440532013000" }) {
+      assertEquals(IbanError.INVALID_COUNTRY_CODE, assertThrows(InvalidIbanException.class, () -> Iban.of(code, "123")).error(), code);
+      assertEquals(IbanError.INVALID_COUNTRY_CODE, assertThrows(InvalidIbanException.class, () -> Iban.builder().countryCode(code).buildRandom(new java.util.Random(1))).error(), code);
+      assertEquals(IbanError.INVALID_COUNTRY_CODE, assertThrows(InvalidIbanException.class, () -> Iban.random(code, new java.util.Random(1))).error(), code);
+    }
+    assertEquals(IbanError.UNSUPPORTED_COUNTRY, assertThrows(InvalidIbanException.class, () -> Iban.random("us", new java.util.Random(1))).error());
+    // documented normalization stays usable
+    Iban.builder().countryCode(" d e ").bban("370400440532013000").build();
+    Iban.builder().countryCode("de").buildRandom(new java.util.Random(1));
+  }
+
+  @Test
+  void randomBuilderRejectsInvalidFixedPartsLikeBuild() {
+    for (String[] parts : new String[][] { { "05428", "X0000001234!6" }, { "05428", "00000001234!6" }, { "0542A", "0000000123456" }, { "05428", "00000012345" } }) {
+      String account = parts[1];
+      java.util.function.Supplier<IbanBuilder> builder = () -> Iban.builder()
+                                                                   .countryCode("IT")
+                                                                   .bankIdentifier(parts[0])
+                                                                   .branchIdentifier("11101")
+                                                                   .accountNumber(account)
+                                                                   .nationalCheckDigits(true);
+      InvalidIbanException expected = assertThrows(InvalidIbanException.class, () -> builder.get().build());
+      InvalidIbanException actual   = assertThrows(InvalidIbanException.class, () -> builder.get().buildRandom(new java.util.Random(42)));
+      assertEquals(expected.error(), actual.error(), account + parts[0]);
+      assertEquals(expected.result().position(), actual.result().position(), account + parts[0]);
+    }
+    InvalidIbanException exception = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                         .countryCode("IT")
+                                                                                         .bankIdentifier("05428")
+                                                                                         .branchIdentifier("11101")
+                                                                                         .accountNumber("X0000001234!6")
+                                                                                         .nationalCheckDigits(true)
+                                                                                         .buildRandom(new java.util.Random(42)));
+    assertEquals(IbanError.INVALID_CHARACTER, exception.error());
+    assertEquals(java.util.OptionalInt.of(26), exception.result().position());
+    // valid fixed parts still work
+    Iban.builder().countryCode("IT").bankIdentifier("05428").branchIdentifier("11101").nationalCheckDigits(true).buildRandom(new java.util.Random(42));
   }
 
   @Test

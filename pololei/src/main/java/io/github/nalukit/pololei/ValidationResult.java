@@ -110,6 +110,8 @@ public final class ValidationResult<T, E extends Enum<E>>
   /**
    * Recreates a result from its parts; used by the GWT-RPC serializer of pololei-gwt. Absent
    * positions and lengths are {@link #NONE}.
+   *
+   * @throws IllegalArgumentException if the parts do not form a valid or an invalid result
    */
   static <T, E extends Enum<E>> ValidationResult<T, E> restore(T value,
                                                                E error,
@@ -121,7 +123,68 @@ public final class ValidationResult<T, E extends Enum<E>>
                                                                int lastPosition,
                                                                String rule,
                                                                NationalCheckStatus nationalCheck) {
-    return new ValidationResult<>(value, error, message, position, expectedLength, actualLength, expectedType, lastPosition, rule, nationalCheck);
+    ValidationResult<T, E> result = new ValidationResult<>(value, error, message, position, expectedLength, actualLength, expectedType, lastPosition, rule, nationalCheck);
+    result.checkConsistency();
+    return result;
+  }
+
+  /**
+   * Rejects a result whose fields contradict each other, for example one that is valid and has no
+   * value, or has a value and an error. Used for results created from outside, that is by the
+   * Java deserialization and the GWT-RPC serializer.
+   *
+   * @throws IllegalArgumentException if the fields do not form a valid or an invalid result
+   */
+  private void checkConsistency() {
+    if ((value == null) == (error == null)) {
+      throw new IllegalArgumentException("invalid ValidationResult: either a value or an error is required");
+    }
+    if (error == null) {
+      if (message != null || position != NONE || expectedLength != NONE || actualLength != NONE || expectedType != null || lastPosition != NONE || rule != null) {
+        throw new IllegalArgumentException("invalid ValidationResult: a valid result has no error details");
+      }
+      if (!(value instanceof Iban || value instanceof Bic || value instanceof String)) {
+        throw new IllegalArgumentException("invalid ValidationResult: unsupported value type");
+      }
+      if (nationalCheck == NationalCheckStatus.FAILED) {
+        throw new IllegalArgumentException("invalid ValidationResult: a valid result has no failed national check");
+      }
+    } else {
+      if (!(error instanceof IbanError || error instanceof BicError)) {
+        throw new IllegalArgumentException("invalid ValidationResult: unsupported error type");
+      }
+      if (message == null || message.isEmpty()) {
+        throw new IllegalArgumentException("invalid ValidationResult: an error needs a message");
+      }
+      if (nationalCheck == NationalCheckStatus.PASSED) {
+        throw new IllegalArgumentException("invalid ValidationResult: an error has no passed national check");
+      }
+      if ((nationalCheck == NationalCheckStatus.FAILED) != (error == IbanError.INVALID_NATIONAL_CHECK_DIGITS)) {
+        throw new IllegalArgumentException("invalid ValidationResult: national check status does not match the error");
+      }
+    }
+    if (nationalCheck == null) {
+      throw new IllegalArgumentException("invalid ValidationResult: national check status is missing");
+    }
+    if (position != NONE && position < 1 || lastPosition != NONE && lastPosition < 1) {
+      throw new IllegalArgumentException("invalid ValidationResult: positions are 1-based");
+    }
+    if (lastPosition != NONE && (position == NONE || lastPosition < position)) {
+      throw new IllegalArgumentException("invalid ValidationResult: invalid position range");
+    }
+    if (expectedLength < NONE || actualLength < NONE) {
+      throw new IllegalArgumentException("invalid ValidationResult: lengths must not be negative");
+    }
+    if (rule != null && (rule.isEmpty() || error == null)) {
+      throw new IllegalArgumentException("invalid ValidationResult: invalid rule");
+    }
+  }
+
+  /** Rejects inconsistent results read from a Java serialization stream. */
+  @Serial
+  private Object readResolve() {
+    checkConsistency();
+    return this;
   }
 
   /** Returns a copy with the 1-based position of the offending character. */

@@ -137,6 +137,42 @@ public class CustomFieldSerializerTest {
     assertThrows(SerializationException.class, () -> instantiate(null, null, "OtherError", "EMPTY", "x"));
   }
 
+  @Test
+  public void invalidDetailsAndStatusCombinationsAreRejected() throws SerializationException {
+    String e = "IbanError";
+    // each manipulated value on its own: position, lastPosition, expectedLength, actualLength
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", -20, -1, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 0, -1, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -30, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -2, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -1, -3, "NOT_PERFORMED"));
+    // range without start or ending before its start
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", -1, 5, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 7, 5, -1, -1, "NOT_PERFORMED"));
+    // error and national check status contradict each other
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "PASSED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -1, -1, "FAILED"));
+    // the combination of the whole manipulated example
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", -20, -30, -2, -3, "PASSED"));
+    // regular results stay readable
+    assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "FAILED").error()
+                                                                                                                       .orElseThrow());
+    assertEquals(IbanError.INVALID_LENGTH, full(e, "INVALID_LENGTH", -1, -1, 22, 20, "NOT_PERFORMED").error()
+                                                                                                    .orElseThrow());
+  }
+
+  private static ValidationResult<?, ?> full(String errorKind,
+                                             String errorName,
+                                             int position,
+                                             int lastPosition,
+                                             int expectedLength,
+                                             int actualLength,
+                                             String status) throws SerializationException {
+    List<Object> all = new ArrayList<>(java.util.Arrays.asList(null, null, errorKind, errorName, "x", position, expectedLength, actualLength, null, lastPosition, null, status));
+    return ValidationResult_CustomFieldSerializer.instantiate(objectReader(all));
+  }
+
   private static ValidationResult<?, ?> instantiate(Object... values) throws SerializationException {
     List<Object> all = new ArrayList<>(java.util.Arrays.asList(values));
     all.addAll(java.util.Arrays.asList(-1, -1, -1, null, -1, null, "NOT_PERFORMED"));

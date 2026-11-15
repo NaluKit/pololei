@@ -432,6 +432,9 @@ example in a servlet container or a GWT-RPC server:
 
 ## Building
 
+Building needs Java 21 or newer and Maven 3.9.9 or a newer Maven 3 (checked by the build; CI uses the Maven of
+the runner image). The versions of all Maven plugins are fixed in the parent POM.
+
 ```bash
 mvn verify
 ```

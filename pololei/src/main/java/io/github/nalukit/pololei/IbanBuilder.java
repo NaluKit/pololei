@@ -105,11 +105,16 @@ public final class IbanBuilder {
   }
 
   static IbanCountry country(String countryCode) {
-    if (countryCode == null || countryCode.isEmpty()) {
+    String code = countryCode == null ? "" : Text.normalize(countryCode);
+    if (code.isEmpty()) {
       throw new InvalidIbanException(Iban.invalid(IbanError.INVALID_COUNTRY_CODE, "country code is missing"));
     }
-    return IbanRegistry.find(Text.normalize(countryCode))
-                       .orElseThrow(() -> new InvalidIbanException(Iban.invalid(IbanError.UNSUPPORTED_COUNTRY, "country " + countryCode + " does not use IBAN")));
+    // the unchecked input never appears in a message: it may be an account number or contain control characters
+    if (code.length() != 2 || !Text.isUpperCaseLetter(code.charAt(0)) || !Text.isUpperCaseLetter(code.charAt(1))) {
+      throw new InvalidIbanException(Iban.invalid(IbanError.INVALID_COUNTRY_CODE, "country code must have two letters"));
+    }
+    return IbanRegistry.find(code)
+                       .orElseThrow(() -> new InvalidIbanException(Iban.invalid(IbanError.UNSUPPORTED_COUNTRY, "country " + code + " does not use IBAN")));
   }
 
   /**
@@ -351,6 +356,13 @@ public final class IbanBuilder {
     for (int attempt = 1; ; attempt++) {
       String drawn = composition.fill(random, digitsOnly);
       if (!nationalCheckDigits) {
+        return finish(country, drawn);
+      }
+      // fixed parts that violate the BBAN structure are rejected like build() does, before the
+      // national rule, which requires a valid structure, sees them
+      checkCharacters(drawn);
+      if (!country.bbanStructure()
+                  .matches(drawn)) {
         return finish(country, drawn);
       }
       Optional<String> completed = rule.complete(drawn);

@@ -47,7 +47,8 @@ reference in `docs/api/<version>.md`.
   `docs/api/<version>.md`; `--site <dir>` also checks the website and `--artifacts` builds the
   quickstart of the reference against the published artifacts. Pull requests against `main` run the
   static checks, so an inconsistent release is found before the merge. The deploy job of `dev` and
-  `main` is one job; the GitHub release is created only after the deploy succeeded.
+  `main` is one job; the release files are prepared before anything is published, an interrupted
+  release is completed by re-running the job (no second Central upload, no second GitHub release).
 - `check-release.sh --site` checks release and source commit in the sidebar of every pololei
   documentation page of the website, as for paniolo.
 - CI: weekly build for new vulnerabilities in unchanged dependencies, dependency updates only in

@@ -19,23 +19,33 @@
 
 # Collects the evidence of a release into one directory, for the GitHub release and for anyone who
 # rebuilds the release to compare it:
-#   <module>-<version>[-sources|-javadoc|-all].jar   the JARs of every published module
-#   <module>-<version>-cyclonedx.json                 the SBOM (CycloneDX) of every module
-#   SHA256SUMS                                        SHA-256 of all these files
-#   RELEASE-NOTES.md                                  the section of the version in CHANGELOG.md
+#   <module>-<version>.jar, -sources.jar, -javadoc.jar   the JARs of every published module; all
+#                                                        three are required
+#   <module>-<version>-cyclonedx.json                    the SBOM (CycloneDX) of every module
+#   pololei-<version>-dependency-check-report.html       the OWASP report, if one is passed
+#   SHA256SUMS                                           SHA-256 of the JARs, SBOMs and the report
+#   RELEASE-NOTES.md                                     the section of the version in CHANGELOG.md
+#
+# The directory must not exist or be empty, so files of another version or an earlier run cannot
+# be released by accident.
 #
 # Run it after a build with the release profile of the same version:
 #   mvn package -DskipTests -Dgpg.skip -P release -Drevision=<version> \
 #       -Dproject.build.outputTimestamp=<commit time, UTC>
-#   scripts/release/collect-release-files.sh <version> <directory>
+#   scripts/release/collect-release-files.sh <version> <directory> [<dependency-check-report.html>]
 set -euo pipefail
 
-if [[ $# -ne 2 ]]; then
-  echo "usage: $0 <version> <directory>" >&2
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+  echo "usage: $0 <version> <directory> [<dependency-check-report.html>]" >&2
   exit 2
 fi
 VERSION=$1
 OUT=$2
+REPORT=${3:-}
+if [[ -n $REPORT && ! -f $REPORT ]]; then
+  echo "Missing OWASP report $REPORT" >&2
+  exit 1
+fi
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 
 # BEGIN relink_to_tag
@@ -46,6 +56,10 @@ relink_to_tag() {
 }
 # END relink_to_tag
 
+if [[ -d $OUT && -n $(ls -A "$OUT") ]]; then
+  echo "Directory $OUT is not empty; use an empty directory" >&2
+  exit 1
+fi
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd)
 
@@ -54,12 +68,14 @@ modules=$(sed -n 's:.*<module>\(.*\)</module>.*:\1:p' "$ROOT/pom.xml" | grep -v 
 count=0
 for module in $modules; do
   target="$ROOT/$module/target"
-  if [[ ! -f $target/$module-$VERSION.jar ]]; then
-    echo "Missing $target/$module-$VERSION.jar; build version $VERSION with the release profile first" >&2
-    exit 1
-  fi
-  for jar in "$target/$module-$VERSION".jar "$target/$module-$VERSION"-*.jar; do
-    [[ -f $jar ]] && cp "$jar" "$OUT/" && count=$((count + 1))
+  for suffix in "" -sources -javadoc; do
+    jar="$target/$module-$VERSION$suffix.jar"
+    if [[ ! -f $jar ]]; then
+      echo "Missing $jar; build version $VERSION with the release profile first" >&2
+      exit 1
+    fi
+    cp "$jar" "$OUT/"
+    count=$((count + 1))
   done
   if [[ ! -f $target/bom.json ]]; then
     echo "Missing SBOM $target/bom.json" >&2
@@ -71,7 +87,11 @@ if [[ -f $ROOT/target/bom.json ]]; then
   cp "$ROOT/target/bom.json" "$OUT/pololei-parent-$VERSION-cyclonedx.json"
 fi
 
-(cd "$OUT" && find . -maxdepth 1 -type f \( -name '*.jar' -o -name '*-cyclonedx.json' \) | sed 's:^\./::' | LC_ALL=C sort |
+if [[ -n $REPORT ]]; then
+  cp "$REPORT" "$OUT/pololei-$VERSION-dependency-check-report.html"
+fi
+
+(cd "$OUT" && find . -maxdepth 1 -type f \( -name '*.jar' -o -name '*-cyclonedx.json' -o -name '*.html' \) | sed 's:^\./::' | LC_ALL=C sort |
   xargs shasum -a 256 > SHA256SUMS)
 
 # The release notes: the section '## [<version>] - <date>' of CHANGELOG.md up to the next section.
@@ -93,9 +113,9 @@ fi
   echo "## Verification"
   echo
   echo "The JARs are published to Maven Central with GPG signatures. This release carries for every"
-  echo "module the SBOM (\`*-cyclonedx.json\`), the SHA-256 checksums of all files (\`SHA256SUMS\`), the"
-  echo "OWASP Dependency-Check report of the release build, and a build provenance attestation of"
-  echo "GitHub. The build is reproducible; see [Verifying a release](https://github.com/NaluKit/pololei/blob/main/SECURITY.md#verifying-a-release)."
+  echo "module the SBOM (\`*-cyclonedx.json\`), the SHA-256 checksums of the JARs, the SBOMs and the"
+  echo "OWASP Dependency-Check report (\`SHA256SUMS\`), the report of the release build, and a build"
+  echo "provenance attestation of GitHub. The build is reproducible; see [Verifying a release](https://github.com/NaluKit/pololei/blob/main/SECURITY.md#verifying-a-release)."
 } > "$OUT/RELEASE-NOTES.md"
 
 echo "Collected $count JARs of version $VERSION in $OUT"
