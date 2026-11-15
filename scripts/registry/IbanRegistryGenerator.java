@@ -25,9 +25,12 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -41,8 +44,11 @@ import java.util.regex.Pattern;
  * Cells may be quoted and contain line breaks. Older releases are encoded in Windows-1252, newer
  * ones in UTF-8.
  * <p>
- * Run with a single-file launch (Java 21+):
- * {@code java IbanRegistryGenerator.java <registry.txt> "<release description>" <output.java>}
+ * The input must have the expected SHA-256, pinned in {@code scripts/registry/registry-source.properties};
+ * a different file is rejected. Release and SHA-256 are written to the generated class.
+ * <p>
+ * Run with a single-file launch (Java 21+), usually through {@code generate-registry.sh}:
+ * {@code java IbanRegistryGenerator.java <registry.txt> "<release description>" <sha256> <output.java>}
  */
 public class IbanRegistryGenerator {
 
@@ -59,15 +65,22 @@ public class IbanRegistryGenerator {
   }
 
   public static void main(String[] args) throws IOException {
-    if (args.length != 3) {
-      System.err.println("usage: java IbanRegistryGenerator.java <registry.txt> \"<release description>\" <output.java>");
+    if (args.length != 4) {
+      System.err.println("usage: java IbanRegistryGenerator.java <registry.txt> \"<release description>\" <sha256> <output.java>");
       System.exit(2);
     }
     Path          input     = Path.of(args[0]);
     String        source    = args[1].trim();
-    Path          output    = Path.of(args[2]);
+    String        expected  = args[2].trim().toLowerCase(Locale.ROOT);
+    Path          output    = Path.of(args[3]);
     List<Country> countries = new ArrayList<>();
     List<String>  errors    = new ArrayList<>();
+    String        actual    = sha256(input);
+    if (!actual.equals(expected)) {
+      System.err.println("registry not generated: SHA-256 of " + input + " is " + actual + ", expected " + expected);
+      System.err.println("  for a new registry release, update scripts/registry/registry-source.properties first");
+      System.exit(1);
+    }
     try {
       countries = parse(read(input), errors);
     } catch (IllegalArgumentException e) {
@@ -78,8 +91,18 @@ public class IbanRegistryGenerator {
       errors.forEach(error -> System.err.println("  " + error));
       System.exit(1);
     }
-    Files.writeString(output, render(source, countries), StandardCharsets.UTF_8);
+    Files.writeString(output, render(source, actual, countries), StandardCharsets.UTF_8);
     System.out.println("wrote " + countries.size() + " countries to " + output);
+  }
+
+  private static String sha256(Path input) throws IOException {
+    try {
+      return HexFormat.of()
+                      .formatHex(MessageDigest.getInstance("SHA-256")
+                                              .digest(Files.readAllBytes(input)));
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   private static String read(Path input) throws IOException {
@@ -295,6 +318,7 @@ public class IbanRegistryGenerator {
   }
 
   private static String render(String source,
+                               String sha256,
                                List<Country> countries) {
     StringBuilder sb = new StringBuilder();
     sb.append("""
@@ -327,6 +351,9 @@ public class IbanRegistryGenerator {
                   """);
     sb.append("  static final String SOURCE = ")
       .append(literal(source))
+      .append(";\n");
+    sb.append("  static final String SOURCE_SHA256 = ")
+      .append(literal(sha256))
       .append(";\n\n");
     sb.append("""
                     private IbanRegistryData() {

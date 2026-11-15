@@ -11,11 +11,14 @@ kept by a regression test in `RegistryAuditTest`.
 |------|-------|
 | Source of truth | SWIFT IBAN Registry, release 100, *IBAN Registry (TXT)* |
 | SHA-256 of the TXT file used | `ad13d9595a991790ad1a5a1363d574a43357c710e3bce2170f95c9bef8932df0` |
-| Generator | `scripts/registry/generate-registry.sh <file> "SWIFT IBAN Registry Release 100"` |
-| Result | byte-identical `IbanRegistryData.java` (89 countries), checked on 2 November 2026 |
+| Pinned in | `scripts/registry/registry-source.properties` (release and SHA-256) |
+| Generator | `scripts/registry/generate-registry.sh <file>` |
+| Result | byte-identical `IbanRegistryData.java` (89 countries), checked on 2 November 2026 and 15 November 2026 |
 
 The registry file is not part of the repository (SWIFT terms of use). Running the generator with the file above
-reproduces `IbanRegistryData.java` without any change.
+reproduces `IbanRegistryData.java` without any change. The generator rejects a file with another SHA-256 and
+writes release and SHA-256 to `IbanRegistryData` (`SOURCE`, `SOURCE_SHA256`); `IbanRegistrySourceTest` checks
+that the pinned values, the generated class and this table agree.
 
 ## Rules
 

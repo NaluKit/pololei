@@ -375,13 +375,15 @@ IbanRegistry.source();      // SWIFT IBAN Registry Release 100
 
 The data is generated Java code (`IbanRegistryData`), so it works in GWT without resources. To update it,
 download the *IBAN Registry (TXT)* from
-[SWIFT](https://www.swift.com/standards/data-standards/iban-international-bank-account-number) and run:
+[SWIFT](https://www.swift.com/standards/data-standards/iban-international-bank-account-number), enter its
+release and SHA-256 in `scripts/registry/registry-source.properties` and run:
 
 ```bash
-scripts/registry/generate-registry.sh ~/Downloads/iban-registry.txt "SWIFT IBAN Registry Release 100"
+scripts/registry/generate-registry.sh ~/Downloads/iban-registry.txt
 ```
 
-The generator checks every example IBAN against its structure and check digits before writing the file.
+The generator rejects a file whose SHA-256 differs from the pinned one and checks every example IBAN against its
+structure and check digits before writing the file.
 [docs/registry-audit.md](docs/registry-audit.md) compares the data with iban4j and records every decision.
 
 ## Serialization
@@ -420,6 +422,14 @@ mvn verify
 
 `pololei-gwt` compiles the sources with the GWT compiler and runs `PololeiGwtSuite` as JavaScript, including real
 GWT-RPC calls against a test servlet. CI builds and tests with Java 21 and 25.
+
+The profile `corpus` adds [test-pololei-corpus](test-pololei-corpus/README.md): IBANs, BICs and Creditor Identifiers
+from the unchanged test files of four public projects, pinned to a commit, with a reviewed expectation for every
+value and the reason for every difference to the upstream statement. CI builds always include it:
+
+```bash
+mvn verify -P corpus
+```
 
 The sources of the `pololei`, `pololei-epc` and `pololei-creditor` modules are shared with GWT, which supports the Java 17 language
 level and its own JRE emulation: use Java 21 syntax such as pattern matching for `switch` or record patterns,

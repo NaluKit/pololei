@@ -27,7 +27,7 @@ The build is checked with OWASP Dependency-Check in every CI build.
 ## How releases are built
 
 Every push and pull request is built by GitHub Actions on Java 21 and 25 with all tests, including
-the GWT tests, and checked with OWASP Dependency-Check, which fails the build for vulnerabilities
+the GWT tests and the public identifier corpus (`test-pololei-corpus`), and checked with OWASP Dependency-Check, which fails the build for vulnerabilities
 with a CVSS score of 7 or higher. A weekly run repeats the checks on unchanged code. Releases are
 built by the same workflow from the `main` branch only:
 

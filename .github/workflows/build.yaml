@@ -66,8 +66,10 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: maven
+      # The public identifier corpus (test-pololei-corpus) is part of every build: it is the
+      # regression evidence for the validation results. Its fixtures are in the repository.
       - name: Verify with Maven
-        run: mvn verify -ntp
+        run: mvn verify -ntp -P corpus
       - uses: actions/upload-artifact@v7
         if: failure()
         with:

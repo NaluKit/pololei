@@ -25,6 +25,7 @@ import java.util.List;
 final class IbanRegistryData {
 
   static final String SOURCE = "SWIFT IBAN Registry Release 100";
+  static final String SOURCE_SHA256 = "ad13d9595a991790ad1a5a1363d574a43357c710e3bce2170f95c9bef8932df0";
 
   private IbanRegistryData() {
   }

@@ -15,6 +15,15 @@ reference in `docs/api/<version>.md`.
   Dependency-Check report of the release build, and the changes of the version.
   `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
   release. `SECURITY.md` describes how releases are built and how to verify them.
+- Public identifier corpus `test-pololei-corpus` (profile `corpus`, part of every CI build, never
+  published): 1131 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
+  of python-stdnum, Apache Commons Validator, schwifty and sepa_king, with SHA-256 and license of
+  every file, a reviewed expectation for every value and the reason for each of the 45 differences
+  to the upstream statement. `scripts/fixtures.py` verifies and restores the files.
+- The SWIFT IBAN registry file the country data is generated from is pinned by release and SHA-256
+  in `scripts/registry/registry-source.properties`; `generate-registry.sh` rejects any other file
+  and writes the SHA-256 to `IbanRegistryData`. `IbanRegistrySourceTest` keeps the pinned values,
+  the generated class and `docs/registry-audit.md` in line.
 
 ### Changed
 
@@ -31,6 +40,11 @@ reference in `docs/api/<version>.md`.
   archive timestamp. The JAR has the same entries as before.
 - README dependency snippets use the published release instead of a `${pololei.version}`
   placeholder.
+- `generate-registry.sh` takes only the registry file; release and SHA-256 come from
+  `scripts/registry/registry-source.properties`.
+- Build plugins and test dependencies on the versions of the other NaluKit projects: JUnit 6.1.3,
+  maven-compiler-plugin 3.16.0, maven-javadoc-plugin 3.12.0, flatten-maven-plugin 1.9.0,
+  maven-resources-plugin 3.5.0; gwt-maven-plugin 1.3.0.
 
 ## [1.0.0-rc01] - 2026-11-03
 

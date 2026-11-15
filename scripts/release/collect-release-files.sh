@@ -49,8 +49,8 @@ relink_to_tag() {
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd)
 
-# The modules of the reactor; all of them are published.
-modules=$(sed -n 's:.*<module>\(.*\)</module>.*:\1:p' "$ROOT/pom.xml")
+# The modules of the reactor; the corpus tests are never published.
+modules=$(sed -n 's:.*<module>\(.*\)</module>.*:\1:p' "$ROOT/pom.xml" | grep -v -e '^test-pololei-corpus$')
 count=0
 for module in $modules; do
   target="$ROOT/$module/target"

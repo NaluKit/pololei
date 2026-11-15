@@ -25,17 +25,23 @@
 # https://www.swift.com/standards/data-standards/iban-international-bank-account-number
 # It cannot be downloaded by script, so download it in a browser first.
 #
-# usage: scripts/registry/generate-registry.sh <registry.txt> "<release, e.g. SWIFT IBAN Registry Release 100>"
+# Release and SHA-256 of the expected file are pinned in scripts/registry/registry-source.properties;
+# a file with another SHA-256 is rejected. For a new registry release, update that file first.
+#
+# usage: scripts/registry/generate-registry.sh <registry.txt>
 #
 set -euo pipefail
 
-if [ $# -ne 2 ]; then
-  echo "usage: $0 <registry.txt> \"<release description>\"" >&2
+if [ $# -ne 1 ]; then
+  echo "usage: $0 <registry.txt>" >&2
   exit 2
 fi
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUTPUT="$ROOT/pololei/src/main/java/io/github/nalukit/pololei/registry/IbanRegistryData.java"
+PINS="$ROOT/scripts/registry/registry-source.properties"
+RELEASE="$(sed -n 's/^release=//p' "$PINS")"
+SHA256="$(sed -n 's/^sha256=//p' "$PINS")"
 
-java "$ROOT/scripts/registry/IbanRegistryGenerator.java" "$1" "$2" "$OUTPUT"
+java "$ROOT/scripts/registry/IbanRegistryGenerator.java" "$1" "$RELEASE" "$SHA256" "$OUTPUT"
 echo "now run: mvn -f \"$ROOT/pom.xml\" verify"
