@@ -36,6 +36,8 @@ reference in `docs/api/<version>.md`.
   quickstart of the reference against the published artifacts. Pull requests against `main` run the
   static checks, so an inconsistent release is found before the merge. The deploy job of `dev` and
   `main` is one job; the GitHub release is created only after the deploy succeeded.
+- `check-release.sh --site` checks release and source commit in the sidebar of every pololei
+  documentation page of the website, as for paniolo.
 - CI: weekly build for new vulnerabilities in unchanged dependencies, dependency updates only in
   that build, Dependabot for GitHub Actions and Maven, least-privilege permissions, and the OWASP
   Dependency-Check version in the parent POM.

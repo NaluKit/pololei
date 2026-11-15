@@ -205,28 +205,29 @@ if [[ -z $SITE ]]; then
 elif [[ ! -d $SITE ]]; then
   fail "website directory '$SITE' does not exist"
 else
-  for page in index.html quickstart.html api.html; do
+  for page in quickstart.html modules.html api.html bban-fields.html national-checks.html registry-audit.html \
+              migration-iban4j.html migration-iban4g.html; do
     if [[ ! -f $SITE/$page ]]; then
       fail "$page is missing in $SITE"
       continue
     fi
-    if grep -Fq "$VERSION" "$SITE/$page"; then
-      ok "$page names $VERSION"
+    # every page names release and source commit in its sidebar: <p class="pn-meta">1.0.0<br><code>7b7f6401ef2d</code></p>
+    META=$(grep -Eo '<p class="pn-meta">[^<]+<br><code>[0-9a-f]+</code>' "$SITE/$page" | head -n 1 || true)
+    SHOWN=$(echo "$META" | sed -E 's/.*pn-meta">([^<]+)<br>.*/\1/')
+    SHOWN_COMMIT=$(echo "$META" | sed -E 's/.*<code>([0-9a-f]+)<\/code>.*/\1/')
+    if [[ -z $META ]]; then
+      fail "$page shows no release and commit (<p class=\"pn-meta\">)"
+    elif [[ $SHOWN != "$VERSION" ]]; then
+      fail "$page shows release '$SHOWN', expected '$VERSION'"
+    elif [[ -n $COMMIT && $COMMIT != "$SHOWN_COMMIT"* ]]; then
+      fail "$page shows commit $SHOWN_COMMIT, $REFERENCE names $COMMIT"
     else
-      fail "$page does not name release $VERSION"
+      ok "$page shows $VERSION, commit $SHOWN_COMMIT"
     fi
     if grep -Eq "SNAPSHOT|0\.0\.0-" "$SITE/$page"; then
       fail "$page still shows a SNAPSHOT or a local 0.0.0-<commit> coordinate"
     fi
   done
-  # the API page names the source commit of the release in its table of pinned values
-  if [[ -f $SITE/api.html && -n $COMMIT ]]; then
-    if grep -Fq "<code>$COMMIT</code>" "$SITE/api.html"; then
-      ok "api.html names source commit $COMMIT"
-    else
-      fail "api.html does not name source commit $COMMIT of $REFERENCE"
-    fi
-  fi
 fi
 
 if [[ $ARTIFACTS == true && $FAILURES -gt 0 ]]; then
