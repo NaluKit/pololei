@@ -45,25 +45,31 @@ pololei has no runtime dependencies. `pololei-gwt` needs `gwt-user` (provided by
 
 ## Getting started
 
+The Maven group ID is `io.github.nalukit`. The current release is `1.0.0-rc01` on Maven Central; its
+exact API and a runnable quickstart with the expected output are documented in the
+[versioned reference](docs/api/1.0.0-rc01.md). This README describes the current source tree, including
+unreleased features. The development version `HEAD-SNAPSHOT` is built with `mvn install` from the
+repository root (see [building](#building)); use it consistently for all pololei dependencies.
+
 ```xml
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0-rc01</version>
 </dependency>
 
 <!-- optional: EPC QR code payloads -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-epc</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0-rc01</version>
 </dependency>
 
 <!-- optional: SEPA Creditor Identifier -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-creditor</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0-rc01</version>
 </dependency>
 ```
 
@@ -424,7 +430,22 @@ and APIs such as `List.getFirst()`, only in tests and scripts. The GWT build cat
 - from iban4g: [docs/migration-iban4g.md](docs/migration-iban4g.md)
 - from iban4j: [docs/migration-iban4j.md](docs/migration-iban4j.md)
 
-Changes between versions: [CHANGELOG.md](CHANGELOG.md). Reporting security issues: [SECURITY.md](SECURITY.md).
+## Releases and security
+
+A release is published to Maven Central under group ID `io.github.nalukit` and tagged with its
+version in Git. Release version, tag, Maven artifacts, the versioned API reference
+`docs/api/<version>.md` and its runnable quickstart describe the same commit;
+[`scripts/release/check-release.sh`](scripts/release/check-release.sh) checks this before and
+after publishing; its header describes the static checks, the `--site` check of the website
+(maintained in [NaluKit/nalukit-web-site](https://github.com/NaluKit/nalukit-web-site)) and the
+`--artifacts` check against Maven Central. The CI build runs the static checks for every pull
+request against `main`. `HEAD-SNAPSHOT` is the development build of the `dev` branch and is not supported
+for production use. Changes per release, and those not yet released, are listed in
+[CHANGELOG.md](CHANGELOG.md).
+
+Supported release lines, how releases are built and how to verify them, and how to report a
+vulnerability privately are described in [SECURITY.md](SECURITY.md). Please do not report
+vulnerabilities in public issues.
 
 ## License
 

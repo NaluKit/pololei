@@ -65,6 +65,13 @@
           <include>**/*.java</include>
         </includes>
       </resource>
+      <!-- and the sources of this module (GWT-RPC serializers); gwt:package-lib added them itself -->
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+        </includes>
+      </resource>
       <resource>
         <directory>src/main/resources</directory>
       </resource>
@@ -88,6 +95,27 @@
             <include>**/*GwtSuite.java</include>
           </includes>
         </configuration>
+        <executions>
+          <!-- gwt:package-lib ignores project.build.outputTimestamp; the JAR is built by the
+               maven-jar-plugin below instead, so the release build stays reproducible -->
+          <execution>
+            <id>default-package-lib</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <!-- the gwt-lib lifecycle only runs gwt:test; plain JVM tests (*Test) need surefire -->
       <plugin>

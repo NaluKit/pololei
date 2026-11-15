@@ -1,5 +1,37 @@
 # Changelog
 
+All notable changes to pololei are documented in this file. The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Each release also has its own API
+reference in `docs/api/<version>.md`.
+
+## [Unreleased]
+
+### Added
+
+- Release evidence for audits: every module is published with its SBOM in CycloneDX format
+  (`<module>-<version>-cyclonedx.json`); the build is reproducible (fixed archive timestamp, set
+  to the commit time of the release); the release JARs carry a GitHub build provenance
+  attestation; the GitHub release lists the JARs, SBOMs, `SHA256SUMS`, the OWASP
+  Dependency-Check report of the release build, and the changes of the version.
+  `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
+  release. `SECURITY.md` describes how releases are built and how to verify them.
+
+### Changed
+
+- Release process: `scripts/release/check-release.sh <version>` checks release version, Git tag,
+  `pom.xml`, `SECURITY.md`, `CHANGELOG.md`, README and the versioned API reference
+  `docs/api/<version>.md`; `--site <dir>` also checks the website and `--artifacts` builds the
+  quickstart of the reference against the published artifacts. Pull requests against `main` run the
+  static checks, so an inconsistent release is found before the merge. The deploy job of `dev` and
+  `main` is one job; the GitHub release is created only after the deploy succeeded.
+- CI: weekly build for new vulnerabilities in unchanged dependencies, dependency updates only in
+  that build, Dependabot for GitHub Actions and Maven, least-privilege permissions, and the OWASP
+  Dependency-Check version in the parent POM.
+- `pololei-gwt` is packaged by the `maven-jar-plugin`, because `gwt:package-lib` ignores the fixed
+  archive timestamp. The JAR has the same entries as before.
+- README dependency snippets use the published release instead of a `${pololei.version}`
+  placeholder.
+
 ## [1.0.0-rc01] - 2026-11-03
 
 Closes the functional gaps found by comparing pololei with iban4j. Remaining differences are
@@ -75,3 +107,6 @@ keep their results unless listed under *Changed behaviour*.
   registry.
 - `Iban.random(...)` does not calculate national check digits; use `Iban.builder().nationalCheckDigits(true).buildRandom(random)`.
 - Country data stays SWIFT IBAN registry release 100, prefixes of iban4j outside the registry are rejected.
+
+[Unreleased]: https://github.com/NaluKit/pololei/compare/1.0.0-rc01...HEAD
+[1.0.0-rc01]: https://github.com/NaluKit/pololei/releases/tag/1.0.0-rc01

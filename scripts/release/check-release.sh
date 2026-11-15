@@ -18,72 +18,267 @@
 #
 
 #
-# Checks that a version is consistent before it is tagged and published:
-#   scripts/release/check-release.sh [--allow-snapshot] [--repository owner/name] <version>
+# Checks that a pololei release is described consistently: release version, Git tag, Maven
+# version, SECURITY.md, CHANGELOG.md, README, versioned API reference and, optionally, website.
 #
-# A release version (x.y.z) needs a section '## x.y.z' in CHANGELOG.md and, with --repository, links to a
-# pololei repository in pom.xml, README.md and SECURITY.md that all point to that GitHub repository. A SNAPSHOT version fails, unless
-# --allow-snapshot is given: then it is a development build and the release checks are skipped. The
-# release dry run of the CI uses --allow-snapshot, the release job does not.
+#   scripts/release/check-release.sh <version>
+#       Static checks of the working tree. The CI build runs them for every pull request
+#       against main, so a release is checked before it is merged.
 #
-# POLOLEI_ROOT overrides the project directory (used by check-release-test.sh).
+#   scripts/release/check-release.sh <version> --site <dir>
+#       Additionally checks the pololei pages of the website. The website is maintained in the
+#       repository NaluKit/nalukit-web-site; <dir> is its directory src/content/pololei.
 #
+#   scripts/release/check-release.sh <version> --artifacts [--repository <url>]
+#       Additionally builds the quickstart of docs/api/<version>.md as a new project, with an
+#       empty local Maven repository and only Maven Central (plus <url>, e.g. a staging
+#       repository) as source. SNAPSHOT resolution is disabled, so the example must build from
+#       the published release artifacts alone. Run this after the release was published.
+#
+# Exit code 0: all checks passed, 1: at least one check failed, 2: usage error.
+
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 [--allow-snapshot] [--repository owner/name] <version>" >&2
+  echo "usage: $0 <version> [--site <dir>] [--artifacts] [--repository <url>]" >&2
   exit 2
 }
 
-allow_snapshot=false
-repository=""
+[[ $# -ge 1 ]] || usage
+VERSION=$1
+shift
+ARTIFACTS=false
+REPOSITORY=
+SITE=
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --allow-snapshot) allow_snapshot=true; shift ;;
-    --repository) [[ $# -ge 2 ]] || usage; repository="$2"; shift 2 ;;
-    -*) usage ;;
-    *) break ;;
+  case $1 in
+    --artifacts) ARTIFACTS=true ;;
+    --site) [[ $# -ge 2 ]] || usage; SITE=$2; shift ;;
+    --repository) [[ $# -ge 2 ]] || usage; REPOSITORY=$2; shift ;;
+    *) usage ;;
   esac
+  shift
 done
-[[ $# -eq 1 && -n "$1" ]] || usage
-version="$1"
 
-if [[ "$version" == *-SNAPSHOT ]]; then
-  if [[ "$allow_snapshot" == true ]]; then
-    echo "Version $version is a development snapshot; release checks skipped."
-    exit 0
+ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+REFERENCE="docs/api/$VERSION.md"
+FAILURES=0
+COMMIT=
+
+ok() { echo "  ok    $*"; }
+fail() { echo "  FAIL  $*"; FAILURES=$((FAILURES + 1)); }
+
+# Prints "file:line:version" for every io.github.nalukit dependency version in a file.
+nalukit_versions() {
+  awk -v file="$1" '
+    /<groupId>io\.github\.nalukit<\/groupId>/ { pending = 3; next }
+    pending > 0 && /<version>/ {
+      v = $0; sub(/.*<version>/, "", v); sub(/<\/version>.*/, "", v)
+      print file ":" NR ":" v; pending = 0; next
+    }
+    { pending-- }
+  ' "$ROOT/$1"
+}
+
+# Prints the first fenced block of the given language that contains the marker text.
+fenced_block() {
+  awk -v lang="$2" -v marker="$3" '
+    !inside && $0 == "```" lang { inside = 1; block = ""; next }
+    inside && $0 == "```" { inside = 0; if (index(block, marker)) { printf "%s", block; exit } next }
+    inside { block = block $0 "\n" }
+  ' "$ROOT/$1"
+}
+
+echo "Release $VERSION"
+
+echo "Version and tag"
+if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ && $VERSION != *SNAPSHOT* ]]; then
+  ok "release version format"
+else
+  fail "'$VERSION' is not a release version (x.y.z, optional qualifier, no SNAPSHOT)"
+fi
+REVISION=$(sed -n 's:.*<revision>\(.*\)</revision>.*:\1:p' "$ROOT/pom.xml" | head -n 1)
+if [[ $REVISION == "$VERSION" ]]; then
+  ok "pom.xml revision is $VERSION"
+else
+  fail "pom.xml revision is '$REVISION', expected '$VERSION'"
+fi
+if git -C "$ROOT" rev-parse -q --verify "refs/tags/$VERSION" > /dev/null; then
+  if [[ $(git -C "$ROOT" rev-parse "refs/tags/$VERSION^{commit}") == $(git -C "$ROOT" rev-parse HEAD) ]]; then
+    ok "tag $VERSION points to the checked-out commit"
+  else
+    fail "tag $VERSION exists but does not point to the checked-out commit"
   fi
-  echo "Version $version is a SNAPSHOT and cannot be released." >&2
-  exit 1
-fi
-if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
-  echo "Version $version is not a valid release version (x.y.z)." >&2
-  exit 1
+else
+  ok "tag $VERSION does not exist yet (created by the release workflow)"
 fi
 
-root="${POLOLEI_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
-if ! grep -qE "^## \[?${version//./\\.}\]?([[:space:]]|$)" "$root/CHANGELOG.md"; then
-  echo "CHANGELOG.md has no section '## $version'." >&2
-  exit 1
+echo "SECURITY.md"
+LINE=$(echo "$VERSION" | cut -d. -f1-2).x
+if grep -Eq "^\| *\`$LINE\` *\| *Yes" "$ROOT/SECURITY.md"; then
+  ok "release line $LINE is listed as supported"
+else
+  fail "SECURITY.md has no row '| \`$LINE\` | Yes |' in 'Supported versions'"
 fi
 
-if [[ -n "$repository" ]]; then
-  # every link to a pololei repository (project, SCM, issues, badge, advisories) must name the
-  # repository that publishes the release; GitHub names are case-insensitive
-  expected="$(echo "$repository" | tr '[:upper:]' '[:lower:]')"
-  if ! grep -qiF "<url>https://github.com/$repository</url>" "$root/pom.xml"; then
-    echo "pom.xml has no project url https://github.com/$repository." >&2
-    exit 1
+echo "CHANGELOG.md"
+if [[ ! -f $ROOT/CHANGELOG.md ]]; then
+  fail "CHANGELOG.md is missing"
+else
+  if grep -Eq "^## \[${VERSION//./\\.}\] - [0-9]{4}-[0-9]{2}-[0-9]{2}$" "$ROOT/CHANGELOG.md"; then
+    ok "section '## [$VERSION] - <date>'"
+  else
+    fail "CHANGELOG.md has no section '## [$VERSION] - YYYY-MM-DD'"
   fi
-  for file in pom.xml README.md SECURITY.md; do
-    [[ -f "$root/$file" ]] || continue
-    while read -r link; do
-      found="$(echo "${link#github.com?}" | sed 's/\.git$//' | tr '[:upper:]' '[:lower:]')"
-      if [[ "$found" != "$expected" ]]; then
-        echo "$file links to github.com/$found instead of $repository." >&2
-        exit 1
-      fi
-    done < <(grep -oiE 'github\.com[:/][A-Za-z0-9_.-]+/pololei[A-Za-z0-9_.-]*' "$root/$file" || true)
+  if grep -Fxq "[$VERSION]: https://github.com/NaluKit/pololei/releases/tag/$VERSION" "$ROOT/CHANGELOG.md"; then
+    ok "link to the release $VERSION"
+  else
+    fail "CHANGELOG.md has no link '[$VERSION]: https://github.com/NaluKit/pololei/releases/tag/$VERSION'"
+  fi
+  UNRELEASED=$(grep -E '^\[Unreleased\]: ' "$ROOT/CHANGELOG.md" || true)
+  if [[ -z $UNRELEASED || $UNRELEASED == "[Unreleased]: https://github.com/NaluKit/pololei/compare/$VERSION...HEAD" ]]; then
+    ok "[Unreleased] compares with $VERSION"
+  else
+    fail "CHANGELOG.md [Unreleased] link does not compare with $VERSION: ${UNRELEASED#*: }"
+  fi
+fi
+
+echo "Versioned API reference"
+if [[ -f $ROOT/$REFERENCE ]]; then
+  ok "$REFERENCE exists"
+  if head -n 1 "$ROOT/$REFERENCE" | grep -Fq "$VERSION"; then
+    ok "title names $VERSION"
+  else
+    fail "title of $REFERENCE does not name $VERSION"
+  fi
+  if grep -Eq "SNAPSHOT|0\.0\.0-|git archive" "$ROOT/$REFERENCE"; then
+    fail "$REFERENCE refers to a SNAPSHOT, a local 0.0.0-<commit> coordinate or a source build:"
+    grep -En "SNAPSHOT|0\.0\.0-|git archive" "$ROOT/$REFERENCE" | sed 's/^/          /'
+  else
+    ok "no SNAPSHOT, local coordinate or source build"
+  fi
+  # The pinned commit contains the release sources. Between it and the release only documentation
+  # may change, because the reference itself is committed after the commit it names.
+  COMMIT=$(grep -Eo '`[0-9a-f]{40}`' "$ROOT/$REFERENCE" | head -n 1 | tr -d '`')
+  if [[ -z $COMMIT ]]; then
+    fail "$REFERENCE names no full source commit"
+  elif ! git -C "$ROOT" merge-base --is-ancestor "$COMMIT" HEAD 2> /dev/null; then
+    fail "source commit $COMMIT is not part of the checked-out history"
+  else
+    CHANGED=$(git -C "$ROOT" diff --name-only "$COMMIT" HEAD | grep -Ev '\.md$|^docs/' || true)
+    if [[ -z $CHANGED ]]; then
+      ok "source commit $COMMIT; later changes only touch documentation"
+    else
+      fail "files changed after source commit $COMMIT: $(echo $CHANGED)"
+    fi
+  fi
+else
+  fail "$REFERENCE is missing"
+fi
+
+echo "README"
+for f in $REFERENCE README.md; do
+  [[ -f $ROOT/$f ]] || continue
+  while IFS=: read -r file line found; do
+    if [[ $found == "$VERSION" ]]; then
+      ok "$file:$line dependency version"
+    else
+      fail "$file:$line dependency version is '$found', expected '$VERSION'"
+    fi
+  done < <(nalukit_versions "$f")
+done
+LINKS=$(grep -Eo '\]\(docs/api/[^)]+\.md' "$ROOT/README.md" | cut -c3- | sort -u)
+if [[ $LINKS == "$REFERENCE" ]]; then
+  ok "README links only $REFERENCE"
+else
+  fail "README must link only $REFERENCE, found: $(echo $LINKS)"
+fi
+if grep -Fq "SECURITY.md" "$ROOT/README.md"; then
+  ok "README links SECURITY.md"
+else
+  fail "README does not link SECURITY.md"
+fi
+
+echo "Website"
+if [[ -z $SITE ]]; then
+  echo "  skip  maintained in NaluKit/nalukit-web-site; pass --site <dir> to check it"
+elif [[ ! -d $SITE ]]; then
+  fail "website directory '$SITE' does not exist"
+else
+  for page in index.html quickstart.html api.html; do
+    if [[ ! -f $SITE/$page ]]; then
+      fail "$page is missing in $SITE"
+      continue
+    fi
+    if grep -Fq "$VERSION" "$SITE/$page"; then
+      ok "$page names $VERSION"
+    else
+      fail "$page does not name release $VERSION"
+    fi
+    if grep -Eq "SNAPSHOT|0\.0\.0-" "$SITE/$page"; then
+      fail "$page still shows a SNAPSHOT or a local 0.0.0-<commit> coordinate"
+    fi
   done
+  # the API page names the source commit of the release in its table of pinned values
+  if [[ -f $SITE/api.html && -n $COMMIT ]]; then
+    if grep -Fq "<code>$COMMIT</code>" "$SITE/api.html"; then
+      ok "api.html names source commit $COMMIT"
+    else
+      fail "api.html does not name source commit $COMMIT of $REFERENCE"
+    fi
+  fi
 fi
-echo "Release $version is consistent."
+
+if [[ $ARTIFACTS == true && $FAILURES -gt 0 ]]; then
+  echo "Quickstart against published artifacts"
+  fail "skipped, fix the failed checks above first"
+elif [[ $ARTIFACTS == true ]]; then
+  echo "Quickstart against published artifacts"
+  WORK=$(mktemp -d "${TMPDIR:-/tmp}/pololei-release-check.XXXXXX")
+  APP=$WORK/app
+  mkdir -p "$APP/src/main/java/example"
+  fenced_block "$REFERENCE" xml "<artifactId>pololei-quickstart</artifactId>" > "$APP/pom.xml"
+  fenced_block "$REFERENCE" java "public final class Quickstart" > "$APP/src/main/java/example/Quickstart.java"
+  fenced_block "$REFERENCE" text "IBAN:     " > "$WORK/expected.txt"
+  for f in "$APP/pom.xml" "$APP/src/main/java/example/Quickstart.java" "$WORK/expected.txt"; do
+    [[ -s $f ]] || fail "could not extract $(basename "$f") from $REFERENCE"
+  done
+  # Settings without the user's mirrors or profiles: Maven Central, optionally one more release
+  # repository, never snapshots.
+  {
+    echo "<settings><profiles><profile><id>release-check</id><repositories>"
+    if [[ -n $REPOSITORY ]]; then
+      echo "<repository><id>release-check</id><url>$REPOSITORY</url>"
+      echo "<releases><enabled>true</enabled></releases><snapshots><enabled>false</enabled></snapshots></repository>"
+    fi
+    echo "</repositories></profile></profiles><activeProfiles><activeProfile>release-check</activeProfile></activeProfiles></settings>"
+  } > "$WORK/settings.xml"
+  if [[ $FAILURES -eq 0 ]] \
+     && echo "  ...   building $APP (may take a while)" \
+     && (cd "$APP" && mvn -B -ntp -s "$WORK/settings.xml" -Dmaven.repo.local="$WORK/repository" \
+           compile dependency:list \
+           org.apache.maven.plugins:maven-dependency-plugin:3.7.0:copy-dependencies \
+           -DincludeScope=runtime -DoutputFile="$WORK/dependencies.txt" > "$WORK/maven.log" 2>&1); then
+    ok "new project builds with an empty local repository (log: $WORK/maven.log)"
+    if grep -q SNAPSHOT "$WORK/dependencies.txt"; then
+      fail "resolved dependencies contain SNAPSHOT artifacts ($WORK/dependencies.txt)"
+    else
+      ok "no SNAPSHOT dependency resolved"
+    fi
+    if (cd "$APP" && java -cp 'target/classes:target/dependency/*' example.Quickstart > "$WORK/output.txt" 2> "$WORK/stderr.txt") \
+       && diff -u "$WORK/expected.txt" "$WORK/output.txt"; then
+      ok "quickstart output matches the expected output in $REFERENCE"
+    else
+      fail "quickstart run differs from the expected output (see $WORK)"
+    fi
+  else
+    fail "quickstart project did not build (see $WORK/maven.log)"
+  fi
+fi
+
+if [[ $FAILURES -eq 0 ]]; then
+  echo "All checks passed."
+else
+  echo "$FAILURES check(s) failed."
+  exit 1
+fi
