@@ -152,6 +152,8 @@ jobs:
         # the plugin version comes from the pluginManagement of the parent POM
         run: |
           mvn org.owasp:dependency-check-maven:aggregate -ntp \
+          -Daether.connector.http.retryHandler.count=5 \
+          -Dmaven.wagon.http.retryHandler.count=5 \
           -DdataDirectory=./dependency-checker-db \
           -DfailBuildOnCVSS=7 \
           -Dodc.outputDirectory=reports \
