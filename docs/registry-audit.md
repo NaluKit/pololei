@@ -9,16 +9,32 @@ kept by a regression test in `RegistryAuditTest`.
 
 | Item | Value |
 |------|-------|
-| Source of truth | SWIFT IBAN Registry, release 100, *IBAN Registry (TXT)* |
+| Source of truth | SWIFT IBAN Registry, release 103, *IBAN Registry (TXT)* |
 | SHA-256 of the TXT file used | `ad13d9595a991790ad1a5a1363d574a43357c710e3bce2170f95c9bef8932df0` |
 | Pinned in | `scripts/registry/registry-source.properties` (release and SHA-256) |
 | Generator | `scripts/registry/generate-registry.sh <file>` |
-| Result | byte-identical `IbanRegistryData.java` (89 countries), checked on 2 November 2026 and 15 November 2026 |
+| Result | byte-identical `IbanRegistryData.java` (89 countries), checked on 2 November 2026 and 15 November 2026; release identified on 15 November 2026, see below |
 
 The registry file is not part of the repository (SWIFT terms of use). Running the generator with the file above
 reproduces `IbanRegistryData.java` without any change. The generator rejects a file with another SHA-256 and
 writes release and SHA-256 to `IbanRegistryData` (`SOURCE`, `SOURCE_SHA256`); `IbanRegistrySourceTest` checks
 that the pinned values, the generated class and this table agree.
+
+## Release of the registry file
+
+The TXT file names no release. Until 15 November 2026 pololei labelled it release 100; that label was wrong,
+the data was already release 103. The release was determined on 15 November 2026 as follows:
+
+| Check | Result |
+|-------|--------|
+| TXT on swift.com (*IBAN Registry (TXT)*, updated 17 September 2026) | byte-identical with the file above (same SHA-256) |
+| PDF on swift.com (*IBAN Registry (PDF)*, created 15 September 2026) | title page: *Release 103, Sep 2026* |
+| PDF and TXT compared per country: BBAN structure, bank and branch identifier position, IBAN example, IBAN length, SEPA, effective date | identical for the 87 countries read from the PDF; AD and PS were not read from the PDF, their last update (Mar-21, Oct-25) predates release 100 |
+| Changes of 2026 in the file (*Last update date*) | BH (Jun-26) and BR (Sep-26, effective Aug-26), the latest change in the file |
+
+Only the label changed: `IbanRegistryData` differs in `SOURCE` alone, the country data is unchanged, and
+`IbanRegistry.source()` returns `SWIFT IBAN Registry Release 103`. Releases 1.0.0-rc01 and earlier report
+release 100 for the same data.
 
 ## Rules
 
@@ -33,18 +49,18 @@ that the pinned values, the generated class and this table agree.
 
 | Finding | Count | Decision |
 |---------|------:|----------|
-| Prefixes in pololei | 89 | release 100 |
+| Prefixes in pololei | 89 | release 103 |
 | Prefixes in iban4j | 106 | |
 | Common prefixes | 83 | |
 | Union | 112 | |
-| Only pololei: FK, HN, MN, NI, SO, YE | 6 | **kept**: part of release 100; their registry examples are valid (`prefixesOnlyPololeiAccepts`) |
+| Only pololei: FK, HN, MN, NI, SO, YE | 6 | **kept**: part of release 103; their registry examples are valid (`prefixesOnlyPololeiAccepts`) |
 | Only iban4j: AO, AX, BL, CV, GA, GF, GG, GP, IM, IR, JE, MA, MF, MQ, MZ, NC, PF, PM, RE, SN, TF, WF, YT | 23 | **rejected** (`UNSUPPORTED_COUNTRY`): territories that the registry lists under FR, GB or FI use those prefixes; the others have no registry entry (`prefixesOnlyIban4jAccepts`) |
 | Different character mask: AE, BR, MU, PK, TR, UA | 6 | **registry kept**, see below (`characterMasks`) |
 | Different bank or branch position: AL, BY, FI, FR, PL, PT, SI | 7 | **registry kept** (`bankAndBranchPositions`); FR and PT get a branch in the national layout |
 
 ### Character masks
 
-| Prefix | Release 100 | iban4j | Effect in pololei |
+| Prefix | Release 103 | iban4j | Effect in pololei |
 |--------|-------------|--------|-------------------|
 | AE | `3!n16!n` | `3!n16!c` | letters in the account number are rejected |
 | BR | `8!c5!n10!n1!c1!c` | `8!n5!n10!n1!a1!c` | letters in the bank identifier and a digit as account type are accepted; the registry example `BR6699999A03000010009795493C1` is rejected by iban4j |
@@ -55,7 +71,7 @@ that the pinned values, the generated class and this table agree.
 
 ### Bank and branch positions
 
-| Prefix | Release 100 (bank / branch) | iban4j (bank / branch) | Decision |
+| Prefix | Release 103 (bank / branch) | iban4j (bank / branch) | Decision |
 |--------|-----------------------------|------------------------|----------|
 | AL | 1-3 / 4-8 | 1-3 / 4-7 | registry; iban4j treats position 8 as national check digit |
 | BY | 1-4 / – | 1-4 / 5-8 | registry |
@@ -70,7 +86,7 @@ that the pinned values, the generated class and this table agree.
 Generated from `IbanRegistryData.java` and `org/iban4j/bban/BbanStructure.java` of the commit above. Positions are
 BBAN positions; "–" means not defined or not supported.
 
-| Prefix | Supported by | IBAN length | pololei (release 100) | Bank / branch pololei | iban4j | Bank / branch iban4j | Difference |
+| Prefix | Supported by | IBAN length | pololei (release 103) | Bank / branch pololei | iban4j | Bank / branch iban4j | Difference |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | AD | both | 24 | 4!n4!n12!c | 1-4 / 5-8 | 4!n4!n12!c | 1-4 / 5-8 | – |
 | AE | both | 23 | 3!n16!n | 1-3 / – | 3!n16!c | 1-3 / – | character mask |

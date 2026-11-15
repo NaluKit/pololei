@@ -30,6 +30,7 @@ import static io.github.nalukit.pololei.registry.BbanField.IDENTIFICATION_NUMBER
 import static io.github.nalukit.pololei.registry.BbanField.NATIONAL_CHECK_DIGITS;
 import static io.github.nalukit.pololei.registry.BbanField.OWNER_ACCOUNT_TYPE;
 import static io.github.nalukit.pololei.registry.BbanField.RESERVED;
+import static io.github.nalukit.pololei.registry.BbanField.ROUTING_CHECK_DIGIT;
 
 /**
  * National BBAN layouts that supplement the SWIFT IBAN registry. Maintained by hand, the sources
@@ -154,10 +155,10 @@ final class BbanLayoutData {
       case "MC":
         return rib("Monaco uses the French RIB (CFONB): code banque 5, code guichet 5, numero de compte 11, cle RIB 2");
       case "HU":
-        return new Supplement("Hungary (registry structure 3!n4!n1!n15!n1!n): bank 3, branch 4, account 16 (check digit of bank and branch 1, account 15), check digit 1").add(BANK_IDENTIFIER, 3)
-                                                                                                                                                                         .add(BRANCH_IDENTIFIER, 4)
-                                                                                                                                                                         .add(ACCOUNT_NUMBER, 16)
-                                                                                                                                                                         .add(NATIONAL_CHECK_DIGITS, 1);
+        return new Supplement("Hungary (registry structure 3!n4!n1!n15!n1!n): bank 3, branch 4, routing check digit 1 (over bank and branch), account 16 (15 digits and the final position of the national account number)").add(BANK_IDENTIFIER, 3)
+                                                                                                                                                                                                                           .add(BRANCH_IDENTIFIER, 4)
+                                                                                                                                                                                                                           .add(ROUTING_CHECK_DIGIT, 1)
+                                                                                                                                                                                                                           .add(ACCOUNT_NUMBER, 16);
       case "IS":
         return new Supplement("Iceland: bank 2, branch 2, account type 2, account 6, kennitala of the account holder 10").add(BANK_IDENTIFIER, 2)
                                                                                                                           .add(BRANCH_IDENTIFIER, 2)

@@ -152,6 +152,15 @@
           <artifactId>maven-jar-plugin</artifactId>
           <version>${plugin.jar.version}</version>
         </plugin>
+        <!-- a JavaDoc warning (for example a field or method without a comment) fails the JavaDoc build -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${plugin.javadoc.version}</version>
+          <configuration>
+            <failOnWarnings>true</failOnWarnings>
+          </configuration>
+        </plugin>
         <!-- not bound to a phase; the OWASP job of the CI build runs it on demand -->
         <plugin>
           <groupId>org.owasp</groupId>

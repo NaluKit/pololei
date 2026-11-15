@@ -96,13 +96,27 @@ class Iban4jMigrationTest {
   }
 
   @Test
+  void hungarianFields() {
+    // iban4j: account 8-23 with the routing check digit and without the last digit, national check digit 24
+    Iban iban = Iban.parse("HU42117730161111101800000000");
+    assertEquals(Optional.of("117"), iban.field(BbanField.BANK_IDENTIFIER));
+    assertEquals(Optional.of("7301"), iban.field(BbanField.BRANCH_IDENTIFIER));
+    assertEquals(Optional.of("6"), iban.field(BbanField.ROUTING_CHECK_DIGIT));
+    assertEquals(Optional.of("1111101800000000"), iban.field(BbanField.ACCOUNT_NUMBER));
+    assertEquals(Optional.empty(), iban.field(BbanField.NATIONAL_CHECK_DIGITS));
+    iban = Iban.parse("HU74116000060000000034953226");
+    assertEquals(Optional.of("0000"), iban.field(BbanField.BRANCH_IDENTIFIER));
+    assertEquals(Optional.of("6"), iban.field(BbanField.ROUTING_CHECK_DIGIT));
+    assertEquals(Optional.of("0000000034953226"), iban.field(BbanField.ACCOUNT_NUMBER));
+  }
+
+  @Test
   void separateNationalCheckDigits() {
     // getNationalCheckDigit(), getAccountNumber() of iban4j for the countries whose registry
-    // structure ends with check digits
+    // structure ends with check digits; HU differs on purpose, see hungarianFields
     String[][] cases = { { "DJ2100010000000154000100186", "86", "01540001001" },
                          { "EE382200221020145685", "5", "0022102014568" },
                          { "FO6264600001631634", "4", "000163163" },
-                         { "HU42117730161111101800000000", "0", "6111110180000000" },
                          { "MR1300020001010000123456753", "53", "00001234567" },
                          { "SE4550000000058398257466", "6", "0000005839825746" },
                          { "TL380080012345678910157", "57", "00123456789101" },

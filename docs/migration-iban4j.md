@@ -18,7 +18,7 @@ on any difference, or any changed value of a difference, not listed under [Field
 | Artifacts | `org.iban4j:iban4j` | `io.github.nalukit:pololei`, plus `pololei-epc` for EPC QR codes, `pololei-gwt` for GWT |
 | JPMS module | `org.iban4j` (module-info) | `io.github.nalukit.pololei` and `io.github.nalukit.pololei.epc` (`Automatic-Module-Name`) |
 | Country codes | enum `CountryCode` (ISO 3166, ~250 values) | `String`, upper case; `IbanRegistry.find(code)` for IBAN countries |
-| Country data | own table, 106 prefixes | SWIFT IBAN registry release 100, 89 prefixes; see [registry-audit.md](registry-audit.md) |
+| Country data | own table, 106 prefixes | SWIFT IBAN registry release 103, 89 prefixes; see [registry-audit.md](registry-audit.md) |
 | Errors | exceptions (`IbanFormatException`, `InvalidCheckDigitException`, `UnsupportedCountryException`) | `ValidationResult` without exceptions, or `InvalidIbanException` with an `IbanError` |
 | Input | electronic format, upper case (`valueOf`) | `parse` accepts electronic and print format, whitespace and lower case; `parse(s, IbanFormat.ELECTRONIC/PRINT)` is strict |
 | Account number | national account number (`getAccountNumber`) | `accountNumber()`: everything outside bank and branch; national account number with `field(ACCOUNT_NUMBER)`, see [bban-fields.md](bban-fields.md) |
@@ -60,7 +60,7 @@ on any difference, or any changed value of a difference, not listed under [Field
 | `.bankCodeExt(s)` | `.field(BANK_IDENTIFIER_EXTENSION, s)` (must match the bank identifier, if both are set) |
 | `.branchCode(s)` | `.branchIdentifier(s)` |
 | `.accountNumber(s)` | `.field(ACCOUNT_NUMBER, s)` — **not** `.accountNumber(s)`, which sets all positions outside bank and branch |
-| `.nationalCheckDigit(s)` | `.field(NATIONAL_CHECK_DIGITS, s)`, or `.nationalCheckDigits(true)` to calculate them; for TR `.field(RESERVED, s)`; for AL and PL the check digit is part of the branch or bank identifier and a separate value must agree with it |
+| `.nationalCheckDigit(s)` | `.field(NATIONAL_CHECK_DIGITS, s)`, or `.nationalCheckDigits(true)` to calculate them; for TR `.field(RESERVED, s)`; for HU `.field(ROUTING_CHECK_DIGIT, s)` for position 8 and `.field(ACCOUNT_NUMBER, s)` with 16 characters, there is no national check digit; for AL and PL the check digit is part of the branch or bank identifier and a separate value must agree with it |
 | `.accountType(s)`, `.ownerAccountType(s)`, `.identificationNumber(s)` | `.field(ACCOUNT_TYPE / OWNER_ACCOUNT_TYPE / IDENTIFICATION_NUMBER, s)`; for SC `.field(CURRENCY, s)` |
 | `.leftPadding(true)` | `.padAccountNumber(true)`, `.padBankIdentifier(true)`, `.padBranchIdentifier(true)` (separately) |
 | `.paddingCharacter(c)` | `.paddingCharacter(c)`; it must be allowed at the padded positions |
@@ -162,7 +162,24 @@ countries a getter of iban4j and the corresponding pololei field return differen
 | FI | `getBankCode()` `123456`, `getAccountNumber()` `0000078` | `bankIdentifier()` `123`, `field(ACCOUNT_NUMBER)` `4560000078` | registry bank identifier of 3 digits |
 | BY | `getBranchCode()` `3600`, `getAccountNumber()` `900000002Z00AB00` | no branch, `field(ACCOUNT_NUMBER)` `3600900000002Z00AB00` | the registry defines no branch identifier |
 | SC | `getBankCode()` `SSCB`, `getAccountType()` `USD` | `bankIdentifier()` `SSCB11`, `field(CURRENCY)` `USD` | the extension is part of the registry bank identifier; the last three characters are a currency |
+| HU | `getBranchCode()` `7301`, `getAccountNumber()` `6111110180000000`, `getNationalCheckDigit()` `0` | `branchIdentifier()` `7301`, `field(ROUTING_CHECK_DIGIT)` `6`, `field(ACCOUNT_NUMBER)` `1111101800000000`, no national check digits | iban4j starts the account number at position 8, so it contains the routing check digit and misses the last digit (iban4j #64, #83); the registry defines position 8 as the check digit over bank and branch and positions 9-24 as account number |
 | TR | `getNationalCheckDigit()` `0` | `field(RESERVED)` `0`, no national check digits | position 6 is reserved by the registry (currently `0`), not a check digit |
+
+Hungary, before and after (`HU42117730161111101800000000`):
+
+```java
+// iban4j: account number from position 8, without the last digit
+iban.getAccountNumber();                          // 6111110180000000  (routing check digit 6 + 15 digits)
+iban.getNationalCheckDigit();                     // 0                 (position 24)
+
+// pololei: routing check digit and account number are separate
+iban.field(BbanField.ROUTING_CHECK_DIGIT);        // Optional[6]
+iban.field(BbanField.ACCOUNT_NUMBER);             // Optional[1111101800000000], positions 9-24
+iban.accountNumber();                             // registry meaning, unchanged
+```
+
+Code that built HU IBANs with `.field(ACCOUNT_NUMBER, "6111110180000000")` and `.field(NATIONAL_CHECK_DIGITS, "0")`
+sets `.field(ROUTING_CHECK_DIGIT, "6")` and `.field(ACCOUNT_NUMBER, "1111101800000000")` instead.
 
 ```java
 Iban poland = Iban.parse("PL61109010140000071219812874");

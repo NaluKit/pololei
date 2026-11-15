@@ -45,7 +45,7 @@ class NationalChecksTest {
 
   /**
    * Valid IBANs from two independent sources per country: the example of the SWIFT IBAN registry
-   * (release 100) and published accounts or test vectors; sources in docs/national-checks.md.
+   * (release 103) and published accounts or test vectors; sources in docs/national-checks.md.
    */
   @ParameterizedTest
   @CsvSource({

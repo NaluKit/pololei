@@ -136,6 +136,72 @@ public class GwtTestNational
     }
   }
 
+  /** iban4j #64, #83: routing check digit at position 8, account number of 16 characters at 9-24. */
+  public void testHungarianFields() {
+    Iban iban = Iban.parse("HU42117730161111101800000000");
+    assertEquals("117", iban.field(BbanField.BANK_IDENTIFIER).orElseThrow());
+    assertEquals("7301", iban.field(BbanField.BRANCH_IDENTIFIER).orElseThrow());
+    assertEquals("6", iban.field(BbanField.ROUTING_CHECK_DIGIT).orElseThrow());
+    assertEquals("1111101800000000", iban.field(BbanField.ACCOUNT_NUMBER).orElseThrow());
+    assertFalse(iban.field(BbanField.NATIONAL_CHECK_DIGITS).isPresent());
+    assertEquals(iban, Iban.builder()
+                           .countryCode("HU")
+                           .field(BbanField.BANK_IDENTIFIER, "117")
+                           .field(BbanField.BRANCH_IDENTIFIER, "7301")
+                           .field(BbanField.ROUTING_CHECK_DIGIT, "6")
+                           .field(BbanField.ACCOUNT_NUMBER, "1111101800000000")
+                           .build());
+    Iban second = Iban.parse("HU74116000060000000034953226");
+    assertEquals("0000", second.field(BbanField.BRANCH_IDENTIFIER).orElseThrow());
+    assertEquals("6", second.field(BbanField.ROUTING_CHECK_DIGIT).orElseThrow());
+    assertEquals("0000000034953226", second.field(BbanField.ACCOUNT_NUMBER).orElseThrow());
+    assertEquals(second, Iban.builder()
+                             .countryCode("HU")
+                             .field(BbanField.BANK_IDENTIFIER, "116")
+                             .field(BbanField.BRANCH_IDENTIFIER, "0000")
+                             .field(BbanField.ROUTING_CHECK_DIGIT, "6")
+                             .field(BbanField.ACCOUNT_NUMBER, "0000000034953226")
+                             .build());
+  }
+
+  /** Small cases of IssueCasesTest (iban4j issues #17, #29, #34, #64, #83, #145). */
+  public void testIssueCases() {
+    IbanValidator base     = IbanValidator.standard();
+    IbanValidator national = IbanValidator.standard()
+                                          .nationalCheck(NationalCheckMode.REQUIRED);
+    // #34: the Spanish control digits 45 fail, 48 pass
+    assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, national.validate("ES7021000418450200051322")
+                                                                 .error()
+                                                                 .orElseThrow());
+    assertTrue(national.isValid("ES7821000418480200051322"));
+    assertTrue(base.isValid("ES7021000418450200051322"));
+    // #29: old 32 character NI example, current registry example
+    assertEquals(IbanError.INVALID_LENGTH, base.validate("NI92BAMC000000000000000003123123")
+                                               .error()
+                                               .orElseThrow());
+    assertTrue(base.isValid("NI45BAPR00000013000003558124"));
+    // #17: TR01 original and its canonical counterpart TR98
+    assertEquals(IbanError.INVALID_CHECK_DIGITS, base.validate("TR010012300882101517977799")
+                                                     .error()
+                                                     .orElseThrow());
+    assertTrue(base.isValid("TR980012300882101517977799"));
+    // #64: wrong check digits of the original
+    assertEquals(IbanError.INVALID_CHECK_DIGITS, base.validate("HU58117730111111018000000006")
+                                                     .error()
+                                                     .orElseThrow());
+    // #83: both HU values are valid, position 8 is the routing check digit
+    Iban first  = Iban.parse("HU36116000000000000349532266");
+    assertEquals("0", first.field(BbanField.ROUTING_CHECK_DIGIT).orElseThrow());
+    assertEquals("0000000349532266", first.field(BbanField.ACCOUNT_NUMBER).orElseThrow());
+    // #145: MA is not in the registry
+    assertEquals(IbanError.UNSUPPORTED_COUNTRY, base.validate("MA64011519000001205000534921")
+                                                    .error()
+                                                    .orElseThrow());
+    assertEquals(IbanError.NATIONAL_CHECK_NOT_SUPPORTED, national.validate("DE89370400440532013000")
+                                                                 .error()
+                                                                 .orElseThrow());
+  }
+
   public void testOwnNationalRule() {
     NationalCheck lastDigitZero = new NationalCheck() {
       @Override

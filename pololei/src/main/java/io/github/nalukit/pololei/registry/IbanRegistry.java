@@ -79,7 +79,7 @@ public final class IbanRegistry {
   /**
    * Returns the release of the SWIFT IBAN registry the data was generated from.
    *
-   * @return the registry release, for example {@code SWIFT IBAN Registry Release 100}
+   * @return the registry release, for example {@code SWIFT IBAN Registry Release 103}
    */
   public static String source() {
     return IbanRegistryData.SOURCE;

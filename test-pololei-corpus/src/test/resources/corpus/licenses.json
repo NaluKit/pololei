@@ -43,5 +43,10 @@
     "file": "licenses/segno-LICENSE",
     "source": "https://raw.githubusercontent.com/heuer/segno/b11dc2913c22b22b3bc0a6efaa989904c44977bf/LICENSE",
     "sha256": "de6c85fccf5d52902aa13dfe2dc6d2a2a106fc3419ed438f3460f0d4b76a6935"
+  },
+  {
+    "file": "licenses/sepa_rator-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/AdVitam/sepa_rator/1d6e9cae16172b108dca14b59cbaff6edc7b5754/LICENSE.txt",
+    "sha256": "4a4d724c0d918a5be82c435a3b08878ef24b17353244fa008ca2d1e25609b52d"
   }
 ]

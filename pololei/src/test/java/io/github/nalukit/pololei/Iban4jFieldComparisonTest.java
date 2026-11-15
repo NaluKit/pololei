@@ -72,6 +72,9 @@ class Iban4jFieldComparisonTest {
       Map.entry("FI BANK_IDENTIFIER", new Difference("123456", "123")),
       Map.entry("FI ACCOUNT_NUMBER", new Difference("0000078", "4560000078")),
       // registry bank identifier is the 8 digit sort code including branch and check digit, no branch identifier
+      // position 8 is the routing check digit (field(ROUTING_CHECK_DIGIT)), the account number covers positions 9-24; iban4j starts at 8 and loses the last digit (iban4j #64, #83)
+      Map.entry("HU ACCOUNT_NUMBER", new Difference("6111110180000000", "1111101800000000")),
+      Map.entry("HU NATIONAL_CHECK_DIGITS", new Difference("0", "")),
       Map.entry("PL BANK_IDENTIFIER", new Difference("109", "10901014")),
       Map.entry("PL BRANCH_IDENTIFIER", new Difference("0101", "")),
       // registry bank identifier includes the 2 digit extension (BANK_IDENTIFIER_EXTENSION)
@@ -99,6 +102,41 @@ class Iban4jFieldComparisonTest {
     }
     // keys and values: a changed value of an expected difference fails as well
     assertEquals(EXPECTED_DIFFERENCES, differences);
+  }
+
+  /**
+   * Hungary, iban4j <a href="https://github.com/arturmkrtchyan/iban4j/issues/64">#64</a> and
+   * <a href="https://github.com/arturmkrtchyan/iban4j/issues/83">#83</a>. The registry structure
+   * is {@code 3!n4!n1!n15!n1!n}: bank 1-3, branch 4-7, check digit over bank and branch 8, account
+   * number 9-24. iban4j reads the account number from position 8 to 23, so it contains the routing
+   * check digit and misses the last digit, and returns position 24 as national check digit. pololei
+   * has the routing check digit as a field of its own and the 16 characters 9-24 as account number.
+   * The values of the first example are those of iban4j-fields.tsv; those of the second follow
+   * from the same positions of iban4j, they were not generated with iban4j.
+   */
+  @Test
+  void hungarianFieldsDifferFromIban4jOnPurpose() {
+    // iban, then iban4j: bank, branch, account number, national check digit; pololei: routing check digit, account number
+    String[][] cases = { { "HU42117730161111101800000000", "117", "7301", "6111110180000000", "0", "6", "1111101800000000" },
+                         { "HU74116000060000000034953226", "116", "0000", "6000000003495322", "6", "6", "0000000034953226" } };
+    for (String[] c : cases) {
+      Iban   iban   = Iban.parse(c[0]);
+      String bban   = c[0].substring(4);
+      // iban4j positions, derived from the BBAN
+      assertEquals(c[1], bban.substring(0, 3), c[0]);
+      assertEquals(c[2], bban.substring(3, 7), c[0]);
+      assertEquals(c[3], bban.substring(7, 23), c[0]);
+      assertEquals(c[4], bban.substring(23), c[0]);
+      // pololei
+      assertEquals(c[1], iban.field(BANK_IDENTIFIER).orElseThrow(), c[0]);
+      assertEquals(c[2], iban.field(BRANCH_IDENTIFIER).orElseThrow(), c[0]);
+      assertEquals(c[5], iban.field(BbanField.ROUTING_CHECK_DIGIT).orElseThrow(), c[0]);
+      assertEquals(c[6], iban.field(ACCOUNT_NUMBER).orElseThrow(), c[0]);
+      assertFalse(iban.field(NATIONAL_CHECK_DIGITS).isPresent(), c[0]);
+      // the two readings differ exactly by the routing check digit in front and the last digit
+      assertEquals(c[5] + c[6].substring(0, 15), c[3], c[0]);
+      assertEquals(c[6].substring(15), c[4], c[0]);
+    }
   }
 
   @Test

@@ -33,6 +33,11 @@ public enum BbanField {
   ACCOUNT_NUMBER("account number"),
   /** National check digits (for example the French RIB key or the Italian CIN). */
   NATIONAL_CHECK_DIGITS("national check digits"),
+  /**
+   * Check digit over bank and branch identifier that is a position of its own between branch
+   * identifier and account number (Hungary).
+   */
+  ROUTING_CHECK_DIGIT("routing check digit"),
   /** Type of the account (Bulgaria, Brazil, Iceland). */
   ACCOUNT_TYPE("account type"),
   /** Position of the account holder, for example primary or secondary holder (Brazil). */

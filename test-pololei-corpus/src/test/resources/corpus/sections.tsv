@@ -31,3 +31,14 @@ sepa_king/spec/validator_spec.rb	41	41	BIC	valid	'([^']*)'	BICValidator: accept
 sepa_king/spec/validator_spec.rb	45	45	BIC	invalid	'([^']*)'	BICValidator: not accept
 sepa_king/spec/validator_spec.rb	65	74	CI	valid	'([^']*)'	CreditorIdentifierValidator: accept
 sepa_king/spec/validator_spec.rb	81	84	CI	invalid	'([^']*)'	CreditorIdentifierValidator: not accept
+sepa_rator/spec/validator_spec.rb	52	52	IBAN	valid	'([^']*)'	IBANValidator: accepts
+sepa_rator/spec/validator_spec.rb	57	61	IBAN	invalid	'([^']*)'	IBANValidator: does not accept
+sepa_rator/spec/validator_spec.rb	86	86	BIC	valid	'([^']*)'	BICValidator: accepts v03 BICs (AnyBICIdentifier)
+sepa_rator/spec/validator_spec.rb	90	90	BIC	valid	'([^']*)'	BICValidator: accepts v09/v13 BICs (BICFIDec2014Identifier) with digits in first positions
+sepa_rator/spec/validator_spec.rb	94	95	BIC	invalid	'([^']*)'	BICValidator: does not accept
+sepa_rator/spec/validator_spec.rb	109	118	CI	valid	'([^']*)'	CreditorIdentifierValidator: accepts
+sepa_rator/spec/validator_spec.rb	125	128	CI	invalid	'([^']*)'	CreditorIdentifierValidator: does not accept
+sepa_rator/spec/validator_spec.rb	198	198	IBAN	valid	'([^']*)'	IBANValidator.valid_iban?: true
+sepa_rator/spec/validator_spec.rb	202	202	IBAN	invalid	'([^']*)'	IBANValidator.valid_iban?: false for a wrong checksum
+sepa_rator/spec/validator_spec.rb	206	206	IBAN	invalid	'([^']*)'	IBANValidator.valid_iban?: false for lower case
+sepa_rator/spec/validator_spec.rb	210	210	IBAN	invalid	'([^']*)'	IBANValidator.valid_iban?: false for spaces

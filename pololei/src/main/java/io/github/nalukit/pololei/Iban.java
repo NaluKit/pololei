@@ -64,7 +64,7 @@ public final class Iban
   @Serial
   private static final long serialVersionUID = 1L;
 
-  // the electronic format; GWT-RPC uses Iban_CustomFieldSerializer from pololei-gwt
+  /** The IBAN in its electronic format; GWT-RPC uses Iban_CustomFieldSerializer from pololei-gwt. */
   private final String value;
 
   private Iban(String value) {
@@ -462,6 +462,8 @@ public final class Iban
   /**
    * Validates a deserialized instance, so that a manipulated stream cannot create an invalid IBAN.
    * Called by Java serialization; GWT-RPC validates in Iban_CustomFieldSerializer.
+   *
+   * @return the validated IBAN that replaces the deserialized instance
    */
   @Serial
   private Object readResolve() {

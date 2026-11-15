@@ -54,16 +54,26 @@ public final class ValidationResult<T, E extends Enum<E>>
 
   // final, so that a result is safely published to other threads even without synchronization;
   // GWT-RPC uses ValidationResult_CustomFieldSerializer from pololei-gwt
+  /** The validated value, {@code null} if invalid. */
   @SuppressWarnings("serial") // T is Iban or Bic, both serializable
   private final T                   value;
+  /** The error, {@code null} if valid. */
   private final E                   error;
+  /** The message, {@code null} if valid. */
   private final String              message;
+  /** IBAN or BIC position of the error, or -1. */
   private final int                 position;
+  /** Expected length, or -1. */
   private final int                 expectedLength;
+  /** Actual length, or -1. */
   private final int                 actualLength;
+  /** Expected character type, or {@code null}. */
   private final CharacterType       expectedType;
+  /** Last position of the affected range, or -1. */
   private final int                 lastPosition;
+  /** Id of the national rule, or {@code null}. */
   private final String              rule;
+  /** The national check status, {@code null} if not performed. */
   private final NationalCheckStatus nationalCheck;
 
   private ValidationResult(T value,

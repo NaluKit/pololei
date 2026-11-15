@@ -66,7 +66,7 @@ Positions are BBAN positions (1-based). All rules work on the JVM and in GWT.
   ([Betaalvereniging](https://www.betaalvereniging.nl/en/news/last-ten-digits-dutch-iban-not-separate-from-2020/)),
   so the rule would reject valid IBANs. pololei has no NL rule (`NOT_SUPPORTED`).
 - Countries with national check digits whose algorithm is bank specific or not sufficiently documented (for example
-  DE, HU, PL, AL, EE) have no rule. Their check digits are available as `BbanField.NATIONAL_CHECK_DIGITS` where the
+  DE, PL, AL, EE) have no rule. Their check digits are available as `BbanField.NATIONAL_CHECK_DIGITS` where the
   position is known (see [bban-fields.md](bban-fields.md)).
 
 An application that needs a rule for one of these countries, or a different rule, adds its own `NationalCheck` to an
@@ -74,7 +74,7 @@ An application that needs a rule for one of these countries, or a different rule
 
 ## Test data and sources
 
-`NationalChecksTest` checks for every country the example of the SWIFT IBAN registry (release 100) and, except for
+`NationalChecksTest` checks for every country the example of the SWIFT IBAN registry (release 103) and, except for
 MC and SM, at least one IBAN from a second, independent source: published accounts of organisations and test vectors
 of [python-stdnum](https://arthurdejong.org/python-stdnum/) 2.2. Every algorithm was additionally cross-checked
 against an independent Python implementation written from the descriptions above. For negative cases the test

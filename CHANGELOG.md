@@ -6,8 +6,19 @@ reference in `docs/api/<version>.md`.
 
 ## [Unreleased]
 
+### Fixed
+
+- `Iban.field(ACCOUNT_NUMBER)` of Hungarian IBANs returns the 16 character national account number of
+  BBAN positions 9-24. It started at position 8 with the routing check digit and lost the last digit
+  (iban4j #64, #83). The check digit over bank and branch is the new field
+  `BbanField.ROUTING_CHECK_DIGIT`; HU has no `NATIONAL_CHECK_DIGITS` field any more.
+
 ### Added
 
+- `Bic.of(institutionCode, countryCode, locationCode[, branchCode])`: builds a BIC from its components with the
+  validation rules of `Bic.parse` (iban4j #62).
+- `Bic.random(...)`: random BIC test data with an injectable `Random`, a settable country and 8 or 11 characters
+  (iban4j #43). The BIC is syntactically valid, not a test BIC, and not guaranteed to be unassigned.
 - Release evidence for audits: every module is published with its SBOM in CycloneDX format
   (`<module>-<version>-cyclonedx.json`); the build is reproducible (fixed archive timestamp, set
   to the commit time of the release); the release JARs carry a GitHub build provenance
@@ -16,9 +27,10 @@ reference in `docs/api/<version>.md`.
   `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
   release. `SECURITY.md` describes how releases are built and how to verify them.
 - Public identifier corpus `test-pololei-corpus` (profile `corpus`, part of every CI build, never
-  published): 1131 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
-  of python-stdnum, Apache Commons Validator, schwifty and sepa_king, with SHA-256 and license of
-  every file, a reviewed expectation for every value and the reason for each of the 45 differences
+  published): 1165 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
+  of python-stdnum, Apache Commons Validator, schwifty, sepa_king and its successor sepa_rator, with
+  SHA-256 and license of every file, a reviewed expectation for every value and the reason for each of
+  the 49 differences
   to the upstream statement. 67 EPC QR code cases from the tests of girocode, payme,
   sepa-payment-qr-code and segno, including both examples of EPC069-12, compare the payloads of
   `pololei-epc` byte for byte or the rejected inputs; 9 differences are explained. `scripts/fixtures.py`
@@ -53,6 +65,9 @@ reference in `docs/api/<version>.md`.
 
 ### Changed behaviour
 
+- `IbanRegistry.source()` returns `SWIFT IBAN Registry Release 103`. The country data is unchanged: the
+  registry file pololei is generated from is release 103 (September 2026), which was labelled release 100
+  before; see [docs/registry-audit.md](docs/registry-audit.md#release-of-the-registry-file).
 - `EpcQrPayload.Builder` rejects a text field that consists of whitespace only (spaces, tabs, no-break
   spaces) with `<field> must not consist of whitespace only`; before, such a value was written to the
   payload, and a name of spaces satisfied the mandatory name. `null` and empty strings still mean

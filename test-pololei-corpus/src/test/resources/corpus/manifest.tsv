@@ -11,3 +11,4 @@ schwifty/tests/test_iban.py	https://raw.githubusercontent.com/mdomke/schwifty/a9
 segno/tests/test_helpers_epcqr.py	https://raw.githubusercontent.com/heuer/segno/b11dc2913c22b22b3bc0a6efaa989904c44977bf/tests/test_helpers_epcqr.py	634a7fa87228e7c27e8a6c7f62942f076c3354ccc4d03e7c4c2559dfa9628ce7	BSD-3-Clause
 sepa-payment-qr-code/test.js	https://raw.githubusercontent.com/derhuerst/sepa-payment-qr-code/62d7b9d4ad44c9e257dc9c7b45dcb00565bf1bd9/test.js	9bfc9a0e1acddfb5cd3e6f82f48cc5f89c343368ea619aff5a181efba8037942	ISC
 sepa_king/spec/validator_spec.rb	https://raw.githubusercontent.com/salesking/sepa_king/41d561362e7af4bcd7da7bfad97e6e5e2d32f7bb/spec/validator_spec.rb	a76ddf50e590b627464555ff0ed4253f45849feaa99240ec35e6f653da0f645d	MIT
+sepa_rator/spec/validator_spec.rb	https://raw.githubusercontent.com/AdVitam/sepa_rator/1d6e9cae16172b108dca14b59cbaff6edc7b5754/spec/validator_spec.rb	d29b5befe0d53efaea1dfdebe5173af373b216f811c16dbd34b11deb64a97b6b	MIT

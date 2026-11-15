@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Keeps the decisions of the data audit against iban4j (commit b2f6be5), see
- * docs/registry-audit.md: pololei follows the SWIFT IBAN registry, release 100.
+ * docs/registry-audit.md: pololei follows the SWIFT IBAN registry, release 103.
  */
 class RegistryAuditTest {
 
@@ -47,7 +47,7 @@ class RegistryAuditTest {
 
   @Test
   void registryRelease() {
-    assertEquals("SWIFT IBAN Registry Release 100", IbanRegistry.source());
+    assertEquals("SWIFT IBAN Registry Release 103", IbanRegistry.source());
     assertEquals(89, IbanRegistry.countries()
                                  .size());
   }
@@ -68,7 +68,7 @@ class RegistryAuditTest {
                                                                  .error());
   }
 
-  /** Prefixes only pololei accepts: part of release 100, not of iban4j. */
+  /** Prefixes only pololei accepts: part of release 103, not of iban4j. */
   @ParameterizedTest
   @ValueSource(strings = { "FK", "HN", "MN", "NI", "SO", "YE" })
   void prefixesOnlyPololeiAccepts(String prefix) {

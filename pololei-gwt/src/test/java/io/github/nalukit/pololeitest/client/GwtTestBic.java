@@ -32,6 +32,48 @@ public class GwtTestBic
     return "io.github.nalukit.pololeitest.PololeiTest";
   }
 
+  public void testOfComponents() {
+    assertEquals("DEUTDEFF500", Bic.of("DEUT", "DE", "FF", "500").toString());
+    assertEquals("DEUTDEFF", Bic.of("DEUT", "DE", "FF").toString());
+    assertEquals("A1B2DEFF", Bic.of("A1B2", "DE", "FF").toString());
+    try {
+      Bic.of("DEU", "DE", "FF");
+      fail();
+    } catch (io.github.nalukit.pololei.error.InvalidBicException e) {
+      assertEquals(BicError.INVALID_LENGTH, e.result().error().orElseThrow());
+    }
+    try {
+      Bic.of("DEUT", "ZZ", "FF", "500");
+      fail();
+    } catch (io.github.nalukit.pololei.error.InvalidBicException e) {
+      assertEquals(BicError.UNKNOWN_COUNTRY, e.result().error().orElseThrow());
+    }
+  }
+
+  public void testRandom() {
+    assertEquals(Bic.random(new java.util.Random(42)), Bic.random(new java.util.Random(42)));
+    java.util.Random random = new java.util.Random(1);
+    for (int i = 0; i < 100; i++) {
+      assertTrue(Bic.isValid(Bic.random(random, 8).toString()));
+      Bic bic = Bic.random("de", random, 11);
+      assertEquals("DE", bic.countryCode());
+      assertEquals(11, bic.toString().length());
+      assertTrue(Bic.isValid(bic.toString()));
+    }
+    try {
+      Bic.random("ZZ", random);
+      fail();
+    } catch (io.github.nalukit.pololei.error.InvalidBicException e) {
+      assertEquals(BicError.UNKNOWN_COUNTRY, e.result().error().orElseThrow());
+    }
+    try {
+      Bic.random(random, 9);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
   public void testParse() {
     Bic bic = Bic.parse("deut de ff 500");
     assertEquals("DEUTDEFF500", bic.toString());

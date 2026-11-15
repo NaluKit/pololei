@@ -32,6 +32,7 @@ public class InvalidIbanException
   @Serial
   private static final long serialVersionUID = 1L;
 
+  /** The validation result with the details of the error. */
   private final ValidationResult<Iban, IbanError> result;
 
   /**

@@ -1,12 +1,12 @@
 # Public identifier test corpus
 
-Unchanged test files of eight public projects, pinned to a commit and retrieved on 2026-11-15: the
+Unchanged test files of nine public projects, pinned to a commit and retrieved on 2026-11-15: the
 IBANs, BICs and SEPA Creditor Identifiers their authors state as valid or invalid, and their EPC QR
 code test cases with the payload they expect or the input they reject. The corpus supplements the unit
 tests, which are written against the specifications, with third-party cases: values found in the wild,
 other formats of input, territories, deliberate errors, and other implementations of EPC069-12.
 
-**Results: 1131 values from 7 files (580 IBANs, 537 BICs, 14 Creditor Identifiers). pololei agrees with the upstream statement for 1086 of them; 45 results are explained one by one.**
+**Results: 1165 values from 8 files (592 IBANs, 545 BICs, 28 Creditor Identifiers). pololei agrees with the upstream statement for 1116 of them; 49 results are explained one by one.**
 
 **EPC QR code: 67 cases from 4 files; pololei builds 39 payloads and rejects 28 inputs. It agrees with the upstream test for 58 cases; 9 results are explained one by one.**
 
@@ -65,13 +65,17 @@ Each difference is listed with its reason in the `note` column of
 | Values | Upstream | pololei | Reason |
 | ---: | --- | --- | --- |
 | 8 | sepa_king: valid Creditor Identifiers | `INVALID_CHECK_DIGITS` | sepa_king checks only the structure; the check digits, recalculated with ISO 7064 MOD 97-10 as in EPC262-08, are wrong. Only `DE98ZZZ09999999999` and `HU74111A12345676` are correct. |
-| 14 | commons-validator: valid IBANs of territories (AX, BL, GF, GP, MF, MQ, NC, PF, PM, RE, TF, WF, YT) | `UNSUPPORTED_COUNTRY` | The SWIFT IBAN registry release 100 lists these territories under FR or FI; see [docs/registry-audit.md](../docs/registry-audit.md). |
+| 14 | commons-validator: valid IBANs of territories (AX, BL, GF, GP, MF, MQ, NC, PF, PM, RE, TF, WF, YT) | `UNSUPPORTED_COUNTRY` | The SWIFT IBAN registry release 103 lists these territories under FR or FI; see [docs/registry-audit.md](../docs/registry-audit.md). |
 | 1 | schwifty: valid IBAN of Senegal | `UNSUPPORTED_COUNTRY` | No registry entry; schwifty lists the same IBAN as experimental. |
-| 2 | schwifty: experimental IBANs of HN and YE | valid | Part of registry release 100. |
+| 2 | schwifty: experimental IBANs of HN and YE | valid | Part of registry release 103. |
 | 11 | python-stdnum: valid IBANs with `-` or `.` | `INVALID_CHARACTER` | pololei accepts the electronic and the print format; stdnum removes these separators first. |
 | 1 | python-stdnum: valid BIC `GEBA-BEBB` | `INVALID_LENGTH` | Same for a BIC. |
 | 1 | python-stdnum: invalid Belgian IBAN | valid, national check fails | stdnum.be.iban includes the national check digits; pololei reports them with the national check. |
-| 7 | commons-validator, sepa_king: invalid IBANs in lower case or with spaces | valid | pololei accepts lower case letters and spaces and normalizes them. |
+| 11 | commons-validator, sepa_king, sepa_rator: invalid IBANs in lower case or with spaces | valid | pololei accepts lower case letters and spaces and normalizes them; sepa_rator rejects them on purpose, because SEPA XML files need the electronic format. |
+
+sepa_rator, the maintained successor of sepa_king, contains the same Creditor Identifier cases with
+corrected check digits (CH13, SE41, PL18, NO38, BG07, AT88, FR72, NL42) and checks them with MOD 97-10;
+pololei accepts all ten. This confirms the eight sepa_king differences independently.
 
 Every IBAN the upstream projects call valid and pololei accepts also passes its national check digits
 where pololei has a rule.
@@ -108,6 +112,7 @@ text field; `null` and an empty string mean "not set".
 | [Apache Commons Validator](https://github.com/apache/commons-validator) | `8ca512b49d1ca58b61ebf11af82f0e714fb3be56` | 1 | 126 | Apache-2.0; NOTICE included |
 | [schwifty](https://github.com/mdomke/schwifty) | `a9be09003d41397526201edb2999951720961441` | 2 | 137 | MIT |
 | [sepa_king](https://github.com/salesking/sepa_king) | `41d561362e7af4bcd7da7bfad97e6e5e2d32f7bb` | 1 | 27 | MIT |
+| [sepa_rator](https://github.com/AdVitam/sepa_rator) | `1d6e9cae16172b108dca14b59cbaff6edc7b5754` | 1 | 34 | MIT |
 | [girocode](https://github.com/mtgrosser/girocode) | `79db005c563fb38e713cb281388e9b6b3b9676d0` | 1 | 5 cases | MIT |
 | [payme](https://github.com/jovandeginste/payme) | `c9df800fc935c1a5dafd21aaa9c1da23c01fc441` | 2 | 3 cases | MIT |
 | [sepa-payment-qr-code](https://github.com/derhuerst/sepa-payment-qr-code) | `62d7b9d4ad44c9e257dc9c7b45dcb00565bf1bd9` | 1 | 4 cases | ISC |
@@ -116,7 +121,7 @@ text field; `null` and an empty string mean "not set".
 The original files are retained under `src/test/resources/corpus/<source>/`, preserving their
 upstream paths: `tests/test_iban.doctest`, `tests/test_bic.doctest` and `tests/test_be_iban.doctest`
 of python-stdnum, `IBANValidatorTest.java` of Commons Validator, `tests/test_iban.py` and
-`tests/test_bic.py` of schwifty, `spec/validator_spec.rb` of sepa_king, `test/girocode_test.rb` of
+`tests/test_bic.py` of schwifty, `spec/validator_spec.rb` of sepa_king and of sepa_rator, `test/girocode_test.rb` of
 girocode, `pkg/payment/payment_test.go` and `pkg/payment/output_test.go` (constants) of payme,
 `test.js` of sepa-payment-qr-code, and `tests/test_helpers_epcqr.py` of segno. Only the sections listed
 in `sections.tsv` and the cases of `epc-cases.tsv` are used; the rest of each file is code of the

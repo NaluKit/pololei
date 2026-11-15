@@ -289,7 +289,20 @@ bic.isTestBic();            // false (true if the location code ends with 0)
 Bic.validate(input);        // ValidationResult<Bic, BicError>
 Bic.isValid(input);         // boolean
 Bic.tryParse(input);        // Optional<Bic>
+
+Bic.of("DEUT", "DE", "FF", "500");               // DEUTDEFF500, from components; without branch code DEUTDEFF
+Bic.random(new Random(42));                      // test data: random country, 8 characters
+Bic.random(new Random(42), 11);                  // with branch code
+Bic.random("DE", new SecureRandom(), 11);        // fixed country
 ```
+
+`Bic.of(...)` checks every component for its own length (4, 2, 2 and 3 characters) and the result by the rules of
+`Bic.parse`; an invalid component throws an `InvalidBicException` that names it.
+
+`Bic.random(...)` uses the given `Random` directly, so the same seed, country and length give the same BIC for the
+same pololei version. Country and length (8 or 11) can be set; an unknown country throws an `InvalidBicException`, any
+other length an `IllegalArgumentException`. The generated BIC passes `Bic.validate` and is never a test BIC, but
+syntactic validity is neither a SWIFT registration nor a guarantee that no real institution uses it.
 
 A BIC has 8 or 11 letters or digits, and characters 5-6 must be a known ISO 3166-1 country code (including XK
 for Kosovo). Following ISO 9362:2022, the first four characters may contain digits. Whether a BIC is actually
@@ -362,7 +375,7 @@ authorities, and `of(...)` only calculates check digits, for example for test da
 
 ## Country data
 
-`IbanRegistry` provides the IBAN definition of every country that uses IBAN (89 countries in release 100): BBAN
+`IbanRegistry` provides the IBAN definition of every country that uses IBAN (89 countries in release 103): BBAN
 structure, length, position of bank and branch identifier, BBAN layout, SEPA membership and an example IBAN.
 
 ```java
@@ -373,7 +386,7 @@ germany.bbanLayout();       // [BANK_IDENTIFIER 1-8, ACCOUNT_NUMBER 9-18]
 germany.isSepa();           // true
 IbanRegistry.isSupported("US");   // false
 IbanRegistry.countries();   // all countries, ordered by country code
-IbanRegistry.source();      // SWIFT IBAN Registry Release 100
+IbanRegistry.source();      // SWIFT IBAN Registry Release 103
 ```
 
 The data is generated Java code (`IbanRegistryData`), so it works in GWT without resources. To update it,
@@ -427,7 +440,7 @@ mvn verify
 GWT-RPC calls against a test servlet. CI builds and tests with Java 21 and 25.
 
 The profile `corpus` adds [test-pololei-corpus](test-pololei-corpus/README.md): IBANs, BICs, Creditor Identifiers and
-EPC QR code cases from the unchanged test files of eight public projects, pinned to a commit, with a reviewed
+EPC QR code cases from the unchanged test files of nine public projects, pinned to a commit, with a reviewed
 expectation for every value and case and the reason for every difference to the upstream statement. CI builds always
 include it:
 
@@ -493,7 +506,7 @@ Classpath Exception. Preserve the applicable licenses and notices when distribut
 ### External data and specifications
 
 - **SWIFT IBAN Registry:** `IbanRegistryData.java` contains country definitions and example IBANs generated from
-  the registry labelled release 100; derived values also occur in test fixtures and the registry audit.
+  the registry labelled release 103 (September 2026); derived values also occur in test fixtures and the registry audit.
   The original registry download is not included. SWIFT's publications and
   [website terms](https://www.swift.com/about-us/legal/online-services/swift-website-terms-use) reserve rights;
   public download availability is not an Apache-2.0 grant. No permission establishing unrestricted redistribution
