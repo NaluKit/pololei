@@ -127,4 +127,30 @@ public class GwtTestEpc
                                     .lines()
                                     .get(7));
   }
+
+  public void testWhitespace() {
+    String[] blanks = { " ", "\t", " ", "    " };
+    for (String blank : blanks) {
+      try {
+        belgian().remittanceReference(blank)
+                 .build();
+        fail("exception expected for [" + blank + "]");
+      } catch (IllegalArgumentException expected) {
+        assertEquals("remittanceReference must not consist of whitespace only", expected.getMessage());
+      }
+      try {
+        belgian().beneficiaryName(blank)
+                 .build();
+        fail("exception expected for [" + blank + "]");
+      } catch (IllegalArgumentException expected) {
+        assertEquals("beneficiaryName must not consist of whitespace only", expected.getMessage());
+      }
+    }
+    assertEquals(" Urgency fund ", belgian().remittanceText(" Urgency fund ")
+                                            .build()
+                                            .lines()
+                                            .get(10));
+    assertEquals(belgian().build(), belgian().remittanceText("")
+                                             .build());
+  }
 }

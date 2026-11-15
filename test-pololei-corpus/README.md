@@ -8,7 +8,7 @@ other formats of input, territories, deliberate errors, and other implementation
 
 **Results: 1131 values from 7 files (580 IBANs, 537 BICs, 14 Creditor Identifiers). pololei agrees with the upstream statement for 1086 of them; 45 results are explained one by one.**
 
-**EPC QR code: 67 cases from 4 files; pololei builds 40 payloads and rejects 27 inputs. It agrees with the upstream test for 57 cases; 10 results are explained one by one.**
+**EPC QR code: 67 cases from 4 files; pololei builds 39 payloads and rejects 28 inputs. It agrees with the upstream test for 58 cases; 9 results are explained one by one.**
 
 `ManifestSummaryTest` compares these numbers with the expectations, so they cannot drift apart.
 A passing corpus test confirms the documented baseline, including the differences. It does not
@@ -90,14 +90,14 @@ cases for illegal encodings are not included: the builder takes the character se
 Both examples of [EPC069-12 v3.0](https://europeanpaymentscouncil.eu/sites/default/files/kb/file/2022-09/EPC069-12%20v3.0%20Quick%20Response%20Code%20-%20Guidelines%20to%20Enable%20the%20Data%20Capture%20for%20the%20Initiation%20of%20an%20SCT_0.pdf),
 section 2.3, are covered: example 1 completely by girocode (`girocode-1`) and with its 96 bytes in UTF-8
 by segno, example 2 completely by girocode in UTF-8 (`girocode-3`) and with its 103 bytes in ISO 8859-1
-by segno. pololei agrees with all of them.
+by segno. pololei agrees with all of them. Like segno, pololei rejects a value of whitespace only in a
+text field; `null` and an empty string mean "not set".
 
 | Cases | Upstream | pololei | Reason |
 | ---: | --- | --- | --- |
 | 2 | payme: payload with trailing line feeds, IBAN with spaces, `EUR12.30` | payload without them | EPC069-12 section 2.2: the last populated element is not followed by a separator; the examples of section 2.3 show the IBAN without spaces and `EUR12.3`. |
 | 2 | sepa-payment-qr-code: payload with structured reference, unstructured text left out | rejected | Section 2.2: only one of both may be populated; the library silently drops the text it was given. |
 | 3 | segno: rejects a payload without remittance information | payload | Section 2.2 marks both remittance elements as optional. |
-| 1 | segno: rejects a reference of spaces only | payload | pololei accepts it as a value of 1 to 35 characters; see A8 in the task list. |
 | 2 | segno: rejects the purposes `DE1` and `x` | payload | Section 2.2: the purpose has 1 to 4 alphanumeric characters. |
 
 ## Sources and licenses

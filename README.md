@@ -326,8 +326,11 @@ payload.byteLength();    // 80, at most 331
 | `remittanceText(...)`           | optional, at most 140 characters; excludes `remittanceReference`                          |
 | `information(...)`              | optional, hint for the payer, at most 70 characters                                       |
 
-Texts must not contain line breaks, and the payload must not exceed 331 bytes in its character set. `build()`
-throws an `IllegalArgumentException` that names the field if a rule is violated.
+Texts must not contain line breaks, and the payload must not exceed 331 bytes in its character set. Texts are
+written exactly as given, including whitespace at the start or end; `null` and an empty string mean "not set", a value
+of whitespace only is rejected (a name of whitespace only does not satisfy the mandatory name). The purpose is not
+checked against the ISO 20022 code list and may be in lower case, as EPC069-12 allows. `build()` throws an
+`IllegalArgumentException` that names the field if a rule is violated.
 
 ## SEPA Creditor Identifier
 

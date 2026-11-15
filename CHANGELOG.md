@@ -21,7 +21,7 @@ reference in `docs/api/<version>.md`.
   every file, a reviewed expectation for every value and the reason for each of the 45 differences
   to the upstream statement. 67 EPC QR code cases from the tests of girocode, payme,
   sepa-payment-qr-code and segno, including both examples of EPC069-12, compare the payloads of
-  `pololei-epc` byte for byte or the rejected inputs; 10 differences are explained. `scripts/fixtures.py`
+  `pololei-epc` byte for byte or the rejected inputs; 9 differences are explained. `scripts/fixtures.py`
   verifies and restores the files.
 - The SWIFT IBAN registry file the country data is generated from is pinned by release and SHA-256
   in `scripts/registry/registry-source.properties`; `generate-registry.sh` rejects any other file
@@ -48,6 +48,13 @@ reference in `docs/api/<version>.md`.
 - Build plugins and test dependencies on the versions of the other NaluKit projects: JUnit 6.1.3,
   maven-compiler-plugin 3.16.0, maven-javadoc-plugin 3.12.0, flatten-maven-plugin 1.9.0,
   maven-resources-plugin 3.5.0; gwt-maven-plugin 1.3.0.
+
+### Changed behaviour
+
+- `EpcQrPayload.Builder` rejects a text field that consists of whitespace only (spaces, tabs, no-break
+  spaces) with `<field> must not consist of whitespace only`; before, such a value was written to the
+  payload, and a name of spaces satisfied the mandatory name. `null` and empty strings still mean
+  "not set", and whitespace around a value is still kept.
 
 ## [1.0.0-rc01] - 2026-11-03
 
