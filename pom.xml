@@ -68,7 +68,7 @@
     <plugin.enforcer.version>3.5.0</plugin.enforcer.version>
     <plugin.flatten.version>1.8.0</plugin.flatten.version>
     <plugin.gpg.version>3.2.7</plugin.gpg.version>
-    <plugin.gwt.version>1.1.0</plugin.gwt.version>
+    <plugin.gwt.version>1.3.0</plugin.gwt.version>
     <plugin.jar.version>3.4.2</plugin.jar.version>
     <plugin.javadoc.version>3.11.2</plugin.javadoc.version>
     <plugin.license.version>4.6</plugin.license.version>
