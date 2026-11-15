@@ -1,0 +1,47 @@
+[
+  {
+    "file": "licenses/python-stdnum-COPYING",
+    "source": "https://raw.githubusercontent.com/arthurdejong/python-stdnum/7ddf2ed279bbd46c44c6661f3bdaaac29d3adf0c/COPYING",
+    "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95"
+  },
+  {
+    "file": "licenses/commons-validator-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/apache/commons-validator/8ca512b49d1ca58b61ebf11af82f0e714fb3be56/LICENSE.txt",
+    "sha256": "b1d2870f1a00e4d7f56576e5f0870cba109e041f8af66866cf5b499478e654e7"
+  },
+  {
+    "file": "licenses/commons-validator-NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/apache/commons-validator/8ca512b49d1ca58b61ebf11af82f0e714fb3be56/NOTICE.txt",
+    "sha256": "ef5bb0660cc06604709d81542c4e07e4892c57a2fa85c5ace29fbc5073534690"
+  },
+  {
+    "file": "licenses/schwifty-LICENSE",
+    "source": "https://raw.githubusercontent.com/mdomke/schwifty/a9be09003d41397526201edb2999951720961441/LICENSE",
+    "sha256": "de82f06c9e2b390af8f8d06be4a2115990e9e1130bb17ba76a8c85469651460e"
+  },
+  {
+    "file": "licenses/sepa_king-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/salesking/sepa_king/41d561362e7af4bcd7da7bfad97e6e5e2d32f7bb/LICENSE.txt",
+    "sha256": "b57db2e6a43f346d2e62cf3a100d7ae811146b907cdc98fad3297d063664ea17"
+  },
+  {
+    "file": "licenses/girocode-LICENSE",
+    "source": "https://raw.githubusercontent.com/mtgrosser/girocode/79db005c563fb38e713cb281388e9b6b3b9676d0/LICENSE",
+    "sha256": "0d26c13e865e44fa0df5bcd88ede401dc33f4fecb65f089a83912a1791a6934d"
+  },
+  {
+    "file": "licenses/payme-LICENSE",
+    "source": "https://raw.githubusercontent.com/jovandeginste/payme/c9df800fc935c1a5dafd21aaa9c1da23c01fc441/LICENSE",
+    "sha256": "d3f3f04314562c93006ba3cf629255980d917ff73faa887eedf35009a843f369"
+  },
+  {
+    "file": "licenses/sepa-payment-qr-code-license.md",
+    "source": "https://raw.githubusercontent.com/derhuerst/sepa-payment-qr-code/62d7b9d4ad44c9e257dc9c7b45dcb00565bf1bd9/license.md",
+    "sha256": "fa85b6d0b437b979895fbe5d73ff50cf62c593a51063556678244e5508720df1"
+  },
+  {
+    "file": "licenses/segno-LICENSE",
+    "source": "https://raw.githubusercontent.com/heuer/segno/b11dc2913c22b22b3bc0a6efaa989904c44977bf/LICENSE",
+    "sha256": "de6c85fccf5d52902aa13dfe2dc6d2a2a106fc3419ed438f3460f0d4b76a6935"
+  }
+]

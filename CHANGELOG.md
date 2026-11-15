@@ -19,7 +19,10 @@ reference in `docs/api/<version>.md`.
   published): 1131 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
   of python-stdnum, Apache Commons Validator, schwifty and sepa_king, with SHA-256 and license of
   every file, a reviewed expectation for every value and the reason for each of the 45 differences
-  to the upstream statement. `scripts/fixtures.py` verifies and restores the files.
+  to the upstream statement. 67 EPC QR code cases from the tests of girocode, payme,
+  sepa-payment-qr-code and segno, including both examples of EPC069-12, compare the payloads of
+  `pololei-epc` byte for byte or the rejected inputs; 10 differences are explained. `scripts/fixtures.py`
+  verifies and restores the files.
 - The SWIFT IBAN registry file the country data is generated from is pinned by release and SHA-256
   in `scripts/registry/registry-source.properties`; `generate-registry.sh` rejects any other file
   and writes the SHA-256 to `IbanRegistryData`. `IbanRegistrySourceTest` keeps the pinned values,

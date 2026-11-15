@@ -423,9 +423,10 @@ mvn verify
 `pololei-gwt` compiles the sources with the GWT compiler and runs `PololeiGwtSuite` as JavaScript, including real
 GWT-RPC calls against a test servlet. CI builds and tests with Java 21 and 25.
 
-The profile `corpus` adds [test-pololei-corpus](test-pololei-corpus/README.md): IBANs, BICs and Creditor Identifiers
-from the unchanged test files of four public projects, pinned to a commit, with a reviewed expectation for every
-value and the reason for every difference to the upstream statement. CI builds always include it:
+The profile `corpus` adds [test-pololei-corpus](test-pololei-corpus/README.md): IBANs, BICs, Creditor Identifiers and
+EPC QR code cases from the unchanged test files of eight public projects, pinned to a commit, with a reviewed
+expectation for every value and case and the reason for every difference to the upstream statement. CI builds always
+include it:
 
 ```bash
 mvn verify -P corpus

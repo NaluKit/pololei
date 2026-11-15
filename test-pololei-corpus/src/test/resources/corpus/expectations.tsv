@@ -1,0 +1,1132 @@
+file	line	kind	upstream	value	result	national	note
+python-stdnum/tests/test_iban.doctest	29	IBAN	invalid	0001	INVALID_COUNTRY_CODE	INVALID_COUNTRY_CODE	
+python-stdnum/tests/test_iban.doctest	37	IBAN	invalid	XX431234	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+python-stdnum/tests/test_iban.doctest	47	IBAN	valid	AD12 0001 2030 2003 5910 0100	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	48	IBAN	valid	AD1200012030200359100100	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	49	IBAN	valid	AE070331234567890123456	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	50	IBAN	valid	AL47 2121 1009 0000 0002 3569 8741	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	51	IBAN	valid	AL47212110090000000235698741	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	52	IBAN	valid	AT61 1904 3002 3457 3201	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	53	IBAN	valid	AT611904300234573201	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	54	IBAN	valid	AZ21NABZ00000000137010001944	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	55	IBAN	valid	BA39 1290 0794 0102 8494	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	56	IBAN	valid	BA391290079401028494	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	57	IBAN	valid	BG80 BNBG 9661 1020 3456 78	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	58	IBAN	valid	BG80BNBG96611020345678	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	59	IBAN	valid	BH67BMAG00001299123456	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	60	IBAN	valid	BR1800000000141455123924100C2	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	61	IBAN	valid	BR9700360305000010009795493P1	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	62	IBAN	valid	CH93 0076 2011 6238 5295 7	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	63	IBAN	valid	CH9300762011623852957	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	64	IBAN	valid	CY17 0020 0128 0000 0012 0052 7600	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	65	IBAN	valid	CY17002001280000001200527600	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	66	IBAN	valid	CZ65 0800 0000 1920 0014 5399	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	67	IBAN	valid	CZ6508000000192000145399	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	68	IBAN	valid	CZ94 5500 0000 0010 1103 8930	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	69	IBAN	valid	CZ9455000000001011038930	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	70	IBAN	valid	DE89 3704 0044 0532 0130 00	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	71	IBAN	valid	DE89370400440532013000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	72	IBAN	valid	DK50 0040 0440 1162 43	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	73	IBAN	valid	DK5000400440116243	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	74	IBAN	valid	DO28BAGR00000001212453611324	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	75	IBAN	valid	EE38 2200 2210 2014 5685	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	76	IBAN	valid	EE382200221020145685	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	77	IBAN	valid	ES 58 0049 0290 3424 1352 8341	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	78	IBAN	valid	ES04 0075 0078 0605 0005 0355	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	79	IBAN	valid	ES0521053014113400002160	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	80	IBAN	valid	ES10 0075 0080 11 0600658108	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	81	IBAN	valid	ES15-0049-1806-9121-1186-9374	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_iban.doctest	82	IBAN	valid	ES2030810089311100269222	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	83	IBAN	valid	ES24 2090 3191 1400 4012 1040	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	84	IBAN	valid	ES27 3183 1500 9600 0121 0562	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	85	IBAN	valid	ES28 2104 0485 5390 6968 2983	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	86	IBAN	valid	ES29 2100 2815 9822 0059 9427	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	87	IBAN	valid	ES37 2038 8700 7861 0000 9781	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	88	IBAN	valid	ES39 0081 0294 66 0001238624	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	89	IBAN	valid	ES58 1465 0100 9719 0014 4593	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	90	IBAN	valid	ES59 0049 5030 1129 1601 1246	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	91	IBAN	valid	ES62 2100 4288 5922 0010 4465	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	92	IBAN	valid	ES72 2013-0692-81-0201150993	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_iban.doctest	93	IBAN	valid	ES72 2048 1075 8334 0000 2171	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	94	IBAN	valid	ES81 0081 5515 2900 0157 5763	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	95	IBAN	valid	ES8521005731710200031769	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	96	IBAN	valid	ES86 2013 0095 1102 0142 6812	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	97	IBAN	valid	ES86 30580157682720001384	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	98	IBAN	valid	ES88 2095 0497 9191 0708 8631	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	99	IBAN	valid	ES91 2100 0418 4502 0005 1332	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	100	IBAN	valid	ES9121000418450200051332	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	101	IBAN	valid	ES98 0049 5442 2227 1606 6973	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	102	IBAN	valid	FI21 1234 5600 0007 85	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	103	IBAN	valid	FI2112345600000785	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	104	IBAN	valid	FI5542345670000081	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	105	IBAN	valid	FO62 6460 0001 6316 34	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	106	IBAN	valid	FO6264600001631634	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	107	IBAN	valid	FR14 2004 1010 0505 0001 3M02 606	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	108	IBAN	valid	FR1420041010050500013M02606	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	109	IBAN	valid	GB29 NWBK 6016 1331 9268 19	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	110	IBAN	valid	GB29NWBK60161331926819	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	111	IBAN	valid	GE29 NB00 0000 0101 9049 17	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	112	IBAN	valid	GE29NB0000000101904917	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	113	IBAN	valid	GI75 NWBK 0000 0000 7099 453	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	114	IBAN	valid	GI75NWBK000000007099453	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	115	IBAN	valid	GL89 6471 0001 0002 06	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	116	IBAN	valid	GL8964710001000206	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	117	IBAN	valid	GR16 0110 1250 0000 0001 2300 695	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	118	IBAN	valid	GR1601101250000000012300695	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	119	IBAN	valid	GT82TRAJ01020000001210029690	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	120	IBAN	valid	HR12 1001 0051 8630 0016 0	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	121	IBAN	valid	HR1210010051863000160	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	122	IBAN	valid	HU42 1177 3016 1111 1018 0000 0000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	123	IBAN	valid	HU42117730161111101800000000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	124	IBAN	valid	IE29 AIBK 9311 5212 3456 78	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	125	IBAN	valid	IE29AIBK93115212345678	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	126	IBAN	valid	IL62 0108 0000 0009 9999 999	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	127	IBAN	valid	IL620108000000099999999	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	128	IBAN	valid	IS14 0159 2600 7654 5510 7303 39	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	129	IBAN	valid	IS140159260076545510730339	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	130	IBAN	valid	IT60 X054 2811 1010 0000 0123 456	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	131	IBAN	valid	IT60X0542811101000000123456	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	132	IBAN	valid	JO94CBJO0010000000000131000302	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	133	IBAN	valid	KZ86125KZT5004100100	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	134	IBAN	valid	LB62 0999 0000 0001 0019 0122 9114	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	135	IBAN	valid	LB62099900000001001901229114	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	136	IBAN	valid	LI21 0881 0000 2324 013A A	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	137	IBAN	valid	LI21088100002324013AA	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	138	IBAN	valid	LT12 1000 0111 0100 1000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	139	IBAN	valid	LT121000011101001000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	140	IBAN	valid	LU28 0019 4006 4475 0000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	141	IBAN	valid	LU280019400644750000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	142	IBAN	valid	LV80 BANK 0000 4351 9500 1	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	143	IBAN	valid	LV80BANK0000435195001	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	144	IBAN	valid	MC11 1273 9000 7000 1111 1000 h79	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	145	IBAN	valid	MC1112739000700011111000h79	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	146	IBAN	valid	MD24AG000225100013104168	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	147	IBAN	valid	ME 25 5403 0000 2379 9201 09	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	148	IBAN	valid	ME 2551 0000 0000 0623 4133	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	149	IBAN	valid	ME 25510260797324001246	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	150	IBAN	valid	ME 25525007010044076639	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	151	IBAN	valid	ME 25535005130000020047	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	152	IBAN	valid	ME 25540000007300246820	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	153	IBAN	valid	ME 25550005080000004970	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	154	IBAN	valid	ME25 5050 0001 2345 6789 51	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	155	IBAN	valid	ME25505000012345678951	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	156	IBAN	valid	MK072 5012 0000 0589 84	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	157	IBAN	valid	MK07250120000058984	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	158	IBAN	valid	MR13 0002 0001 0100 0012 3456 753	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	159	IBAN	valid	MR1300020001010000123456753	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	160	IBAN	valid	MT84 MALT 0110 0001 2345 MTLC AST0 01S	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	161	IBAN	valid	MT84MALT011000012345MTLCAST001S	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	162	IBAN	valid	MU17 BOMM 0101 1010 3030 0200 000M UR	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	163	IBAN	valid	MU17 BOMM0101101030300200000MUR	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	164	IBAN	valid	NL91 ABNA 0417 1643 00	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	165	IBAN	valid	NL91ABNA0417164300	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	166	IBAN	valid	NO 02 15037577003	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	167	IBAN	valid	NO 05 15030383041	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	168	IBAN	valid	NO 0560110516994	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	169	IBAN	valid	NO 0571 3905 25162	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	170	IBAN	valid	NO 0828014322061	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	171	IBAN	valid	NO 1232600465693	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	172	IBAN	valid	NO 19 4920 06 96270	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	173	IBAN	valid	NO 21 650 405 251 19	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	174	IBAN	valid	NO 2342009668904	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	175	IBAN	valid	NO 26 7032 0516 038	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	176	IBAN	valid	NO 3036245391786	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	177	IBAN	valid	NO 31 6018 04 47124	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	178	IBAN	valid	NO 33 4270 06 08551	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	179	IBAN	valid	NO 35 9650 05 73667	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	180	IBAN	valid	NO 39 4750 07 95936	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	181	IBAN	valid	NO 39 6318 05 01489	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	182	IBAN	valid	NO 39 7874 0597 506	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	183	IBAN	valid	NO 40 1503 7355 353	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	184	IBAN	valid	NO 402333 06 01019	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	185	IBAN	valid	NO 43 651 204 471 94	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	186	IBAN	valid	NO 44 1850.05.14562	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_iban.doctest	187	IBAN	valid	NO 4575600702548	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	188	IBAN	valid	NO 5314300642641	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	189	IBAN	valid	NO 57 78740655867	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	190	IBAN	valid	NO 5997501101463	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	191	IBAN	valid	NO 62 650 204 441 20	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	192	IBAN	valid	NO 6865040505746	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	193	IBAN	valid	NO 6940872430085	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	194	IBAN	valid	NO 6947780786090	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	195	IBAN	valid	NO 71 7694 05 00903	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	196	IBAN	valid	NO 7615030839797	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	197	IBAN	valid	NO 89 42004151326	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	198	IBAN	valid	NO 91 16024246306	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	199	IBAN	valid	NO05 7058 0555 568	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	200	IBAN	valid	NO07.8380.08.06006	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_iban.doctest	201	IBAN	valid	NO1782000193468	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	202	IBAN	valid	NO2476940517075	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	203	IBAN	valid	NO38 8200 06 10190	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	204	IBAN	valid	NO4697500641723	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	205	IBAN	valid	NO5876940518888	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	206	IBAN	valid	NO71.4202.47.14777	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_iban.doctest	207	IBAN	valid	NO77 7694 0511 077	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	208	IBAN	valid	NO89 4760 5692 776	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	209	IBAN	valid	NO8976940512510	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	210	IBAN	valid	NO93 8601 1117 947	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	211	IBAN	valid	NO9386011117947	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	212	IBAN	valid	NO9832271000153	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	213	IBAN	valid	PK36SCBL0000001123456702	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	214	IBAN	valid	PL61 1090 1014 0000 0712 1981 2874	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	215	IBAN	valid	PL61109010140000071219812874	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	216	IBAN	valid	PS92PALS000000000400123456702	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	217	IBAN	valid	PT50 0002 0123 1234 5678 9015 4	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	218	IBAN	valid	PT50000201231234567890154	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	219	IBAN	valid	QA58DOHB00001234567890ABCDEFG	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	220	IBAN	valid	RO49 AAAA 1B31 0075 9384 0000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	221	IBAN	valid	RO49AAAA1B31007593840000	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	222	IBAN	valid	RS35 2600 0560 1001 6113 79	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	223	IBAN	valid	RS35260005601001611379	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	224	IBAN	valid	SA03 8000 0000 6080 1016 7519	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	225	IBAN	valid	SA0380000000608010167519	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	226	IBAN	valid	SE45 5000 0000 0583 9825 7466	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	227	IBAN	valid	SE4550000000058398257466	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	228	IBAN	valid	SI56 1910 0000 0123 438	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	229	IBAN	valid	SI56191000000123438	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	230	IBAN	valid	SK31 1200 0000 1987 4263 7541	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	231	IBAN	valid	SK3112000000198742637541	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	232	IBAN	valid	SM86 U032 2509 8000 0000 0270 100	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	233	IBAN	valid	SM86U0322509800000000270100	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	234	IBAN	valid	TL 38 008 00123456789101 57	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	235	IBAN	valid	TN59 1000 6035 1835 9847 8831	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	236	IBAN	valid	TN5910006035183598478831	VALID	VALID/PASSED	
+python-stdnum/tests/test_iban.doctest	237	IBAN	valid	TR33 0006 1005 1978 6457 8413 26	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	238	IBAN	valid	TR330006100519786457841326	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	239	IBAN	valid	VG96VPVG0000012345678901	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	240	IBAN	valid	XK051212012345678906	VALID	VALID/NOT_SUPPORTED	
+python-stdnum/tests/test_iban.doctest	249	IBAN	invalid	AL48212110090000000235698741	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	250	IBAN	invalid	AD1210012030200359100100	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	251	IBAN	invalid	AT611804300234573201	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	252	IBAN	invalid	BE68530907547034	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	253	IBAN	invalid	BA391290709401028494	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	254	IBAN	invalid	BG80BNBG99611020345678	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	255	IBAN	invalid	HR1210010052863000160	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	256	IBAN	invalid	CY17002001281000001200527600	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	257	IBAN	invalid	CZ6508000000129000145399	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	258	IBAN	invalid	CZ9455000000000101038930	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	259	IBAN	invalid	DK5000400440116342	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	268	IBAN	invalid	AD48 0001 2030 2003 5910 01	INVALID_LENGTH	INVALID_LENGTH	
+python-stdnum/tests/test_iban.doctest	269	IBAN	invalid	AT93 1904 3002 3457 3201 99	INVALID_LENGTH	INVALID_LENGTH	
+python-stdnum/tests/test_iban.doctest	270	IBAN	invalid	BE36 5390 0754 7034 1234	INVALID_LENGTH	INVALID_LENGTH	
+python-stdnum/tests/test_iban.doctest	271	IBAN	invalid	BA30 1290 0794 0102 84	INVALID_LENGTH	INVALID_LENGTH	
+python-stdnum/tests/test_iban.doctest	282	IBAN	invalid	BG93 BNBG 9661 1A20 3456 78	INVALID_BBAN	INVALID_BBAN	
+python-stdnum/tests/test_iban.doctest	283	IBAN	invalid	GI22 NW3K 0000 0000 7099 453	INVALID_BBAN	INVALID_BBAN	
+python-stdnum/tests/test_iban.doctest	284	IBAN	invalid	NL56 3003 0A17 1643 00	INVALID_BBAN	INVALID_BBAN	
+python-stdnum/tests/test_iban.doctest	285	IBAN	invalid	QQ93 1234 5678	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+python-stdnum/tests/test_iban.doctest	295	IBAN	national-invalid	ES2121000418450200051331	VALID	INVALID_NATIONAL_CHECK_DIGITS	
+python-stdnum/tests/test_iban.doctest	296	IBAN	national-invalid	ES89 3183 1500 9500 0121 0562	VALID	INVALID_NATIONAL_CHECK_DIGITS	
+python-stdnum/tests/test_bic.doctest	28	BIC	invalid	MULTIPLE	UNKNOWN_COUNTRY	-	
+python-stdnum/tests/test_bic.doctest	38	BIC	valid	ABNCNL2AGIR	VALID	-	
+python-stdnum/tests/test_bic.doctest	39	BIC	valid	ABNNSVS2	VALID	-	
+python-stdnum/tests/test_bic.doctest	40	BIC	valid	ABOCCNBJ270	VALID	-	
+python-stdnum/tests/test_bic.doctest	41	BIC	valid	ABOCKRSE	VALID	-	
+python-stdnum/tests/test_bic.doctest	42	BIC	valid	ACGDGDGD	VALID	-	
+python-stdnum/tests/test_bic.doctest	43	BIC	valid	ADECCH2G	VALID	-	
+python-stdnum/tests/test_bic.doctest	44	BIC	valid	AFDBCIABNPD	VALID	-	
+python-stdnum/tests/test_bic.doctest	45	BIC	valid	AFGMMGMG	VALID	-	
+python-stdnum/tests/test_bic.doctest	46	BIC	valid	AFROGB2L	VALID	-	
+python-stdnum/tests/test_bic.doctest	47	BIC	valid	AGBMDEMM	VALID	-	
+python-stdnum/tests/test_bic.doctest	48	BIC	valid	AGRIGPGX	VALID	-	
+python-stdnum/tests/test_bic.doctest	49	BIC	valid	AGTBIDJA	VALID	-	
+python-stdnum/tests/test_bic.doctest	50	BIC	valid	AGUBDZAL	VALID	-	
+python-stdnum/tests/test_bic.doctest	51	BIC	valid	AHCDDOS2	VALID	-	
+python-stdnum/tests/test_bic.doctest	52	BIC	valid	AIEPSGSGIWC	VALID	-	
+python-stdnum/tests/test_bic.doctest	53	BIC	valid	AIRRHKHH	VALID	-	
+python-stdnum/tests/test_bic.doctest	54	BIC	valid	AIYLKG22	VALID	-	
+python-stdnum/tests/test_bic.doctest	55	BIC	valid	ALCVLBBE	VALID	-	
+python-stdnum/tests/test_bic.doctest	56	BIC	valid	ALFXAEAD	VALID	-	
+python-stdnum/tests/test_bic.doctest	57	BIC	valid	ALLFLULLAFI	VALID	-	
+python-stdnum/tests/test_bic.doctest	58	BIC	valid	ANCEAOLU	VALID	-	
+python-stdnum/tests/test_bic.doctest	59	BIC	valid	ANDLTRISTUZ	VALID	-	
+python-stdnum/tests/test_bic.doctest	60	BIC	valid	ANIKAM22	VALID	-	
+python-stdnum/tests/test_bic.doctest	61	BIC	valid	ANZBSBSB	VALID	-	
+python-stdnum/tests/test_bic.doctest	62	BIC	valid	ANZBTONN	VALID	-	
+python-stdnum/tests/test_bic.doctest	63	BIC	valid	APDEVAVA	VALID	-	
+python-stdnum/tests/test_bic.doctest	64	BIC	valid	ARABBHBM	VALID	-	
+python-stdnum/tests/test_bic.doctest	65	BIC	valid	ARABJOAX	VALID	-	
+python-stdnum/tests/test_bic.doctest	66	BIC	valid	ARABPS22600	VALID	-	
+python-stdnum/tests/test_bic.doctest	67	BIC	valid	ARCGITMA	VALID	-	
+python-stdnum/tests/test_bic.doctest	68	BIC	valid	ARECAM22	VALID	-	
+python-stdnum/tests/test_bic.doctest	69	BIC	valid	AREXGHAC	VALID	-	
+python-stdnum/tests/test_bic.doctest	70	BIC	valid	ARUBAWAX	VALID	-	
+python-stdnum/tests/test_bic.doctest	71	BIC	valid	ARUNTJ22	VALID	-	
+python-stdnum/tests/test_bic.doctest	72	BIC	valid	ARVDTJ22	VALID	-	
+python-stdnum/tests/test_bic.doctest	73	BIC	valid	ASBBNZ2A	VALID	-	
+python-stdnum/tests/test_bic.doctest	74	BIC	valid	ASCMPKKA002	VALID	-	
+python-stdnum/tests/test_bic.doctest	75	BIC	valid	ASPMMYKL	VALID	-	
+python-stdnum/tests/test_bic.doctest	76	BIC	valid	ATBJBJBJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	77	BIC	valid	ATGWGWGW	VALID	-	
+python-stdnum/tests/test_bic.doctest	78	BIC	valid	ATTGTGTG	VALID	-	
+python-stdnum/tests/test_bic.doctest	79	BIC	valid	AUDBLBBX	VALID	-	
+python-stdnum/tests/test_bic.doctest	80	BIC	valid	AUIVAU2S	VALID	-	
+python-stdnum/tests/test_bic.doctest	81	BIC	valid	AVALUAUK	VALID	-	
+python-stdnum/tests/test_bic.doctest	82	BIC	valid	AWXLLT22	VALID	-	
+python-stdnum/tests/test_bic.doctest	83	BIC	valid	AXCWKWKW	VALID	-	
+python-stdnum/tests/test_bic.doctest	84	BIC	valid	AXISINBB389	VALID	-	
+python-stdnum/tests/test_bic.doctest	85	BIC	valid	AXSBBMHM	VALID	-	
+python-stdnum/tests/test_bic.doctest	86	BIC	valid	AZAMZMLU	VALID	-	
+python-stdnum/tests/test_bic.doctest	87	BIC	valid	AZRTAZ22	VALID	-	
+python-stdnum/tests/test_bic.doctest	88	BIC	valid	BAIPCVCV	VALID	-	
+python-stdnum/tests/test_bic.doctest	89	BIC	valid	BANOGLG2	VALID	-	
+python-stdnum/tests/test_bic.doctest	90	BIC	valid	BAPRNIMA	VALID	-	
+python-stdnum/tests/test_bic.doctest	91	BIC	valid	BARBFJFJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	92	BIC	valid	BARBKENAKIS	VALID	-	
+python-stdnum/tests/test_bic.doctest	93	BIC	valid	BARBSCSC	VALID	-	
+python-stdnum/tests/test_bic.doctest	94	BIC	valid	BARCSCSC	VALID	-	
+python-stdnum/tests/test_bic.doctest	95	BIC	valid	BAVDCVCP	VALID	-	
+python-stdnum/tests/test_bic.doctest	96	BIC	valid	BBDEBRSPBGS	VALID	-	
+python-stdnum/tests/test_bic.doctest	97	BIC	valid	BBICCWCW	VALID	-	
+python-stdnum/tests/test_bic.doctest	98	BIC	valid	BBONKYKY	VALID	-	
+python-stdnum/tests/test_bic.doctest	99	BIC	valid	BBVATWTP	VALID	-	
+python-stdnum/tests/test_bic.doctest	100	BIC	valid	BCAOMLBASIK	VALID	-	
+python-stdnum/tests/test_bic.doctest	101	BIC	valid	BCAOSNDP	VALID	-	
+python-stdnum/tests/test_bic.doctest	102	BIC	valid	BCBATCGP	VALID	-	
+python-stdnum/tests/test_bic.doctest	103	BIC	valid	BCBHDOSD	VALID	-	
+python-stdnum/tests/test_bic.doctest	104	BIC	valid	BCBTBZBZ	VALID	-	
+python-stdnum/tests/test_bic.doctest	105	BIC	valid	BCEXCOBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	106	BIC	valid	BCKICKCR	VALID	-	
+python-stdnum/tests/test_bic.doctest	107	BIC	valid	BCOMMOMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	108	BIC	valid	BCOMPTPL	VALID	-	
+python-stdnum/tests/test_bic.doctest	109	BIC	valid	BCPLBOLXSCZ	VALID	-	
+python-stdnum/tests/test_bic.doctest	110	BIC	valid	BCPOMAMCBRK	VALID	-	
+python-stdnum/tests/test_bic.doctest	111	BIC	valid	BCTLTLDA	VALID	-	
+python-stdnum/tests/test_bic.doctest	112	BIC	valid	BCYPCY2N	VALID	-	
+python-stdnum/tests/test_bic.doctest	113	BIC	valid	BDACEGCA084	VALID	-	
+python-stdnum/tests/test_bic.doctest	114	BIC	valid	BDGEGNGN	VALID	-	
+python-stdnum/tests/test_bic.doctest	115	BIC	valid	BDINIDJATPC	VALID	-	
+python-stdnum/tests/test_bic.doctest	116	BIC	valid	BEACGQGQ	VALID	-	
+python-stdnum/tests/test_bic.doctest	117	BIC	valid	BFCORERX	VALID	-	
+python-stdnum/tests/test_bic.doctest	118	BIC	valid	BFCOYTYT	VALID	-	
+python-stdnum/tests/test_bic.doctest	119	BIC	valid	BFMXAOLU	VALID	-	
+python-stdnum/tests/test_bic.doctest	120	BIC	valid	BGFICMCX	VALID	-	
+python-stdnum/tests/test_bic.doctest	121	BIC	valid	BGFIGALI	VALID	-	
+python-stdnum/tests/test_bic.doctest	122	BIC	valid	BHELSHJJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	123	BIC	valid	BIBDBNBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	124	BIC	valid	BICCKMKM	VALID	-	
+python-stdnum/tests/test_bic.doctest	125	BIC	valid	BICVNENI	VALID	-	
+python-stdnum/tests/test_bic.doctest	126	BIC	valid	BIMOMZMXFIN	VALID	-	
+python-stdnum/tests/test_bic.doctest	127	BIC	valid	BJAZSAJE002	VALID	-	
+python-stdnum/tests/test_bic.doctest	128	BIC	valid	BKAUATWWWOL	VALID	-	
+python-stdnum/tests/test_bic.doctest	129	BIC	valid	BKCHCNBJ260	VALID	-	
+python-stdnum/tests/test_bic.doctest	130	BIC	valid	BKCHJPJTOTM	VALID	-	
+python-stdnum/tests/test_bic.doctest	131	BIC	valid	BKIDJPJTOSK	VALID	-	
+python-stdnum/tests/test_bic.doctest	132	BIC	valid	BKIGRWRW	VALID	-	
+python-stdnum/tests/test_bic.doctest	133	BIC	valid	BKIRKIKI	VALID	-	
+python-stdnum/tests/test_bic.doctest	134	BIC	valid	BKKBHKHHMTG	VALID	-	
+python-stdnum/tests/test_bic.doctest	135	BIC	valid	BKKBKHPP	VALID	-	
+python-stdnum/tests/test_bic.doctest	136	BIC	valid	BKMOMSMS	VALID	-	
+python-stdnum/tests/test_bic.doctest	137	BIC	valid	BKNNSMSM	VALID	-	
+python-stdnum/tests/test_bic.doctest	138	BIC	valid	BLFLLI2X225	VALID	-	
+python-stdnum/tests/test_bic.doctest	139	BIC	valid	BMCEMAMCCOR	VALID	-	
+python-stdnum/tests/test_bic.doctest	140	BIC	valid	BMILHNTE	VALID	-	
+python-stdnum/tests/test_bic.doctest	141	BIC	valid	BMOCMZMP	VALID	-	
+python-stdnum/tests/test_bic.doctest	142	BIC	valid	BNDCCAMMVAL	VALID	-	
+python-stdnum/tests/test_bic.doctest	143	BIC	valid	BNEVKNNE	VALID	-	
+python-stdnum/tests/test_bic.doctest	144	BIC	valid	BNGRGRAACON	VALID	-	
+python-stdnum/tests/test_bic.doctest	145	BIC	valid	BNPAFRPPAUX	VALID	-	
+python-stdnum/tests/test_bic.doctest	146	BIC	valid	BNPAMQMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	147	BIC	valid	BNPANCNXKOU	VALID	-	
+python-stdnum/tests/test_bic.doctest	148	BIC	valid	BNPARERXPOR	VALID	-	
+python-stdnum/tests/test_bic.doctest	149	BIC	valid	BNPASARI	VALID	-	
+python-stdnum/tests/test_bic.doctest	150	BIC	valid	BNRWRWRW	VALID	-	
+python-stdnum/tests/test_bic.doctest	151	BIC	valid	BOFAIE3XFUT	VALID	-	
+python-stdnum/tests/test_bic.doctest	152	BIC	valid	BOMDMH22	VALID	-	
+python-stdnum/tests/test_bic.doctest	153	BIC	valid	BOSPCKCR	VALID	-	
+python-stdnum/tests/test_bic.doctest	154	BIC	valid	BPKOROBU	VALID	-	
+python-stdnum/tests/test_bic.doctest	155	BIC	valid	BPNGPGPM	VALID	-	
+python-stdnum/tests/test_bic.doctest	156	BIC	valid	BPOLPFTP	VALID	-	
+python-stdnum/tests/test_bic.doctest	157	BIC	valid	BPUNPKKACRU	VALID	-	
+python-stdnum/tests/test_bic.doctest	158	BIC	valid	BRASPYPX	VALID	-	
+python-stdnum/tests/test_bic.doctest	159	BIC	valid	BREDFJFJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	160	BIC	valid	BREDVUVU	VALID	-	
+python-stdnum/tests/test_bic.doctest	161	BIC	valid	BRHAHTPP	VALID	-	
+python-stdnum/tests/test_bic.doctest	162	BIC	valid	BRMXNENI	VALID	-	
+python-stdnum/tests/test_bic.doctest	163	BIC	valid	BSANADAD	VALID	-	
+python-stdnum/tests/test_bic.doctest	164	BIC	valid	BSAPPEPL	VALID	-	
+python-stdnum/tests/test_bic.doctest	165	BIC	valid	BSLJSI2XATM	VALID	-	
+python-stdnum/tests/test_bic.doctest	166	BIC	valid	BSLULCLC	VALID	-	
+python-stdnum/tests/test_bic.doctest	167	BIC	valid	BSUPARBATIT	VALID	-	
+python-stdnum/tests/test_bic.doctest	168	BIC	valid	BTRLRO22BNA	VALID	-	
+python-stdnum/tests/test_bic.doctest	169	BIC	valid	BTVAAT22KIB	VALID	-	
+python-stdnum/tests/test_bic.doctest	170	BIC	valid	BUNONIMA	VALID	-	
+python-stdnum/tests/test_bic.doctest	171	BIC	valid	CABARS22	VALID	-	
+python-stdnum/tests/test_bic.doctest	172	BIC	valid	CAGLESMMVIG	VALID	-	
+python-stdnum/tests/test_bic.doctest	173	BIC	valid	CBAOBFBG	VALID	-	
+python-stdnum/tests/test_bic.doctest	174	BIC	valid	CBBSBA2A	VALID	-	
+python-stdnum/tests/test_bic.doctest	175	BIC	valid	CBCUUYMMGPA	VALID	-	
+python-stdnum/tests/test_bic.doctest	176	BIC	valid	CBCYCY2NPMT	VALID	-	
+python-stdnum/tests/test_bic.doctest	177	BIC	valid	CBGIGYGG	VALID	-	
+python-stdnum/tests/test_bic.doctest	178	BIC	valid	CBININBI	VALID	-	
+python-stdnum/tests/test_bic.doctest	179	BIC	valid	CBKNNANAPCH	VALID	-	
+python-stdnum/tests/test_bic.doctest	180	BIC	valid	CBKUKWKWBOD	VALID	-	
+python-stdnum/tests/test_bic.doctest	181	BIC	valid	CBLELSMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	182	BIC	valid	CBOMOMRU	VALID	-	
+python-stdnum/tests/test_bic.doctest	183	BIC	valid	CBSISBSB	VALID	-	
+python-stdnum/tests/test_bic.doctest	184	BIC	valid	CCEICMCXDLA	VALID	-	
+python-stdnum/tests/test_bic.doctest	185	BIC	valid	CCIOCRSJBBI	VALID	-	
+python-stdnum/tests/test_bic.doctest	186	BIC	valid	CDCGWF2M	VALID	-	
+python-stdnum/tests/test_bic.doctest	187	BIC	valid	CDERCLRG	VALID	-	
+python-stdnum/tests/test_bic.doctest	188	BIC	valid	CDISALTR	VALID	-	
+python-stdnum/tests/test_bic.doctest	189	BIC	valid	CDSOGTG2	VALID	-	
+python-stdnum/tests/test_bic.doctest	190	BIC	valid	CEPANCNM	VALID	-	
+python-stdnum/tests/test_bic.doctest	191	BIC	valid	CESUUAU2	VALID	-	
+python-stdnum/tests/test_bic.doctest	192	BIC	valid	CGDITLDI	VALID	-	
+python-stdnum/tests/test_bic.doctest	193	BIC	valid	CHASARBA	VALID	-	
+python-stdnum/tests/test_bic.doctest	194	BIC	valid	CHASPHMMOBU	VALID	-	
+python-stdnum/tests/test_bic.doctest	195	BIC	valid	CHASTHBX	VALID	-	
+python-stdnum/tests/test_bic.doctest	196	BIC	valid	CHGLVGVG	VALID	-	
+python-stdnum/tests/test_bic.doctest	197	BIC	valid	CIBEEGCX166	VALID	-	
+python-stdnum/tests/test_bic.doctest	198	BIC	valid	CITCCWCU	VALID	-	
+python-stdnum/tests/test_bic.doctest	199	BIC	valid	CITGUS44EHP	VALID	-	
+python-stdnum/tests/test_bic.doctest	200	BIC	valid	CITINGLA	VALID	-	
+python-stdnum/tests/test_bic.doctest	201	BIC	valid	CLMDMGMG	VALID	-	
+python-stdnum/tests/test_bic.doctest	202	BIC	valid	CMBAAWAX	VALID	-	
+python-stdnum/tests/test_bic.doctest	203	BIC	valid	CMWBDMDM	VALID	-	
+python-stdnum/tests/test_bic.doctest	204	BIC	valid	CNBTIMDD	VALID	-	
+python-stdnum/tests/test_bic.doctest	205	BIC	valid	CNVXBMHM	VALID	-	
+python-stdnum/tests/test_bic.doctest	206	BIC	valid	COEBLALA	VALID	-	
+python-stdnum/tests/test_bic.doctest	207	BIC	valid	COFDPEPL	VALID	-	
+python-stdnum/tests/test_bic.doctest	208	BIC	valid	CORIMLBA	VALID	-	
+python-stdnum/tests/test_bic.doctest	209	BIC	valid	CPITMNUB	VALID	-	
+python-stdnum/tests/test_bic.doctest	210	BIC	valid	CRDAADAD	VALID	-	
+python-stdnum/tests/test_bic.doctest	211	BIC	valid	CRESCHZZ12Q	VALID	-	
+python-stdnum/tests/test_bic.doctest	212	BIC	valid	CRTUGE22086	VALID	-	
+python-stdnum/tests/test_bic.doctest	213	BIC	valid	CSDLLT22	VALID	-	
+python-stdnum/tests/test_bic.doctest	214	BIC	valid	CTCBTWTP012	VALID	-	
+python-stdnum/tests/test_bic.doctest	215	BIC	valid	DABAFIHHHAM	VALID	-	
+python-stdnum/tests/test_bic.doctest	216	BIC	valid	DABAIE2D917	VALID	-	
+python-stdnum/tests/test_bic.doctest	217	BIC	valid	DBLNBJBJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	218	BIC	valid	DEUTESBBAP2	VALID	-	
+python-stdnum/tests/test_bic.doctest	219	BIC	valid	DFLTTTPS	VALID	-	
+python-stdnum/tests/test_bic.doctest	220	BIC	valid	DIETMCMC	VALID	-	
+python-stdnum/tests/test_bic.doctest	221	BIC	valid	DIKIBTBBORO	VALID	-	
+python-stdnum/tests/test_bic.doctest	222	BIC	valid	DKNBDKKKPLL	VALID	-	
+python-stdnum/tests/test_bic.doctest	223	BIC	valid	DOHBQAQAWBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	224	BIC	valid	DVKAKZKA	VALID	-	
+python-stdnum/tests/test_bic.doctest	225	BIC	valid	EBAPFRPS	VALID	-	
+python-stdnum/tests/test_bic.doctest	226	BIC	valid	ECAAKYK2	VALID	-	
+python-stdnum/tests/test_bic.doctest	227	BIC	valid	ECOCGQGQ	VALID	-	
+python-stdnum/tests/test_bic.doctest	228	BIC	valid	ECOCSTST	VALID	-	
+python-stdnum/tests/test_bic.doctest	229	BIC	valid	ECOCTGTA	VALID	-	
+python-stdnum/tests/test_bic.doctest	230	BIC	valid	EIKBFOTFKON	VALID	-	
+python-stdnum/tests/test_bic.doctest	231	BIC	valid	EMSYMTMT	VALID	-	
+python-stdnum/tests/test_bic.doctest	232	BIC	valid	ESTPSTST	VALID	-	
+python-stdnum/tests/test_bic.doctest	233	BIC	valid	ESYIPRSJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	234	BIC	valid	ETHNGRAATIP	VALID	-	
+python-stdnum/tests/test_bic.doctest	235	BIC	valid	EUBOBSNS	VALID	-	
+python-stdnum/tests/test_bic.doctest	236	BIC	valid	EXSKSKBX	VALID	-	
+python-stdnum/tests/test_bic.doctest	237	BIC	valid	EXTNKMKM	VALID	-	
+python-stdnum/tests/test_bic.doctest	238	BIC	valid	FARPSZMA	VALID	-	
+python-stdnum/tests/test_bic.doctest	239	BIC	valid	FCIBBBB2	VALID	-	
+python-stdnum/tests/test_bic.doctest	240	BIC	valid	FCIBTTP2	VALID	-	
+python-stdnum/tests/test_bic.doctest	241	BIC	valid	FCOHPAPA	VALID	-	
+python-stdnum/tests/test_bic.doctest	242	BIC	valid	FDSFLI22LV1	VALID	-	
+python-stdnum/tests/test_bic.doctest	243	BIC	valid	FIFBFOTX	VALID	-	
+python-stdnum/tests/test_bic.doctest	244	BIC	valid	FIRNBWGXCUS	VALID	-	
+python-stdnum/tests/test_bic.doctest	245	BIC	valid	FIRNLSMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	246	BIC	valid	FIVFPGPM	VALID	-	
+python-stdnum/tests/test_bic.doctest	247	BIC	valid	FLMSNANX	VALID	-	
+python-stdnum/tests/test_bic.doctest	248	BIC	valid	FLORNL2ACCB	VALID	-	
+python-stdnum/tests/test_bic.doctest	249	BIC	valid	FMBKDEMM258	VALID	-	
+python-stdnum/tests/test_bic.doctest	250	BIC	valid	FMBZZMLX	VALID	-	
+python-stdnum/tests/test_bic.doctest	251	BIC	valid	FPVCCOBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	252	BIC	valid	FTMDMD2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	253	BIC	valid	GBHAMQMM	VALID	-	
+python-stdnum/tests/test_bic.doctest	254	BIC	valid	GDAAETAA	VALID	-	
+python-stdnum/tests/test_bic.doctest	255	BIC	valid	GIBAHUHB	VALID	-	
+python-stdnum/tests/test_bic.doctest	256	BIC	valid	GMBKGUGU	VALID	-	
+python-stdnum/tests/test_bic.doctest	257	BIC	valid	GODOSRPA	VALID	-	
+python-stdnum/tests/test_bic.doctest	258	BIC	valid	GOLDBRSP	VALID	-	
+python-stdnum/tests/test_bic.doctest	259	BIC	valid	GRENGLGXKON	VALID	-	
+python-stdnum/tests/test_bic.doctest	260	BIC	valid	GTBGGMGM	VALID	-	
+python-stdnum/tests/test_bic.doctest	261	BIC	valid	GUTIGYGE	VALID	-	
+python-stdnum/tests/test_bic.doctest	262	BIC	valid	GVVGVCVC	VALID	-	
+python-stdnum/tests/test_bic.doctest	263	BIC	valid	HABAEE2XTIP	VALID	-	
+python-stdnum/tests/test_bic.doctest	264	BIC	valid	HAMBGIGI	VALID	-	
+python-stdnum/tests/test_bic.doctest	265	BIC	valid	HANDPLPW	VALID	-	
+python-stdnum/tests/test_bic.doctest	266	BIC	valid	HATHKHPP	VALID	-	
+python-stdnum/tests/test_bic.doctest	267	BIC	valid	HBBAMEPG	VALID	-	
+python-stdnum/tests/test_bic.doctest	268	BIC	valid	HDELSI22	VALID	-	
+python-stdnum/tests/test_bic.doctest	269	BIC	valid	ICBKKZKX	VALID	-	
+python-stdnum/tests/test_bic.doctest	270	BIC	valid	ICBKNZ2A	VALID	-	
+python-stdnum/tests/test_bic.doctest	271	BIC	valid	ICDJDJJD	VALID	-	
+python-stdnum/tests/test_bic.doctest	272	BIC	valid	ICGSGTGC	VALID	-	
+python-stdnum/tests/test_bic.doctest	273	BIC	valid	IFIPPHM2	VALID	-	
+python-stdnum/tests/test_bic.doctest	274	BIC	valid	IHSAMUMU	VALID	-	
+python-stdnum/tests/test_bic.doctest	275	BIC	valid	INCEGHAC	VALID	-	
+python-stdnum/tests/test_bic.doctest	276	BIC	valid	INUIHR22CUS	VALID	-	
+python-stdnum/tests/test_bic.doctest	277	BIC	valid	IOPRVAVX	VALID	-	
+python-stdnum/tests/test_bic.doctest	278	BIC	valid	ISGUGNGN	VALID	-	
+python-stdnum/tests/test_bic.doctest	279	BIC	valid	ISRAILIR	VALID	-	
+python-stdnum/tests/test_bic.doctest	280	BIC	valid	JNBSJMKN	VALID	-	
+python-stdnum/tests/test_bic.doctest	281	BIC	valid	JSCLUZ22	VALID	-	
+python-stdnum/tests/test_bic.doctest	282	BIC	valid	KBNONO22	VALID	-	
+python-stdnum/tests/test_bic.doctest	283	BIC	valid	KCBLTZTZ	VALID	-	
+python-stdnum/tests/test_bic.doctest	284	BIC	valid	KICPDMD2	VALID	-	
+python-stdnum/tests/test_bic.doctest	285	BIC	valid	KNANKNSK	VALID	-	
+python-stdnum/tests/test_bic.doctest	286	BIC	valid	KOMASK2XSNV	VALID	-	
+python-stdnum/tests/test_bic.doctest	287	BIC	valid	KOMBCZPP	VALID	-	
+python-stdnum/tests/test_bic.doctest	288	BIC	valid	KREZHR2XCUS	VALID	-	
+python-stdnum/tests/test_bic.doctest	289	BIC	valid	KTAYCRSJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	290	BIC	valid	KYRGKG22	VALID	-	
+python-stdnum/tests/test_bic.doctest	291	BIC	valid	LAPBLV2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	292	BIC	valid	LBDELRLM	VALID	-	
+python-stdnum/tests/test_bic.doctest	293	BIC	valid	LDBBLALA	VALID	-	
+python-stdnum/tests/test_bic.doctest	294	BIC	valid	LHFMJESH	VALID	-	
+python-stdnum/tests/test_bic.doctest	295	BIC	valid	LIVEDKKK	VALID	-	
+python-stdnum/tests/test_bic.doctest	296	BIC	valid	LMLDZWHA	VALID	-	
+python-stdnum/tests/test_bic.doctest	297	BIC	valid	LNLNNOB2D01	VALID	-	
+python-stdnum/tests/test_bic.doctest	298	BIC	valid	LUMIILIT	VALID	-	
+python-stdnum/tests/test_bic.doctest	299	BIC	valid	LUOBLCLC	VALID	-	
+python-stdnum/tests/test_bic.doctest	300	BIC	valid	MAOISMSM003	VALID	-	
+python-stdnum/tests/test_bic.doctest	301	BIC	valid	MBICMRMR0MN	VALID	-	
+python-stdnum/tests/test_bic.doctest	302	BIC	valid	MBLBBDDH003	VALID	-	
+python-stdnum/tests/test_bic.doctest	303	BIC	valid	MBLNNPKA	VALID	-	
+python-stdnum/tests/test_bic.doctest	304	BIC	valid	MCBKBQBN	VALID	-	
+python-stdnum/tests/test_bic.doctest	305	BIC	valid	MCBLMVMV	VALID	-	
+python-stdnum/tests/test_bic.doctest	306	BIC	valid	MDFCGWGW	VALID	-	
+python-stdnum/tests/test_bic.doctest	307	BIC	valid	MEBBBA22	VALID	-	
+python-stdnum/tests/test_bic.doctest	308	BIC	valid	MENOMXMT	VALID	-	
+python-stdnum/tests/test_bic.doctest	309	BIC	valid	MMAUMVMV	VALID	-	
+python-stdnum/tests/test_bic.doctest	310	BIC	valid	NABTTVTV	VALID	-	
+python-stdnum/tests/test_bic.doctest	311	BIC	valid	NABZAZ2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	312	BIC	valid	NACNBOLP	VALID	-	
+python-stdnum/tests/test_bic.doctest	313	BIC	valid	NACNPYPA0PE	VALID	-	
+python-stdnum/tests/test_bic.doctest	314	BIC	valid	NAPAPAPA	VALID	-	
+python-stdnum/tests/test_bic.doctest	315	BIC	valid	NATXDZAL	VALID	-	
+python-stdnum/tests/test_bic.doctest	316	BIC	valid	NBADBHBMTFO	VALID	-	
+python-stdnum/tests/test_bic.doctest	317	BIC	valid	NBELBZBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	318	BIC	valid	NBFUAEAFSHJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	319	BIC	valid	NBKEKENX757	VALID	-	
+python-stdnum/tests/test_bic.doctest	320	BIC	valid	NBMAMWMW005	VALID	-	
+python-stdnum/tests/test_bic.doctest	321	BIC	valid	NBRMMK2A	VALID	-	
+python-stdnum/tests/test_bic.doctest	322	BIC	valid	NBSLWSWS	VALID	-	
+python-stdnum/tests/test_bic.doctest	323	BIC	valid	NCBGGDGD001	VALID	-	
+python-stdnum/tests/test_bic.doctest	324	BIC	valid	NCBVVC22	VALID	-	
+python-stdnum/tests/test_bic.doctest	325	BIC	valid	NESWSZMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	326	BIC	valid	NIBIETAA	VALID	-	
+python-stdnum/tests/test_bic.doctest	327	BIC	valid	NLPRXKPR	VALID	-	
+python-stdnum/tests/test_bic.doctest	328	BIC	valid	NOITAGAG	VALID	-	
+python-stdnum/tests/test_bic.doctest	329	BIC	valid	NOSCCATMSEC	VALID	-	
+python-stdnum/tests/test_bic.doctest	330	BIC	valid	NOSCTCGP	VALID	-	
+python-stdnum/tests/test_bic.doctest	331	BIC	valid	NREIGGSP	VALID	-	
+python-stdnum/tests/test_bic.doctest	332	BIC	valid	NSBINPKA	VALID	-	
+python-stdnum/tests/test_bic.doctest	333	BIC	valid	OKOYLV2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	334	BIC	valid	ORBASXSM	VALID	-	
+python-stdnum/tests/test_bic.doctest	335	BIC	valid	ORBKGALI	VALID	-	
+python-stdnum/tests/test_bic.doctest	336	BIC	valid	ORINUGKA	VALID	-	
+python-stdnum/tests/test_bic.doctest	337	BIC	valid	OTPPHUH2	VALID	-	
+python-stdnum/tests/test_bic.doctest	338	BIC	valid	PACIECEG100	VALID	-	
+python-stdnum/tests/test_bic.doctest	339	BIC	valid	PAERCZPPGEN	VALID	-	
+python-stdnum/tests/test_bic.doctest	340	BIC	valid	PASCITMMCAN	VALID	-	
+python-stdnum/tests/test_bic.doctest	341	BIC	valid	PAVTPW22	VALID	-	
+python-stdnum/tests/test_bic.doctest	342	BIC	valid	PBPRHNT2	VALID	-	
+python-stdnum/tests/test_bic.doctest	343	BIC	valid	PCBCVNVX	VALID	-	
+python-stdnum/tests/test_bic.doctest	344	BIC	valid	PCCACLRZ	VALID	-	
+python-stdnum/tests/test_bic.doctest	345	BIC	valid	PHBXLRLM	VALID	-	
+python-stdnum/tests/test_bic.doctest	346	BIC	valid	PICHECEQ522	VALID	-	
+python-stdnum/tests/test_bic.doctest	347	BIC	valid	PICTBSNX	VALID	-	
+python-stdnum/tests/test_bic.doctest	348	BIC	valid	PLLPMUMU	VALID	-	
+python-stdnum/tests/test_bic.doctest	349	BIC	valid	PMAPPS22ACH	VALID	-	
+python-stdnum/tests/test_bic.doctest	350	BIC	valid	PRBAUYMM	VALID	-	
+python-stdnum/tests/test_bic.doctest	351	BIC	valid	PRCBRSBG	VALID	-	
+python-stdnum/tests/test_bic.doctest	352	BIC	valid	PRCBSVSS	VALID	-	
+python-stdnum/tests/test_bic.doctest	353	BIC	valid	PRDTNGLA	VALID	-	
+python-stdnum/tests/test_bic.doctest	354	BIC	valid	PSATPLPW	VALID	-	
+python-stdnum/tests/test_bic.doctest	355	BIC	valid	PSBKLKLX023	VALID	-	
+python-stdnum/tests/test_bic.doctest	356	BIC	valid	PUBABDDH205	VALID	-	
+python-stdnum/tests/test_bic.doctest	357	BIC	valid	PYMXMTMTMAL	VALID	-	
+python-stdnum/tests/test_bic.doctest	358	BIC	valid	QNBAMRMU	VALID	-	
+python-stdnum/tests/test_bic.doctest	359	BIC	valid	RBMAMWMWMRA	VALID	-	
+python-stdnum/tests/test_bic.doctest	360	BIC	valid	RBNKAIAI	VALID	-	
+python-stdnum/tests/test_bic.doctest	361	BIC	valid	RBNKSXSMANT	VALID	-	
+python-stdnum/tests/test_bic.doctest	362	BIC	valid	RBNKVGVGVGA	VALID	-	
+python-stdnum/tests/test_bic.doctest	363	BIC	valid	RBTTBQBN	VALID	-	
+python-stdnum/tests/test_bic.doctest	364	BIC	valid	REBZZWHQ	VALID	-	
+python-stdnum/tests/test_bic.doctest	365	BIC	valid	REVOPTP2	VALID	-	
+python-stdnum/tests/test_bic.doctest	366	BIC	valid	RFLCJESX	VALID	-	
+python-stdnum/tests/test_bic.doctest	367	BIC	valid	RIKOEE22	VALID	-	
+python-stdnum/tests/test_bic.doctest	368	BIC	valid	RIKSSESSBER	VALID	-	
+python-stdnum/tests/test_bic.doctest	369	BIC	valid	RMABBTBT	VALID	-	
+python-stdnum/tests/test_bic.doctest	370	BIC	valid	RNCBMD2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	371	BIC	valid	ROKLIMDI1UW	VALID	-	
+python-stdnum/tests/test_bic.doctest	372	BIC	valid	ROYCBBBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	373	BIC	valid	ROYCGGSPOFM	VALID	-	
+python-stdnum/tests/test_bic.doctest	374	BIC	valid	ROYCSGS2	VALID	-	
+python-stdnum/tests/test_bic.doctest	375	BIC	valid	RYSGTM2A	VALID	-	
+python-stdnum/tests/test_bic.doctest	376	BIC	valid	RZOOAT2L226	VALID	-	
+python-stdnum/tests/test_bic.doctest	377	BIC	valid	SAMBQAQA	VALID	-	
+python-stdnum/tests/test_bic.doctest	378	BIC	valid	SBICCIAB	VALID	-	
+python-stdnum/tests/test_bic.doctest	379	BIC	valid	SBINOMRX	VALID	-	
+python-stdnum/tests/test_bic.doctest	380	BIC	valid	SBMMMCMC	VALID	-	
+python-stdnum/tests/test_bic.doctest	381	BIC	valid	SBZAZAJJAFR	VALID	-	
+python-stdnum/tests/test_bic.doctest	382	BIC	valid	SCBLFKFK	VALID	-	
+python-stdnum/tests/test_bic.doctest	383	BIC	valid	SCBLMOMX	VALID	-	
+python-stdnum/tests/test_bic.doctest	384	BIC	valid	SCBLTHBX	VALID	-	
+python-stdnum/tests/test_bic.doctest	385	BIC	valid	SCBLTZTXSSU	VALID	-	
+python-stdnum/tests/test_bic.doctest	386	BIC	valid	SCHBBWGX013	VALID	-	
+python-stdnum/tests/test_bic.doctest	387	BIC	valid	SCOBWSWS	VALID	-	
+python-stdnum/tests/test_bic.doctest	388	BIC	valid	SEDCJOAX	VALID	-	
+python-stdnum/tests/test_bic.doctest	389	BIC	valid	SENFLKLX	VALID	-	
+python-stdnum/tests/test_bic.doctest	390	BIC	valid	SGBBBFBF	VALID	-	
+python-stdnum/tests/test_bic.doctest	391	BIC	valid	SIMXMXMM	VALID	-	
+python-stdnum/tests/test_bic.doctest	392	BIC	valid	SKFISEGA	VALID	-	
+python-stdnum/tests/test_bic.doctest	393	BIC	valid	SLCBSLFR	VALID	-	
+python-stdnum/tests/test_bic.doctest	394	BIC	valid	SOCBPFTX	VALID	-	
+python-stdnum/tests/test_bic.doctest	395	BIC	valid	SOGEBJBJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	396	BIC	valid	SOGHHTPP	VALID	-	
+python-stdnum/tests/test_bic.doctest	397	BIC	valid	SPYEISR2	VALID	-	
+python-stdnum/tests/test_bic.doctest	398	BIC	valid	SRIBDJJD	VALID	-	
+python-stdnum/tests/test_bic.doctest	399	BIC	valid	SSDSKRSE	VALID	-	
+python-stdnum/tests/test_bic.doctest	400	BIC	valid	STBBMK22	VALID	-	
+python-stdnum/tests/test_bic.doctest	401	BIC	valid	STBKTNTT925	VALID	-	
+python-stdnum/tests/test_bic.doctest	402	BIC	valid	STBMMNUB	VALID	-	
+python-stdnum/tests/test_bic.doctest	403	BIC	valid	STGNPRSJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	404	BIC	valid	SWHTBEBB	VALID	-	
+python-stdnum/tests/test_bic.doctest	405	BIC	valid	TACBAU2S	VALID	-	
+python-stdnum/tests/test_bic.doctest	406	BIC	valid	TBLTGMGM	VALID	-	
+python-stdnum/tests/test_bic.doctest	407	BIC	valid	TEBKXKPR030	VALID	-	
+python-stdnum/tests/test_bic.doctest	408	BIC	valid	TEBUTRIS664	VALID	-	
+python-stdnum/tests/test_bic.doctest	409	BIC	valid	TEECMH22	VALID	-	
+python-stdnum/tests/test_bic.doctest	410	BIC	valid	TNBKTM2X	VALID	-	
+python-stdnum/tests/test_bic.doctest	411	BIC	valid	TNETZAJJ	VALID	-	
+python-stdnum/tests/test_bic.doctest	412	BIC	valid	TNOVGIGI	VALID	-	
+python-stdnum/tests/test_bic.doctest	413	BIC	valid	TODETONU	VALID	-	
+python-stdnum/tests/test_bic.doctest	414	BIC	valid	TOLMAGAG	VALID	-	
+python-stdnum/tests/test_bic.doctest	415	BIC	valid	TOPFUGKA	VALID	-	
+python-stdnum/tests/test_bic.doctest	416	BIC	valid	UBBIMY22	VALID	-	
+python-stdnum/tests/test_bic.doctest	417	BIC	valid	UBCITNTTCHG	VALID	-	
+python-stdnum/tests/test_bic.doctest	418	BIC	valid	UBKLGB2LBAK	VALID	-	
+python-stdnum/tests/test_bic.doctest	419	BIC	valid	UGEBGE22622	VALID	-	
+python-stdnum/tests/test_bic.doctest	420	BIC	valid	UNAFSNDA	VALID	-	
+python-stdnum/tests/test_bic.doctest	421	BIC	valid	UNALALTR	VALID	-	
+python-stdnum/tests/test_bic.doctest	422	BIC	valid	UNCRBGSF426	VALID	-	
+python-stdnum/tests/test_bic.doctest	423	BIC	valid	UOVBBNBBCMS	VALID	-	
+python-stdnum/tests/test_bic.doctest	424	BIC	valid	UPMKFIHH	VALID	-	
+python-stdnum/tests/test_bic.doctest	425	BIC	valid	USBKLU2L	VALID	-	
+python-stdnum/tests/test_bic.doctest	426	BIC	valid	UTBSSLFR	VALID	-	
+python-stdnum/tests/test_bic.doctest	427	BIC	valid	UTWBBEBBTGT	VALID	-	
+python-stdnum/tests/test_bic.doctest	428	BIC	valid	UZUMUZ22	VALID	-	
+python-stdnum/tests/test_bic.doctest	429	BIC	valid	VATOISRE	VALID	-	
+python-stdnum/tests/test_bic.doctest	430	BIC	valid	VBAAVNVX640	VALID	-	
+python-stdnum/tests/test_bic.doctest	431	BIC	valid	VCBSSRPA	VALID	-	
+python-stdnum/tests/test_bic.doctest	432	BIC	valid	VMBSJMKN	VALID	-	
+python-stdnum/tests/test_bic.doctest	433	BIC	valid	VPAYBGS2	VALID	-	
+python-stdnum/tests/test_bic.doctest	434	BIC	valid	WANFVUVV	VALID	-	
+python-stdnum/tests/test_bic.doctest	435	BIC	valid	WEWOUS33	VALID	-	
+python-stdnum/tests/test_bic.doctest	436	BIC	valid	ZBCGMEPG	VALID	-	
+python-stdnum/tests/test_bic.doctest	437	BIC	valid	ZRCPCAT2	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	30	IBAN	valid	BE54310100270097	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	32	IBAN	invalid	BE54310100270000	VALID	INVALID_NATIONAL_CHECK_DIGITS	stdnum.be.iban includes the Belgian national check digits; pololei reports the same with the national check (INVALID_NATIONAL_CHECK_DIGITS), the international rules alone accept it
+python-stdnum/tests/test_be_iban.doctest	41	IBAN	valid	BE45102000000089	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	51	IBAN	valid	BE 03 7310 1866 4084	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	52	IBAN	valid	BE 04 4348 1414 3131	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	53	IBAN	valid	BE 05 0013 6299 3375	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	54	IBAN	valid	BE 05 7350 2212 4775	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	55	IBAN	valid	BE 06 0689 0671 6722	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	56	IBAN	valid	BE 07 3751 1110 2566	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	57	IBAN	valid	BE 07 7370 2293 3166	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	58	IBAN	valid	BE 07-0682455012-66	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	59	IBAN	valid	BE 08 0682 0620 1213	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	60	IBAN	valid	BE 099790 8568 5357	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	61	IBAN	valid	BE 10 1030 4164 5404	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	62	IBAN	valid	BE 10850818312004	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	63	IBAN	valid	BE 11 2300 1259 3448	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	64	IBAN	valid	BE 11 4715 0060 2148	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	65	IBAN	valid	BE 12 7340 2513 1392	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	66	IBAN	valid	BE 13 3200 1620 5639	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	67	IBAN	valid	BE 13 4185 0462 2139	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	68	IBAN	valid	BE 15733038344130	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	69	IBAN	valid	BE 17630067314221	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	70	IBAN	valid	BE 18 3100 7494 0165	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	71	IBAN	valid	BE 18 7512 0627 3065	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	72	IBAN	valid	BE 19 0010 6151 1012	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	73	IBAN	valid	BE 19 7380 3475 4112	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	74	IBAN	valid	BE 19737426001512	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	75	IBAN	valid	BE 20 3200 68 35 4556	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	76	IBAN	valid	BE 20 3630 3062 4556	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	77	IBAN	valid	BE 21 0012 4611 0803	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	78	IBAN	valid	BE 26 3900 3439 3629	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	79	IBAN	valid	BE 28 2930 1021 0620	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	80	IBAN	valid	BE 29 2710 3664 0164	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	81	IBAN	valid	BE 30 6451 0272 0611	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	82	IBAN	valid	BE 32 7310 2089 6502	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	83	IBAN	valid	BE 34 0012 3765 1490	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	84	IBAN	valid	BE 35 0011 2595 0637	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	85	IBAN	valid	BE 36 0910 0060 6681	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	86	IBAN	valid	BE 36310180497181	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	87	IBAN	valid	BE 3773 103 388 7428	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	88	IBAN	valid	BE 38 0016 8887 4272	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	89	IBAN	valid	BE 40 0631 6189 5863	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	90	IBAN	valid	BE 40 7380 1475 7863	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	91	IBAN	valid	BE 43.4679.1170.4101	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	92	IBAN	valid	BE 44 2200 4529 0245	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	93	IBAN	valid	BE 45 2100 0760 8589	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	94	IBAN	valid	BE 45 4162 0698 8189	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	95	IBAN	valid	BE 46 4214 1888 0136	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	96	IBAN	valid	BE 46 6528 2264 2736	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	97	IBAN	valid	BE 46 7380 3139 0636	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	98	IBAN	valid	BE 48 3200 7018 4927	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	99	IBAN	valid	BE 48 6792 0055 0227	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	100	IBAN	valid	BE 48 6792 0055 0227	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	101	IBAN	valid	BE 49 7330 3109 2671	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	102	IBAN	valid	BE 49 8601 1076 3571	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	103	IBAN	valid	BE 50 7370 3771 1118	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	104	IBAN	valid	BE 50363093903518	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	105	IBAN	valid	BE 51 4738 1277 3162	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	106	IBAN	valid	BE 52 3100 2367 0009	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	107	IBAN	valid	BE 52 7330 4855 6109	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	108	IBAN	valid	BE 54 0011 6600 7997	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	109	IBAN	valid	BE 55 0016 0000 0044	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	110	IBAN	valid	BE 55 552-3281700-44	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	111	IBAN	valid	BE 55 7380 1810 2444	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	112	IBAN	valid	BE 57 0910 0535 5035	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	113	IBAN	valid	BE 59 7340 3846 2226	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	114	IBAN	valid	BE 61 363163180817	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	115	IBAN	valid	BE 61 7343 110 410 17	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	116	IBAN	valid	BE 62 0682 0026 9661	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	117	IBAN	valid	BE 62 0689 3050 5061	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	118	IBAN	valid	BE 63 001 344 1880 08	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	119	IBAN	valid	BE 64 3630 7212 0752	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	120	IBAN	valid	BE 65 7360 2240 0596	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	121	IBAN	valid	BE 68 735 0015372 34	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	122	IBAN	valid	BE 69 2200 6901 0078	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	123	IBAN	valid	BE 70 2930 2739 9525	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	124	IBAN	valid	BE 73 7370 3778 3260	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	125	IBAN	valid	BE 76 7310 1774 3695	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	126	IBAN	valid	BE 77 0017 8594 8842	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	127	IBAN	valid	BE 77 3631 1772 9142	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	128	IBAN	valid	BE 80 293-0175980-77	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	129	IBAN	valid	BE 80 3101 5675 1177	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	130	IBAN	valid	BE 80.3850.5900.6577	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	131	IBAN	valid	BE 81 4171 0398 9124	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	132	IBAN	valid	BE 81 731001139824	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	133	IBAN	valid	BE 84375084291059	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	134	IBAN	valid	BE 85 0017 1352 5006	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	135	IBAN	valid	BE 85 7310 4209 1406	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	136	IBAN	valid	BE 87 0015 4520 0094	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	137	IBAN	valid	BE 88 3200 2887 4041	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	138	IBAN	valid	BE 88733 0477639 41	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	139	IBAN	valid	BE 89 0013 0131 2085	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	140	IBAN	valid	BE 89 2800 2298 4185	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	141	IBAN	valid	BE 89 3100 60925685	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	142	IBAN	valid	BE 90 735007997232	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	143	IBAN	valid	BE 90 7510 0079 4632	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	144	IBAN	valid	BE 90 9730 2935 2032	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	145	IBAN	valid	BE 90645110734932	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	146	IBAN	valid	BE 91 733-0204328-76	INVALID_CHARACTER	INVALID_CHARACTER	separators '-' and '.' are not part of the electronic or print format; pololei rejects them, stdnum removes them before the check
+python-stdnum/tests/test_be_iban.doctest	147	IBAN	valid	BE 91733049319476	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	148	IBAN	valid	BE 92 6528 3175 9423	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	149	IBAN	valid	BE 94 4324 0214 9114	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	150	IBAN	valid	BE 95 3800 4313 4658	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	151	IBAN	valid	BE 96 2100 6808 9305	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	152	IBAN	valid	BE 962300 1003 8005	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	153	IBAN	valid	BE 97 2930 1249 3049	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	154	IBAN	valid	BE52 3100 2234 1109	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	155	IBAN	valid	BE58 7310 2144 7479	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	156	IBAN	valid	BE59 65283724 9926	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	157	IBAN	valid	BE65 0910 0060 8196	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	158	IBAN	valid	BE79 0689 0189 6933	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	159	IBAN	valid	BE97 0017 6310 6049	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	160	IBAN	valid	be 54 9799 7279 3197	VALID	VALID/PASSED	
+python-stdnum/tests/test_be_iban.doctest	51	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	52	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	53	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	54	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	55	BIC	valid	GKCC BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	56	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	57	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	58	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	59	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	60	BIC	valid	ARSPBE22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	61	BIC	valid	NICABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	62	BIC	valid	NICABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	63	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	64	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	65	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	66	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	67	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	68	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	69	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	70	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	71	BIC	valid	AXABBE22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	72	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	73	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	74	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	75	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	76	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	77	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	78	BIC	valid	BBRU BEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	79	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	80	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	81	BIC	valid	JVBABE22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	82	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	83	BIC	valid	GEBA BEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	84	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	85	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	86	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	87	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	88	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	89	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	90	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	91	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	92	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	93	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	94	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	95	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	96	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	97	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	98	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	99	BIC	valid	PCHQ BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	100	BIC	valid	PCHQBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	101	BIC	valid	KRED BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	102	BIC	valid	NICABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	103	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	104	BIC	valid	BBRU BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	105	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	106	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	107	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	108	BIC	valid	GEBA BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	109	BIC	valid	GEBA BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	110	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	111	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	112	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	113	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	114	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	115	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	116	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	117	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	118	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	119	BIC	valid	BBRU BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	120	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	121	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	122	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	123	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	124	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	125	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	126	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	127	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	128	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	129	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	130	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	131	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	132	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	133	BIC	valid	BBRU BE BB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	134	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	135	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	136	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	137	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	138	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	139	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	140	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	141	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	142	BIC	valid	KRE DBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	143	BIC	valid	AXABBE22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	144	BIC	valid	ARS PBE 22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	145	BIC	valid	JVBABE22	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	146	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	147	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	148	BIC	valid	BBR UBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	149	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	150	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	151	BIC	valid	GEBA-BEBB	INVALID_LENGTH	-	the separator '-' is not part of a BIC; pololei rejects it, stdnum removes it before the check
+python-stdnum/tests/test_be_iban.doctest	152	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	153	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	154	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	155	BIC	valid	KREDBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	156	BIC	valid	BBRUBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	157	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	158	BIC	valid	GKCCBEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	159	BIC	valid	GEBABEBB	VALID	-	
+python-stdnum/tests/test_be_iban.doctest	160	BIC	valid	arspbe22	VALID	-	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	82	IBAN	invalid		EMPTY	EMPTY	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	83	IBAN	invalid	   	EMPTY	EMPTY	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	84	IBAN	invalid	A	INVALID_COUNTRY_CODE	INVALID_COUNTRY_CODE	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	85	IBAN	invalid	AB	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	86	IBAN	invalid	FR1420041010050500013m02606	VALID	VALID/PASSED	pololei accepts lower case letters and normalizes them to upper case (README, Iban.parse); commons-validator rejects them
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	87	IBAN	invalid	MT84MALT011000012345mtlcast001s	VALID	VALID/NOT_SUPPORTED	pololei accepts lower case letters and normalizes them to upper case (README, Iban.parse); commons-validator rejects them
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	88	IBAN	invalid	LI21088100002324013aa	VALID	VALID/NOT_SUPPORTED	pololei accepts lower case letters and normalizes them to upper case (README, Iban.parse); commons-validator rejects them
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	89	IBAN	invalid	QA58DOHB00001234567890abcdefg	VALID	VALID/NOT_SUPPORTED	pololei accepts lower case letters and normalizes them to upper case (README, Iban.parse); commons-validator rejects them
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	90	IBAN	invalid	RO49AAAA1b31007593840000	VALID	VALID/NOT_SUPPORTED	pololei accepts lower case letters and normalizes them to upper case (README, Iban.parse); commons-validator rejects them
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	91	IBAN	invalid	LC62HEMM000100010012001200023015	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	92	IBAN	invalid	BY00NBRB3600000000000Z00AB00	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	93	IBAN	invalid	ST68000200010192194210112	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	94	IBAN	invalid	SV62CENR0000000000000700025	INVALID_LENGTH	INVALID_LENGTH	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	95	IBAN	invalid	NI04BAPR00000013000003558124	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	96	IBAN	invalid	RU1704452522540817810538091310419	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	109	IBAN	valid	AD1200012030200359100100	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	110	IBAN	valid	AE070331234567890123456	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	111	IBAN	valid	AL47212110090000000235698741	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	112	IBAN	valid	AT611904300234573201	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	113	IBAN	valid	AZ21NABZ00000000137010001944	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	114	IBAN	valid	BA391290079401028494	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	115	IBAN	valid	BE68539007547034	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	116	IBAN	valid	BG80BNBG96611020345678	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	117	IBAN	valid	BH67BMAG00001299123456	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	118	IBAN	valid	BI4210000100010000332045181	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	119	IBAN	valid	BR1800000000141455123924100C2	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	120	IBAN	valid	BR1800360305000010009795493C1	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	121	IBAN	valid	BR9700360305000010009795493P1	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	122	IBAN	valid	BY13NBRB3600900000002Z00AB00	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	123	IBAN	valid	CH9300762011623852957	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	124	IBAN	valid	CR05015202001026284066	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	125	IBAN	valid	CY17002001280000001200527600	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	126	IBAN	valid	CZ6508000000192000145399	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	127	IBAN	valid	CZ9455000000001011038930	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	128	IBAN	valid	DE89370400440532013000	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	129	IBAN	valid	DJ2110002010010409943020008	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	130	IBAN	valid	DK5000400440116243	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	131	IBAN	valid	DO28BAGR00000001212453611324	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	132	IBAN	valid	EE382200221020145685	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	133	IBAN	valid	EG380019000500000000263180002	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	134	IBAN	valid	ES9121000418450200051332	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	135	IBAN	valid	FI2112345600000785	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	136	IBAN	valid	FI5542345670000081	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	138	IBAN	valid	AX2112345600000785	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FI; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	139	IBAN	valid	AX5542345670000081	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FI; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	140	IBAN	valid	FK88SC123456789012	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	141	IBAN	valid	FO6264600001631634	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	142	IBAN	valid	FR1420041010050500013M02606	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	144	IBAN	valid	BL6820041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	145	IBAN	valid	GF4120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	146	IBAN	valid	GP1120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	147	IBAN	valid	MF8420041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	148	IBAN	valid	MQ5120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	149	IBAN	valid	NC8420041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	150	IBAN	valid	PF5720041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	151	IBAN	valid	PM3620041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	152	IBAN	valid	RE4220041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	153	IBAN	valid	TF2120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	154	IBAN	valid	WF9120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	155	IBAN	valid	YT3120041010050500013M02606	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	territory code without an entry in the SWIFT IBAN Registry release 100, which lists the territory under FR; rejected as documented in docs/registry-audit.md
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	156	IBAN	valid	GB29NWBK60161331926819	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	161	IBAN	valid	GE29NB0000000101904917	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	162	IBAN	valid	GI75NWBK000000007099453	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	163	IBAN	valid	GL8964710001000206	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	164	IBAN	valid	GR1601101250000000012300695	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	165	IBAN	valid	GT82TRAJ01020000001210029690	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	166	IBAN	valid	HN88CABF00000000000250005469	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	167	IBAN	valid	HR1210010051863000160	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	168	IBAN	valid	HU42117730161111101800000000	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	169	IBAN	valid	IE29AIBK93115212345678	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	170	IBAN	valid	IL620108000000099999999	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	171	IBAN	valid	IQ98NBIQ850123456789012	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	172	IBAN	valid	IS140159260076545510730339	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	173	IBAN	valid	IT60X0542811101000000123456	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	174	IBAN	valid	JO94CBJO0010000000000131000302	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	175	IBAN	valid	KW81CBKU0000000000001234560101	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	176	IBAN	valid	KZ86125KZT5004100100	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	177	IBAN	valid	LB62099900000001001901229114	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	178	IBAN	valid	LC55HEMM000100010012001200023015	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	179	IBAN	valid	LI21088100002324013AA	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	180	IBAN	valid	LT121000011101001000	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	181	IBAN	valid	LU280019400644750000	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	182	IBAN	valid	LY83002048000020100120361	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	183	IBAN	valid	LV80BANK0000435195001	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	184	IBAN	valid	LY83002048000020100120361	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	185	IBAN	valid	MC5811222000010123456789030	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	186	IBAN	valid	MD24AG000225100013104168	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	187	IBAN	valid	ME25505000012345678951	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	188	IBAN	valid	MK07250120000058984	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	189	IBAN	valid	MN121234123456789123	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	190	IBAN	valid	MR1300020001010000123456753	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	191	IBAN	valid	MT84MALT011000012345MTLCAST001S	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	192	IBAN	valid	MU17BOMM0101101030300200000MUR	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	193	IBAN	valid	NI45BAPR00000013000003558124	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	194	IBAN	valid	NL91ABNA0417164300	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	195	IBAN	valid	NO9386011117947	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	196	IBAN	valid	OM810180000001299123456	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	197	IBAN	valid	PK36SCBL0000001123456702	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	198	IBAN	valid	PL61109010140000071219812874	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	199	IBAN	valid	PS92PALS000000000400123456702	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	200	IBAN	valid	PT50000201231234567890154	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	201	IBAN	valid	QA58DOHB00001234567890ABCDEFG	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	202	IBAN	valid	RO49AAAA1B31007593840000	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	203	IBAN	valid	RS35260005601001611379	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	204	IBAN	valid	RU0204452560040702810412345678901	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	205	IBAN	valid	SA0380000000608010167519	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	206	IBAN	valid	SC18SSCB11010000000000001497USD	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	207	IBAN	valid	SD8811123456789012	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	208	IBAN	valid	SE4550000000058398257466	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	209	IBAN	valid	SI56191000000123438	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	210	IBAN	valid	SI56263300012039086	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	211	IBAN	valid	SK3112000000198742637541	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	212	IBAN	valid	SM86U0322509800000000270100	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	213	IBAN	valid	SO211000001001000100141	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	214	IBAN	valid	ST68000100010051845310112	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	215	IBAN	valid	SV62CENR00000000000000700025	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	216	IBAN	valid	SV43ACAT00000000000000123123	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	217	IBAN	valid	TL380080012345678910157	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	218	IBAN	valid	TN5910006035183598478831	VALID	VALID/PASSED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	219	IBAN	valid	TR330006100519786457841326	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	220	IBAN	valid	UA213223130000026007233566001	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	221	IBAN	valid	UA213996220000026007233566001	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	222	IBAN	valid	VA59001123000012345678	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	223	IBAN	valid	VG96VPVG0000012345678901	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	224	IBAN	valid	XK051212012345678906	VALID	VALID/NOT_SUPPORTED	
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	225	IBAN	valid	YE15CBYE0001018861234567891234	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	17	IBAN	valid	AL47 2121 1009 0000 0002 3569 8741	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	18	IBAN	valid	AD12 0001 2030 2003 5910 0100	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	19	IBAN	valid	AT61 1904 3002 3457 3201	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	20	IBAN	valid	AZ21 NABZ 0000 0000 1370 1000 1944	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	21	IBAN	valid	BH67 BMAG 0000 1299 1234 56	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	22	IBAN	valid	BE68 5390 0754 7034	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	23	IBAN	valid	BA39 1290 0794 0102 8494	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	24	IBAN	valid	BR97 0036 0305 0000 1000 9795 493P 1	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	25	IBAN	valid	BR18 0000 0000 1414 5512 3924 100C 2	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	26	IBAN	valid	BG80 BNBG 9661 1020 3456 78	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	27	IBAN	valid	CR05 0152 0200 1026 2840 66	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	28	IBAN	valid	HR12 1001 0051 8630 0016 0	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	29	IBAN	valid	CY17 0020 0128 0000 0012 0052 7600	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	30	IBAN	valid	CZ65 0800 0000 1920 0014 5399	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	31	IBAN	valid	CZ94 5500 0000 0010 1103 8930	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	32	IBAN	valid	DK50 0040 0440 1162 43	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	33	IBAN	valid	FO62 6460 0001 6316 34	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	34	IBAN	valid	GL89 6471 0001 0002 06	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	35	IBAN	valid	DO28 BAGR 0000 0001 2124 5361 1324	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	36	IBAN	valid	EE38 2200 2210 2014 5685	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	37	IBAN	valid	FI21 1234 5600 0007 85	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	38	IBAN	valid	FR14 2004 1010 0505 0001 3M02 606	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	39	IBAN	valid	GE29 NB00 0000 0101 9049 17	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	40	IBAN	valid	DE89 3704 0044 0532 0130 00	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	41	IBAN	valid	GI75 NWBK 0000 0000 7099 453	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	42	IBAN	valid	GR16 0110 1250 0000 0001 2300 695	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	43	IBAN	valid	GT82 TRAJ 0102 0000 0012 1002 9690	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	44	IBAN	valid	HU42 1177 3016 1111 1018 0000 0000	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	45	IBAN	valid	IS14 0159 2600 7654 5510 7303 39	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	46	IBAN	valid	IE29 AIBK 9311 5212 3456 78	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	47	IBAN	valid	IL62 0108 0000 0009 9999 999	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	48	IBAN	valid	IT60 X054 2811 1010 0000 0123 456	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	49	IBAN	valid	JO94 CBJO 0010 0000 0000 0131 0003 02	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	50	IBAN	valid	KZ86 125K ZT50 0410 0100	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	51	IBAN	valid	XK05 1212 0123 4567 8906	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	52	IBAN	valid	KW81 CBKU 0000 0000 0000 1234 5601 01	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	53	IBAN	valid	LV80 BANK 0000 4351 9500 1	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	54	IBAN	valid	LB62 0999 0000 0001 0019 0122 9114	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	55	IBAN	valid	LI21 0881 0000 2324 013A A	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	56	IBAN	valid	LT12 1000 0111 0100 1000	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	57	IBAN	valid	LU28 0019 4006 4475 0000	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	58	IBAN	valid	MK07 2501 2000 0058 984	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	59	IBAN	valid	MT84 MALT 0110 0001 2345 MTLC AST0 01S	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	60	IBAN	valid	MR13 0002 0001 0100 0012 3456 753	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	61	IBAN	valid	MU17 BOMM 0101 1010 3030 0200 000M UR	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	62	IBAN	valid	MD24 AG00 0225 1000 1310 4168	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	63	IBAN	valid	MC58 1122 2000 0101 2345 6789 030	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	64	IBAN	valid	ME25 5050 0001 2345 6789 51	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	65	IBAN	valid	NL91 ABNA 0417 1643 00	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	66	IBAN	valid	NO93 8601 1117 947	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	67	IBAN	valid	PK36 SCBL 0000 0011 2345 6702	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	68	IBAN	valid	PS92 PALS 0000 0000 0400 1234 5670 2	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	69	IBAN	valid	PL61 1090 1014 0000 0712 1981 2874	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	70	IBAN	valid	PT50 0002 0123 1234 5678 9015 4	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	71	IBAN	valid	QA58 DOHB 0000 1234 5678 90AB CDEF G	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	72	IBAN	valid	RO49 AAAA 1B31 0075 9384 0000	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	73	IBAN	valid	LC55 HEMM 0001 0001 0012 0012 0002 3015	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	74	IBAN	valid	SM86 U032 2509 8000 0000 0270 100	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	75	IBAN	valid	ST68 0001 0001 0051 8453 1011 2	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	76	IBAN	valid	SA03 8000 0000 6080 1016 7519	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	77	IBAN	valid	RS35 2600 0560 1001 6113 79	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	78	IBAN	valid	SN08 SN01 0015 2000 0485 0000 3035	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	Senegal has no entry in the SWIFT IBAN Registry release 100 (docs/registry-audit.md); schwifty lists the same IBAN as experimental (line 137)
+schwifty/tests/test_iban.py	79	IBAN	valid	SC18 SSCB 1101 0000 0000 0000 1497 USD	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	80	IBAN	valid	SK31 1200 0000 1987 4263 7541	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	81	IBAN	valid	SI56 1910 0000 0123 438	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	82	IBAN	valid	ES91 2100 0418 4502 0005 1332	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	83	IBAN	valid	SE45 5000 0000 0583 9825 7466	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	84	IBAN	valid	CH93 0076 2011 6238 5295 7	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	85	IBAN	valid	TL38 0080 0123 4567 8910 157	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	86	IBAN	valid	TN59 1000 6035 1835 9847 8831	VALID	VALID/PASSED	
+schwifty/tests/test_iban.py	87	IBAN	valid	TR33 0006 1005 1978 6457 8413 26	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	88	IBAN	valid	UA21 3996 2200 0002 6007 2335 6600 1	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	89	IBAN	valid	AE07 0331 2345 6789 0123 456	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	90	IBAN	valid	GB29 NWBK 6016 1331 9268 19	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	91	IBAN	valid	VG96 VPVG 0000 0123 4567 8901	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	92	IBAN	valid	BY13 NBRB 3600 9000 0000 2Z00 AB00	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	93	IBAN	valid	SV62 CENR 0000 0000 0000 0070 0025	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	94	IBAN	valid	FO62 6460 0001 6316 34	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	95	IBAN	valid	GL89 6471 0001 0002 06	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	96	IBAN	valid	IQ98 NBIQ 8501 2345 6789 012	VALID	VALID/NOT_SUPPORTED	
+schwifty/tests/test_iban.py	101	IBAN	invalid	DE89 3704 0044 0532 0130	INVALID_LENGTH	INVALID_LENGTH	
+schwifty/tests/test_iban.py	102	IBAN	invalid	DE89 3704 0044 0532 0130 0000	INVALID_LENGTH	INVALID_LENGTH	
+schwifty/tests/test_iban.py	103	IBAN	invalid	GB96 BARC 2020 1530 0934 591	INVALID_LENGTH	INVALID_LENGTH	
+schwifty/tests/test_iban.py	104	IBAN	invalid	XX89 3704 0044 0532 0130 00	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	105	IBAN	invalid	DE99 3704 0044 0532 0130 00	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	106	IBAN	invalid	DEAA 3704 0044 0532 0130 00	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	107	IBAN	invalid	GB2L ABBY 0901 2857 2017 07	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	108	IBAN	invalid	DE89 AA04 0044 0532 0130 00	INVALID_BBAN	INVALID_BBAN	
+schwifty/tests/test_iban.py	109	IBAN	invalid	GB12 BARC 2020 1530 093A 59	INVALID_BBAN	INVALID_BBAN	
+schwifty/tests/test_iban.py	110	IBAN	invalid	GB01 BARC 2071 4583 6083 87	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	111	IBAN	invalid	GB00 HLFX 1101 6111 4553 65	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	112	IBAN	invalid	GB94 BARC 2020 1530 0934 59	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+schwifty/tests/test_iban.py	116	IBAN	experimental	DZ58 0002 1000 0111 3000 0005 70	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	117	IBAN	experimental	AO06 0044 0000 6729 5030 1010 2	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	118	IBAN	experimental	BJ66 BJ06 1010 0100 1443 9000 0769	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	119	IBAN	experimental	BF42 BF08 4010 1300 4635 7400 0390	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	120	IBAN	experimental	CM21 1000 2000 3002 7797 6315 008	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	121	IBAN	experimental	CV64 0005 0000 0020 1082 1514 4	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	122	IBAN	experimental	CF42 2000 1000 0101 2006 9700 160	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	123	IBAN	experimental	TD89 6000 2000 0102 7109 1600 153	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	124	IBAN	experimental	KM46 0000 5000 0100 1090 4400 137	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	125	IBAN	experimental	CG39 3001 1000 1010 1345 1300 019	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	126	IBAN	experimental	GQ70 5000 2001 0037 1522 8190 196	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	127	IBAN	experimental	GA21 4002 1010 0320 0189 0020 126	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	128	IBAN	experimental	GW04 GW14 3001 0181 8006 3760 1	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	129	IBAN	experimental	HN54 PISA 0000 0000 0000 0012 3124	VALID	VALID/NOT_SUPPORTED	part of the SWIFT IBAN Registry release 100 (docs/registry-audit.md); schwifty still lists the country as experimental
+schwifty/tests/test_iban.py	130	IBAN	experimental	IR71 0570 0299 7160 1460 6410 01	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	131	IBAN	experimental	CI93 CI00 8011 1301 1342 9120 0589	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	132	IBAN	experimental	MG46 0000 5030 0712 8942 1016 045	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	133	IBAN	experimental	ML13 ML01 6012 0102 6001 0066 8497	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	134	IBAN	experimental	MA64 0115 1900 0001 2050 0053 4921	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	135	IBAN	experimental	MZ59 0003 0108 0016 3671 0237 1	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	136	IBAN	experimental	NE58 NE03 8010 0100 1303 0500 0268	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	137	IBAN	experimental	SN08 SN01 0015 2000 0485 0000 3035	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	138	IBAN	experimental	TG53 TG00 9060 4310 3465 0040 0070	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+schwifty/tests/test_iban.py	139	IBAN	experimental	YE15 CBYE 0001 0188 6123 4567 8912 34	VALID	VALID/NOT_SUPPORTED	part of the SWIFT IBAN Registry release 100 (docs/registry-audit.md); schwifty still lists the country as experimental
+schwifty/tests/test_bic.py	17	BIC	valid	GENODEM1GLS	VALID	-	
+schwifty/tests/test_bic.py	23	BIC	invalid	GENODXM1GLS	UNKNOWN_COUNTRY	-	
+schwifty/tests/test_bic.py	30	BIC	valid	RBKOXKPR	VALID	-	
+schwifty/tests/test_bic.py	30	BIC	valid	RBKOXKPRXXX	VALID	-	
+schwifty/tests/test_bic.py	119	BIC	valid	COBADEFF	VALID	-	
+schwifty/tests/test_bic.py	119	BIC	valid	DEUTDEFF	VALID	-	
+schwifty/tests/test_bic.py	231	BIC	valid	GENODEM0GLS	VALID	-	
+schwifty/tests/test_bic.py	232	BIC	valid	GENODEM1GLS	VALID	-	
+schwifty/tests/test_bic.py	233	BIC	valid	GENODEM2GLS	VALID	-	
+schwifty/tests/test_bic.py	234	BIC	valid	GENODEMMGLS	VALID	-	
+schwifty/tests/test_bic.py	235	BIC	valid	1234DEWWXXX	VALID	-	
+schwifty/tests/test_bic.py	251	BIC	invalid	AAAA	INVALID_LENGTH	-	
+schwifty/tests/test_bic.py	252	BIC	invalid	AAAADEM1GLSX	INVALID_LENGTH	-	
+schwifty/tests/test_bic.py	253	BIC	invalid	GENOD1M1GLS	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	254	BIC	invalid	GENODEM1@#%	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	255	BIC	invalid	GENOXXM1GLS	UNKNOWN_COUNTRY	-	
+schwifty/tests/test_bic.py	266	BIC	invalid	GENODEM1@#%	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	267	BIC	invalid	GENODEM1G-S	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	268	BIC	invalid	GENODEM1GL*	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	269	BIC	invalid	MARKDEF1$$$	INVALID_CHARACTER	-	
+schwifty/tests/test_bic.py	270	BIC	invalid	GENODEM1..X	INVALID_CHARACTER	-	
+sepa_king/spec/validator_spec.rb	13	IBAN	valid	DE21500500009876543210	VALID	VALID/NOT_SUPPORTED	
+sepa_king/spec/validator_spec.rb	13	IBAN	valid	DE87200500001234567890	VALID	VALID/NOT_SUPPORTED	
+sepa_king/spec/validator_spec.rb	17	IBAN	invalid		EMPTY	EMPTY	
+sepa_king/spec/validator_spec.rb	17	IBAN	invalid	xxx	UNSUPPORTED_COUNTRY	UNSUPPORTED_COUNTRY	
+sepa_king/spec/validator_spec.rb	18	IBAN	invalid	DE22500500009876543210	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS	
+sepa_king/spec/validator_spec.rb	19	IBAN	invalid	DE2150050000987654321	INVALID_LENGTH	INVALID_LENGTH	
+sepa_king/spec/validator_spec.rb	20	IBAN	invalid	de87200500001234567890	VALID	VALID/NOT_SUPPORTED	pololei accepts lower case letters and normalizes them to upper case; sepa_king rejects them
+sepa_king/spec/validator_spec.rb	21	IBAN	invalid	DE87 2005 0000 1234 5678 90	VALID	VALID/NOT_SUPPORTED	pololei accepts the print format with spaces; sepa_king rejects whitespace
+sepa_king/spec/validator_spec.rb	41	BIC	valid	DEUTDEDBDUE	VALID	-	
+sepa_king/spec/validator_spec.rb	41	BIC	valid	DUSSDEDDXXX	VALID	-	
+sepa_king/spec/validator_spec.rb	45	BIC	invalid		EMPTY	-	
+sepa_king/spec/validator_spec.rb	45	BIC	invalid	GENODE61HR	INVALID_LENGTH	-	
+sepa_king/spec/validator_spec.rb	45	BIC	invalid	DEUTDEDBDUEDEUTDEDBDUE	INVALID_LENGTH	-	
+sepa_king/spec/validator_spec.rb	65	CI	valid	DE98ZZZ09999999999	VALID	-	
+sepa_king/spec/validator_spec.rb	66	CI	valid	CH0712300000012345	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 13, not 07
+sepa_king/spec/validator_spec.rb	67	CI	valid	SE97ZZZ1234567890	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 41, not 97
+sepa_king/spec/validator_spec.rb	68	CI	valid	PL97ZZZ0123456789	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 18, not 97
+sepa_king/spec/validator_spec.rb	69	CI	valid	NO97ZZZ123456785	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 38, not 97
+sepa_king/spec/validator_spec.rb	70	CI	valid	HU74111A12345676	VALID	-	
+sepa_king/spec/validator_spec.rb	71	CI	valid	BG32ZZZ100064095	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 07, not 32
+sepa_king/spec/validator_spec.rb	72	CI	valid	AT12ZZZ00000000001	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 88, not 12
+sepa_king/spec/validator_spec.rb	73	CI	valid	FR12ZZZ123456	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 72, not 12
+sepa_king/spec/validator_spec.rb	74	CI	valid	NL97ZZZ123456780001	INVALID_CHECK_DIGITS	-	sepa_king checks only the structure (and the length for DE), not the check digits; ISO 7064 MOD 97-10 as in EPC262-08 gives 42, not 97
+sepa_king/spec/validator_spec.rb	81	CI	invalid		EMPTY	-	
+sepa_king/spec/validator_spec.rb	82	CI	invalid	xxx	INVALID_LENGTH	-	
+sepa_king/spec/validator_spec.rb	83	CI	invalid	DE98ZZZ099999999990	INVALID_LENGTH	-	
+sepa_king/spec/validator_spec.rb	84	CI	invalid	DE98---09999999999	INVALID_CHARACTER	-	

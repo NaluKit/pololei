@@ -1,0 +1,33 @@
+file	first_line	last_line	kind	upstream	pattern	description
+python-stdnum/tests/test_iban.doctest	29	29	IBAN	invalid	'([^']*)'	empty BBAN, unknown country, check digits valid
+python-stdnum/tests/test_iban.doctest	37	37	IBAN	invalid	'([^']*)'	unknown country code
+python-stdnum/tests/test_iban.doctest	47	240	IBAN	valid	^\.\.\. (\S.*?)\s*$	sample numbers of the IBAN registry and others, electronic and print format
+python-stdnum/tests/test_iban.doctest	249	259	IBAN	invalid	^\.\.\. (\S.*?)\s*$	broken check digits or mangled
+python-stdnum/tests/test_iban.doctest	268	271	IBAN	invalid	^\.\.\. (\S.*?)\s*$	wrong length, check digits valid
+python-stdnum/tests/test_iban.doctest	282	285	IBAN	invalid	^\.\.\. (\S.*?)\s*$	wrong character type or unknown country code
+python-stdnum/tests/test_iban.doctest	295	296	IBAN	national-invalid	^\.\.\. (\S.*?)\s*$	valid by the international rules, invalid national check digits
+python-stdnum/tests/test_bic.doctest	28	28	BIC	invalid	'([^']*)'	unknown country code
+python-stdnum/tests/test_bic.doctest	37	438	BIC	valid	^\.\.\. (\S.*?)\s*$	BICs found online
+python-stdnum/tests/test_be_iban.doctest	30	30	IBAN	valid	'([^']*)'	Belgian national check digits 97
+python-stdnum/tests/test_be_iban.doctest	32	32	IBAN	invalid	'([^']*)'	Belgian national check digits 00
+python-stdnum/tests/test_be_iban.doctest	41	41	IBAN	valid	'([^']*)'	constructed account without BIC
+python-stdnum/tests/test_be_iban.doctest	51	160	IBAN	valid	^\.\.\. (\S+(?: \S+)*) {2,}	Belgian IBANs (first column)
+python-stdnum/tests/test_be_iban.doctest	51	160	BIC	valid	 {2,}(\S+(?: \S+)*)\s*$	BIC of the Belgian IBAN (second column)
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	82	96	IBAN	invalid	^\s*"([^"]*)"	INVALID_IBAN_FIXTURES
+commons-validator/src/test/java/org/apache/commons/validator/routines/IBANValidatorTest.java	109	225	IBAN	valid	^\s*"([^"]*)"	VALID_IBAN_FIXTURES
+schwifty/tests/test_iban.py	17	96	IBAN	valid	^\s*"([^"]*)"	valid
+schwifty/tests/test_iban.py	101	112	IBAN	invalid	^\s*"([^"]*)"	invalid
+schwifty/tests/test_iban.py	116	139	IBAN	experimental	^\s*"([^"]*)"	experimental: countries outside the IBAN registry
+schwifty/tests/test_bic.py	17	17	BIC	valid	BIC\("([^"]*)"	test_bic
+schwifty/tests/test_bic.py	23	23	BIC	invalid	BIC\("([^"]*)"	test_bic_allow_invalid: unknown country code
+schwifty/tests/test_bic.py	30	30	BIC	valid	"([A-Z0-9]{8}|[A-Z0-9]{11})"	test_bic_kosovo
+schwifty/tests/test_bic.py	119	119	BIC	valid	"([A-Z0-9]{8}|[A-Z0-9]{11})"	test_bic_and_its_xxx_form_are_the_same_bic
+schwifty/tests/test_bic.py	231	235	BIC	valid	^\s*\("([^"]*)"	test_bic_type
+schwifty/tests/test_bic.py	251	255	BIC	invalid	^\s*\("([^"]*)"	test_invalid_bic
+schwifty/tests/test_bic.py	266	270	BIC	invalid	^\s*"([^"]*)"	test_invalid_bic_branch_code_characters
+sepa_king/spec/validator_spec.rb	13	13	IBAN	valid	'([^']*)'	IBANValidator: accept
+sepa_king/spec/validator_spec.rb	17	21	IBAN	invalid	'([^']*)'	IBANValidator: not accept
+sepa_king/spec/validator_spec.rb	41	41	BIC	valid	'([^']*)'	BICValidator: accept
+sepa_king/spec/validator_spec.rb	45	45	BIC	invalid	'([^']*)'	BICValidator: not accept
+sepa_king/spec/validator_spec.rb	65	74	CI	valid	'([^']*)'	CreditorIdentifierValidator: accept
+sepa_king/spec/validator_spec.rb	81	84	CI	invalid	'([^']*)'	CreditorIdentifierValidator: not accept

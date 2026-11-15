@@ -1,0 +1,506 @@
+from __future__ import annotations
+
+import copy
+
+import pytest
+from pycountry import countries  # type: ignore
+
+from schwifty import BIC
+from schwifty import exceptions
+from schwifty import registry
+from schwifty.domain import Bank
+from schwifty.domain import BankStatus
+from schwifty.domain import SEPAScheme
+
+
+def test_bic() -> None:
+    bic = BIC("GENODEM1GLS")
+    assert bic.formatted == "GENO DE M1 GLS"
+    assert bic.validate()
+
+
+def test_bic_allow_invalid() -> None:
+    bic = BIC("GENODXM1GLS", allow_invalid=True)
+    assert bic
+    assert bic.country_code == "DX"
+    with pytest.raises(exceptions.InvalidCountryCode):
+        bic.validate()
+
+
+@pytest.mark.parametrize("value", ["RBKOXKPR", "RBKOXKPRXXX"])
+def test_bic_kosovo(value: str) -> None:
+    # Kosovo has no ISO 3166-1 entry, but SWIFT issues its BICs with the code XK.
+    bic = BIC(value)
+    assert bic.country_code == "XK"
+    assert bic.country is None
+    assert bic.validate()
+
+
+def test_bic_no_branch_code() -> None:
+    bic = BIC("GENODEM1")
+    assert bic.branch_code == ""
+    assert bic.formatted == "GENO DE M1"
+
+
+def test_bic_properties() -> None:
+    bic = BIC("GENODEM1GLS")
+    assert bic.length == len(bic) == 11
+    assert bic.bank_code == "GENO"
+    assert bic.country_code == "DE"
+    assert bic.location_code == "M1"
+    assert bic.branch_code == "GLS"
+    assert bic.domestic_bank_codes == ["43060967", "43060988"]
+    assert bic.bank_names == [
+        "GLS Gemeinschaftsbank",
+        "GLS Gemeinschaftsbank (GAA)",
+    ]
+    # The short names follow the records, which rank equally and are ordered by name.
+    assert bic.bank_short_names == [
+        "GLS Gemeinschaftsbk Bochum",
+        "GLS Bank in Bochum (GAA)",
+    ]
+    assert bic.country == countries.get(alpha_2="DE")
+    with pytest.warns(DeprecationWarning, match="Use `BIC.bank_names` instead"):
+        assert bic.bank_name == "GLS Gemeinschaftsbank"
+    with pytest.warns(DeprecationWarning, match="Use `BIC.bank_short_names` instead"):
+        assert bic.bank_short_name == "GLS Gemeinschaftsbk Bochum"
+    with pytest.warns(DeprecationWarning, match="Use `BIC.domestic_bank_codes` instead"):
+        assert bic.country_bank_code == "43060967"
+    assert bic.exists
+    assert bic.type == "passive"
+
+
+@pytest.mark.filterwarnings("ignore:Use `BIC")
+def test_unknown_bic_properties() -> None:
+    bic = BIC("ABNAJPJTXXX")
+    assert bic.length == len(bic) == 11
+    assert bic.bank_code == "ABNA"
+    assert bic.country_code == "JP"
+    assert bic.location_code == "JT"
+    assert bic.branch_code == "XXX"
+    assert bic.country_bank_code is None
+    assert bic.domestic_bank_codes == []
+    assert bic.bank_name is None
+    assert bic.bank_names == []
+    assert bic.bank_short_name is None
+    assert bic.bank_short_names == []
+    assert not bic.exists
+    assert bic.type == "default"
+
+
+def test_bic_with_branch_code_falls_back_to_institution() -> None:
+    # Some registries only list the 8-character institution BIC. An extended
+    # 11-character BIC denotes a branch of that same institution, so it should
+    # still resolve to the institution's data rather than returning nothing.
+    institution = BIC("BSABESBB")
+    assert institution.domestic_bank_codes
+    for extended in ("BSABESBBXXX", "BSABESBB001"):
+        bic = BIC(extended)
+        assert bic.branch_code
+        assert bic.domestic_bank_codes == institution.domestic_bank_codes
+        assert bic.bank_names == institution.bank_names
+        assert bic.bank_short_names == institution.bank_short_names
+
+
+def test_bic_oro_pay_cyprus() -> None:
+    bic = BIC("OROACY2LXXX")
+    assert bic.bank_names == ["ORO PAY LTD"]
+    assert bic.bank_short_names == ["ORO PAY"]
+    assert bic.country_code == "CY"
+
+
+def test_bic_prefers_branch_specific_registry_entry() -> None:
+    # Where the registry does hold branch-specific entries, those must still
+    # win over the institution-level fallback.
+    assert BIC("MARKDEF1100").domestic_bank_codes == ["10000000"]
+    assert BIC("GENODEM1GLS").domestic_bank_codes == ["43060967", "43060988"]
+
+
+@pytest.mark.parametrize("code", ["COBADEFF", "DEUTDEFF"])
+def test_bic_and_its_xxx_form_are_the_same_bic(code: str) -> None:
+    bic = BIC(code)
+    xxx_entry = BIC(f"{code}XXX")
+    assert xxx_entry.domestic_bank_codes
+    assert xxx_entry.bank_names
+    assert xxx_entry.bank_short_names
+    assert bic.domestic_bank_codes == xxx_entry.domestic_bank_codes
+    assert bic.bank_names == xxx_entry.bank_names
+    assert bic.bank_short_names == xxx_entry.bank_short_names
+    # ISO 9362 treats both forms as identical, so both exist.
+    assert bic.exists
+    assert xxx_entry.exists
+
+
+def test_bic_prefers_exact_institution_entry(monkeypatch: pytest.MonkeyPatch) -> None:
+    entries = {
+        "TESTDEFF": [Bank("DE", "TESTDEFF", "10000000", "Exact institution")],
+        "TESTDEFFXXX": [Bank("DE", "TESTDEFFXXX", "20000000", "XXX entry", "XXX")],
+    }
+    monkeypatch.setattr(registry, "get_banks_by_bic", lambda code: entries.get(code, []))
+    bic = BIC("TESTDEFF")
+    assert bic.domestic_bank_codes == ["10000000"]
+    assert bic.bank_names == ["Exact institution"]
+    assert bic.bank_short_names == []
+
+
+def test_banks_of_a_bic_are_ranked(monkeypatch: pytest.MonkeyPatch) -> None:
+    banks = [
+        Bank("DE", "TESTDEFF", "10000001", "Absorbed bank", status=BankStatus.MERGED, primary=True),
+        Bank("DE", "TESTDEFF", "10000002", "Closed bank", status=BankStatus.CLOSED, primary=True),
+        Bank("DE", "TESTDEFF", "10000003", "Bank branch"),
+        Bank("DE", "TESTDEFF", "10000004", "Bank", primary=True),
+        Bank("DE", "TESTDEFF", "10000000", "Another bank", primary=True),
+    ]
+    monkeypatch.setattr(
+        registry, "get_banks_by_bic", lambda code: banks if code == "TESTDEFF" else []
+    )
+    bic = BIC("TESTDEFF")
+    # Active before merged before closed, primary before non-primary, then by name.
+    assert bic.domestic_bank_codes == ["10000000", "10000004", "10000003", "10000001", "10000002"]
+    assert bic.bank_names[0] == "Another bank"
+    assert bic.bank == bic.banks[0]
+    assert bic.bank is not None
+    assert bic.bank.bank_code == "10000000"
+
+
+def test_bank_of_a_bic_with_banks_that_merged_into_it() -> None:
+    # Banco de Sabadell absorbed the banks whose codes share its BIC (#113).
+    bic = BIC("BSABESBB")
+    assert bic.bank is not None
+    assert bic.bank.name == "BANCO DE SABADELL, S.A."
+    assert bic.bank_names[0] == "BANCO DE SABADELL, S.A."
+    assert bic.domestic_bank_codes[0] == "0081"
+    assert all(bank.status is BankStatus.MERGED for bank in bic.banks[2:])
+
+
+def test_bank_of_a_bic() -> None:
+    assert BIC("MARKDEF1100").bank == registry.get_banks_by_code("DE", "10000000")[0]
+    # A branch BIC that the registry doesn't list falls back to the institution.
+    assert BIC("DEUTDEDBXYZ").bank == BIC("DEUTDEDB").bank
+    assert BIC("DEUTDEDBXYZ").banks == []
+    assert BIC("ZZZZDEFFXXX", allow_invalid=True).bank is None
+
+
+def test_sepa_schemes() -> None:
+    assert BIC("AACSDE33").sepa_schemes == {
+        SEPAScheme.CREDIT_TRANSFER,
+        SEPAScheme.CORE_DIRECT_DEBIT,
+        SEPAScheme.B2B_DIRECT_DEBIT,
+        SEPAScheme.CARD_CLEARING,
+    }
+    # Both forms of the BIC of a primary office are the same BIC.
+    assert BIC("AACSDE33XXX").sepa_schemes == BIC("AACSDE33").sepa_schemes
+    # A branch that the SCL directory lists has its own schemes, other branches the ones of the
+    # institution.
+    assert BIC("DEUTDEDBPAL").sepa_schemes == {SEPAScheme.CREDIT_TRANSFER}
+    assert BIC("DEUTDEDBXYZ").sepa_schemes == BIC("DEUTDEDB").sepa_schemes
+    # The directory doesn't list the BIC, so its participation is unknown.
+    assert BIC("ZZZZDEFFXXX", allow_invalid=True).sepa_schemes == frozenset()
+
+
+def test_bank_codes_of_irish_credit_unions() -> None:
+    # Irish and Maltese IBANs use the bank code of the BIC, which the SCL directory provides.
+    assert BIC.from_bank_code("IE", "ABRN") == "ABRNIE21"
+    assert BIC("ABRNIE21").bank_names == ["PEOPLE FIRST CREDIT UNION LIMITED"]
+    assert BIC.from_bank_code("MT", "CFTE") == "CFTEMTM1"
+
+
+@pytest.mark.parametrize(
+    ("code", "bank_codes"), [("REVOFRP2XXX", ["28233"]), ("TRWIGB22XXX", ["TRWI"])]
+)
+def test_bic_domestic_bank_codes_not_shadowed_by_foreign_registry(
+    code: str, bank_codes: list[str]
+) -> None:
+    # Both are also listed in the Lithuanian registry under a Lithuanian bank code (#242).
+    assert BIC(code).domestic_bank_codes == bank_codes
+    assert BIC(code[:8]).domestic_bank_codes == bank_codes
+
+
+@pytest.mark.parametrize("code", ["MARKDEF1", "ABNAJPJT", "COBADEF"])
+def test_bic_without_institution_or_xxx_record(code: str) -> None:
+    bic = BIC(code, allow_invalid=True)
+    assert bic.domestic_bank_codes == []
+    assert bic.bank_names == []
+    assert bic.bank_short_names == []
+    assert not bic.exists
+
+
+@pytest.mark.parametrize(
+    ("code", "type"),
+    [
+        ("GENODEM0GLS", "testing"),
+        ("GENODEM1GLS", "passive"),
+        ("GENODEM2GLS", "reverse billing"),
+        ("GENODEMMGLS", "default"),
+        ("1234DEWWXXX", "default"),
+    ],
+)
+def test_bic_type(code: str, type: str) -> None:  # noqa: A002
+    bic = BIC(code)
+    assert bic.type == type
+
+
+def test_enforce_swift_compliance() -> None:
+    with pytest.raises(exceptions.InvalidStructure):
+        BIC("1234DEWWXXX", enforce_swift_compliance=True)
+
+
+@pytest.mark.parametrize(
+    ("code", "exc"),
+    [
+        ("AAAA", exceptions.InvalidLength),
+        ("AAAADEM1GLSX", exceptions.InvalidLength),
+        ("GENOD1M1GLS", exceptions.InvalidStructure),
+        ("GENODEM1@#%", exceptions.InvalidStructure),
+        ("GENOXXM1GLS", exceptions.InvalidCountryCode),
+    ],
+)
+def test_invalid_bic(code: str, exc: type[Exception]) -> None:
+    with pytest.raises(exc):
+        BIC(code)
+
+
+@pytest.mark.parametrize(
+    "code",
+    [
+        "GENODEM1@#%",  # symbols in the branch code
+        "GENODEM1G-S",  # dash in the branch code
+        "GENODEM1GL*",  # star in the branch code
+        "MARKDEF1$$$",  # dollar signs in the branch code
+        "GENODEM1..X",  # dots in the branch code
+    ],
+)
+def test_invalid_bic_branch_code_characters(code: str) -> None:
+    # An 11-character BIC whose branch code (positions 9-11) contains
+    # non-alphanumeric characters must be rejected. The structure check only
+    # anchored the start of the string, so with the branch-code group being
+    # optional the trailing garbage slipped through and was even exposed via
+    # ``BIC.branch_code``.
+    with pytest.raises(exceptions.InvalidStructure):
+        BIC(code)
+    with pytest.raises(exceptions.InvalidStructure):
+        BIC(code, enforce_swift_compliance=True)
+
+    invalid = BIC(code, allow_invalid=True)
+    assert not invalid.is_valid
+
+
+def test_bic_structure_is_validated_over_full_string() -> None:
+    # Regression guard for the full-string structure validation: genuinely valid
+    # 8- and 11-character BICs must keep validating after the fix.
+    for code in ("GENODEM1", "GENODEM1GLS", "MARKDEF1100", "1234DEWWXXX"):
+        assert BIC(code).validate()
+
+
+@pytest.mark.parametrize(
+    ("country", "bank_code", "bic"),
+    [
+        ("AT", "36274", "RZTIAT22274"),
+        ("BE", "002", "GEBABEBB"),
+        ("CH", "00777", "KBSZCH22"),
+        ("CH", "08390", "ABSOCH22"),
+        ("CZ", "0600", "AGBACZPP"),
+        ("DE", "43060967", "GENODEM1GLS"),
+        ("DE", "48020151", "HAUKDEFF"),  # primary record, not the secondary LAMPDEDDXXX
+        ("ES", "0209", "BSABESBB"),
+        ("FI", "101", "NDEAFIHH"),
+        ("FR", "30004", "BNPAFRPP"),
+        ("FR", "30066", "CMCIFRPP"),
+        ("FR", "17469", "SOCBPFTX"),
+        ("FR", "10096", "CMCIFRP1LYB"),  # its own BIC, not the one of its group
+        ("FR", "18719", "BFCORERX"),  # head office, not the Mayotte branch
+        ("FR", "30077", "SMCTFR2A"),
+        ("FR", "13489", "NORDFRPP"),
+        ("GE", "BG", "BAGAGE22"),
+        ("HU", "107", "CIBHHUHB"),
+        ("HR", "2485003", "CROAHR2X"),
+        ("IT", "01015", "SARDIT31"),  # generated
+        ("IT", "01030", "PASCITMM"),  # curated
+        ("LV", "RIKO", "RIKOLV2X"),
+        ("MC", "30003", "SOGEMCM1"),
+        ("MC", "30004", "BNPAMCM1"),  # French bank code of a Monegasque branch
+        ("ME", "907", "CBCGMEPG"),
+        ("MT", "CFTE", "CFTEMTM1"),
+        ("NL", "ADYB", "ADYBNL2A"),
+        ("PK", "UNIL", "UNILPKKA"),
+        ("PL", "10100055", "NBPLPLPW"),
+        ("PL", "10900004", "WBKPPLPP"),
+        ("PT", "5200", "CDOTPTP1"),
+        ("RO", "BTRL", "BTRLRO22"),
+        ("SE", "500", "ESSESESS"),
+        ("SI", "01050", "BSLJSI2XFNB"),
+        ("SK", "0900", "GIBASKBX"),
+    ],
+)
+def test_bic_from_bank_code(country: str, bank_code: str, bic: str) -> None:
+    assert BIC.from_bank_code(country, bank_code).compact == bic
+
+
+def test_bic_from_unknown_bank_code() -> None:
+    with pytest.raises(exceptions.InvalidBankCode):
+        BIC.from_bank_code("PO", "12345678")
+
+
+@pytest.mark.parametrize(
+    ("country", "bank_code", "bic_codes"),
+    [
+        ("AT", "36274", ["RZTIAT22274"]),
+        ("BE", "002", ["GEBABEBB"]),
+        ("CH", "00100", ["SNBZCHZZ"]),
+        ("CZ", "0600", ["AGBACZPP"]),
+        ("ES", "0209", ["BSABESBB"]),
+        ("FI", "101", ["NDEAFIHH"]),
+        (
+            "FR",
+            "30004",
+            [
+                "BNPAFRPPIFN",
+                "BNPAFRPPPAA",
+                "BNPAFRPPMED",
+                "BNPAFRPPCRN",
+                "BNPAFRPP",
+                "BNPAFRPPPAE",
+                "BNPAFRPPPBQ",
+                "BNPAFRPPNFE",
+                "BNPAFRPPPGN",
+                "BNPAFRPPBOR",
+                "BNPAFRPPCRM",
+                "BNPAFRPPPVD",
+                "BNPAFRPPPTX",
+                "BNPAFRPPPAC",
+                "BNPAFRPPPLZ",
+                "BNPAFRPP039",
+                "BNPAFRPPENG",
+                "BNPAFRPPNEU",
+                "BNPAFRPPORE",
+                "BNPAFRPPPEE",
+                "BNPAFRPPPXV",
+                "BNPAFRPPIFO",
+            ],
+        ),
+        ("DE", "43060967", ["GENODEM1GLS"]),
+        ("DK", "0040", ["NDEADKKK"]),
+        ("HU", "107", ["CIBHHUHB"]),
+        ("HR", "2485003", ["CROAHR2X"]),
+        ("LV", "RIKO", ["RIKOLV2X"]),
+        ("ME", "907", ["CBCGMEPG"]),
+        ("NL", "ADYB", ["ADYBNL2A"]),
+        ("PL", "10100055", ["NBPLPLPW"]),
+        ("RO", "BTRL", ["BTRLRO22"]),
+        ("SE", "500", ["ESSESESS"]),
+        ("SI", "01050", ["BSLJSI2XFNB"]),
+        ("SI", "02188", ["LJBASI2X"]),
+        ("SI", "03100", ["KBMASI2X"]),  # retired SKB code, alias of OTP banka
+        ("SK", "0900", ["GIBASKBX"]),
+    ],
+)
+def test_bic_candidates_from_bank_code(country: str, bank_code: str, bic_codes: list[str]) -> None:
+    for bic in BIC.candidates_from_bank_code(country, bank_code):
+        assert bic.compact in bic_codes
+
+
+def test_bic_candidates_from_unknown_bank_code() -> None:
+    with pytest.raises(exceptions.InvalidBankCode):
+        BIC.candidates_from_bank_code("PO", "12345678")
+
+
+def test_bic_is_from_primary_bank_code() -> None:
+    bic = BIC.from_bank_code("DE", "20070024")
+    assert bic.compact == "DEUTDEDBHAM"
+
+
+def test_bic_from_bank_code_prefers_registry_primary_among_generic_codes() -> None:
+    # Bank code 18719 has two head office BICs; the registry marks the head office primary and the
+    # Mayotte branch not. The primary must win over the alphabetical tie-break.
+    assert BIC.from_bank_code("FR", "18719").compact == "BFCORERX"
+    assert [b.compact for b in BIC.candidates_from_bank_code("FR", "18719")] == [
+        "BFCORERX",
+        "BFCOYTYT",
+    ]
+
+
+def test_magic_methods() -> None:
+    bic = BIC("GENODEM1GLS")
+    assert bic == "GENODEM1GLS"
+    assert bic == BIC("GENODEM1GLS")
+    assert bic != BIC("GENODEMMXXX")
+    assert bic != 12345
+    assert bic < "GENODEM1GLT"
+
+    assert str(bic) == "GENODEM1GLS"
+    assert hash(bic) == hash("GENODEM1GLS")
+    assert repr(bic) == "<BIC=GENODEM1GLS>"
+
+
+def test_pydantic_protocol() -> None:
+    from pydantic import BaseModel
+    from pydantic import ValidationError
+
+    class Model(BaseModel):
+        bic: BIC
+
+    model = Model(bic="GENODEM1GLS")  # type: ignore[arg-type]
+    assert isinstance(model.bic, BIC)
+    assert model.model_dump() == {"bic": model.bic}
+
+    with pytest.raises(ValidationError) as err:
+        Model(bic="GENODXM1GLS")  # type: ignore[arg-type]
+    assert len(err.value.errors()) == 1
+    error = err.value.errors()[0]
+    assert error["type"] == "bic_format"
+    assert error["msg"] == "Invalid country code 'DX'"
+    assert error["input"] == "GENODXM1GLS"
+
+    dumped = model.model_dump_json()
+    assert dumped == '{"bic":"GENODEM1GLS"}'
+
+    from schwifty import bic as bic_module
+
+    schema = Model.model_json_schema()
+    pattern = schema["properties"]["bic"]["pattern"]
+    assert pattern == bic_module._bic_iso9362_re.pattern
+
+    loaded = Model.model_validate_json(dumped)
+    assert loaded == model
+
+
+@pytest.mark.parametrize("value", [None, 123, 12.5, True, ["GENODEM1GLS"]])
+def test_pydantic_protocol_non_string(value: object) -> None:
+    # ``BIC.__init__`` raises TypeError for anything that is not a string, and the IBAN
+    # validator turns that into a field error. The BIC one let it escape, so validating a
+    # model blew up instead of reporting the offending field.
+    from pydantic import BaseModel
+    from pydantic import ValidationError
+
+    class Model(BaseModel):
+        bic: BIC
+
+    with pytest.raises(ValidationError) as err:
+        Model(bic=value)  # type: ignore[arg-type]
+    error = err.value.errors()[0]
+    assert error["type"] == "bic_format"
+    assert error["input"] == value
+
+
+def test_deepcopy() -> None:
+    bic = BIC("GENODEM1GLS")
+
+    bic_deepcopy = copy.deepcopy(bic)
+    assert id(bic) != id(bic_deepcopy)
+    assert bic == bic_deepcopy
+
+    bic_copy = copy.copy(bic)
+    assert id(bic) != id(bic_copy)
+    assert bic == bic_copy
+
+
+@pytest.mark.parametrize("value", ["GENODXM1GLS", "FOOBARBAZ"])
+def test_deepcopy_allow_invalid(value: str) -> None:
+    original = BIC(value, allow_invalid=True)
+
+    copied = copy.deepcopy(original)
+
+    assert copied is not original
+    assert isinstance(copied, BIC)
+    assert copied == original
+    assert not copied.is_valid
