@@ -68,7 +68,7 @@
     <!-- H2 driver of dependency-check-maven (driver.h2database.version of its parent POM); the
          plugin uses it and scripts/ci/check-owasp-db-age.sh reads the database with it -->
     <plugin.dependency-check.h2.version>2.5.252</plugin.dependency-check.h2.version>
-    <plugin.enforcer.version>3.5.0</plugin.enforcer.version>
+    <plugin.enforcer.version>3.7.0</plugin.enforcer.version>
     <plugin.flatten.version>1.9.0</plugin.flatten.version>
     <plugin.gpg.version>3.2.7</plugin.gpg.version>
     <plugin.gwt.version>1.3.0</plugin.gwt.version>
