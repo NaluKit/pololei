@@ -525,3 +525,8 @@ Classpath Exception. Preserve the applicable licenses and notices when distribut
   records its upstream commit and getter output. These are test data sources, not library dependencies.
   Their provenance does not by itself grant permission to relicense copied code or documentation as Apache-2.0;
   review any substantial reused material under its original terms.
+  
+## To get in touch with the developer
+Please visit us [nalu@element.io](https://app.element.io/#/room/#Nalukit42_Lobby:gitter.im) (former Gitter room).
+
+
