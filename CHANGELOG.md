@@ -4,7 +4,7 @@ All notable changes to pololei are documented in this file. The format is based 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Each release also has its own API
 reference in `docs/api/<version>.md`.
 
-## [Unreleased]
+## [1.0.0] - 2026-11-26
 
 ### Fixed
 
@@ -176,5 +176,7 @@ keep their results unless listed under *Changed behaviour*.
 - `Iban.random(...)` does not calculate national check digits; use `Iban.builder().nationalCheckDigits(true).buildRandom(random)`.
 - Country data stays SWIFT IBAN registry release 100, prefixes of iban4j outside the registry are rejected.
 
-[Unreleased]: https://github.com/NaluKit/pololei/compare/1.0.0-rc01...HEAD
+[Unreleased]: https://github.com/NaluKit/pololei/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/NaluKit/pololei/releases/tag/1.0.0
 [1.0.0-rc01]: https://github.com/NaluKit/pololei/releases/tag/1.0.0-rc01
+
