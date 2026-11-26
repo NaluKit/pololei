@@ -15,7 +15,7 @@
 IBAN and BIC validation for Java and GWT: parsing, check digits, national check digits, BBAN fields,
 formatting, IBAN and BIC creation, EPC QR code (GiroCode) payloads and SEPA Creditor Identifiers.
 
-- [Versioned API reference and reproducible quickstart](docs/api/1.0.0-rc01.md)
+- [Versioned API reference and reproducible quickstart](docs/api/1.0.0.md)
 
 pololei is the successor of [iban4g](https://github.com/nalukit/iban4g): a new, smaller API, country data
 generated from the SWIFT IBAN registry, and one code base for the JVM and GWT.
@@ -45,9 +45,9 @@ pololei has no runtime dependencies. `pololei-gwt` needs `gwt-user` (provided by
 
 ## Getting started
 
-The Maven group ID is `io.github.nalukit`. The current release is `1.0.0-rc01` on Maven Central; its
+The Maven group ID is `io.github.nalukit`. The current release is `1.0.0` on Maven Central; its
 exact API and a runnable quickstart with the expected output are documented in the
-[versioned reference](docs/api/1.0.0-rc01.md). This README describes the current source tree, including
+[versioned reference](docs/api/1.0.0.md). This README describes the current source tree, including
 unreleased features. The development version `HEAD-SNAPSHOT` is built with `mvn install` from the
 repository root (see [building](#building)); use it consistently for all pololei dependencies.
 
@@ -55,21 +55,21 @@ repository root (see [building](#building)); use it consistently for all pololei
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei</artifactId>
-  <version>1.0.0-rc01</version>
+  <version>1.0.0</version>
 </dependency>
 
 <!-- optional: EPC QR code payloads -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-epc</artifactId>
-  <version>1.0.0-rc01</version>
+  <version>1.0.0</version>
 </dependency>
 
 <!-- optional: SEPA Creditor Identifier -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-creditor</artifactId>
-  <version>1.0.0-rc01</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
