@@ -79,6 +79,16 @@ reference in `docs/api/<version>.md`.
 - Build plugins and test dependencies on the versions of the other NaluKit projects: JUnit 6.1.3,
   maven-compiler-plugin 3.16.0, maven-javadoc-plugin 3.12.0, flatten-maven-plugin 1.9.0,
   maven-resources-plugin 3.5.0; gwt-maven-plugin 1.3.0.
+- Further build plugin updates (Dependabot): maven-enforcer-plugin 3.7.0, license-maven-plugin 5.1.2,
+  maven-jar-plugin 3.5.1, maven-gpg-plugin 3.2.8, maven-source-plugin 3.4.0, maven-surefire-plugin 3.6.1,
+  central-publishing-maven-plugin 0.12.0, and H2 2.5.252 for the database of OWASP Dependency-Check. They
+  affect only the build; pololei still has no runtime dependencies.
+- Documentation checked against the code: JavaDoc of `Iban`, `Bic`, `IbanBuilder` and `ValidationResult`
+  (whitespace handling of `Bic.random(...)`, positions of `ValidationResult`, exceptions of `buildRandom`);
+  `docs/bban-fields.md` (the fields are released since 1.0.0-rc01); the migration guides name
+  `pololei-creditor` and state that J2CL is not tested; README, migration guides and
+  `docs/national-checks.md` say that messages never contain the *complete* input; README sections on
+  thread safety (`CreditorIdentifier`, `Bic.random`, own `NationalCheck` rules) and contact.
 
 ### Changed behaviour
 
