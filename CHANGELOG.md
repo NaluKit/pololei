@@ -1,5 +1,105 @@
 # Changelog
 
+All notable changes to pololei are documented in this file. The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Each release also has its own API
+reference in `docs/api/<version>.md`.
+
+## [1.0.0] - 2026-11-26
+
+### Fixed
+
+- `INVALID_NATIONAL_CHECK_DIGITS` from `IbanBuilder.build()` and `buildRandom(...)` (no valid national check
+  digits for the given BBAN) now has `nationalCheck()` `FAILED`, as from the validator; it was `NOT_PERFORMED`.
+  Such results and their `InvalidIbanException` can be serialized with Java serialization and GWT-RPC, which
+  reject inconsistent results.
+- `Iban.field(ACCOUNT_NUMBER)` of Hungarian IBANs returns the 16 character national account number of
+  BBAN positions 9-24. It started at position 8 with the routing check digit and lost the last digit
+  (iban4j #64, #83). The check digit over bank and branch is the new field
+  `BbanField.ROUTING_CHECK_DIGIT`; HU has no `NATIONAL_CHECK_DIGITS` field any more.
+  The JavaDoc of `BbanField.ACCOUNT_NUMBER` and `docs/bban-fields.md` now state that the scope of the account
+  number depends on the country layout.
+
+### Added
+
+- `Bic.of(institutionCode, countryCode, locationCode[, branchCode])`: builds a BIC from its components with the
+  validation rules of `Bic.parse` (iban4j #62).
+- `Bic.random(...)`: random BIC test data with an injectable `Random`, a settable country and 8 or 11 characters
+  (iban4j #43). The BIC is syntactically valid, not a test BIC, and not guaranteed to be unassigned.
+- Release evidence for audits: every module is published with its SBOM in CycloneDX format
+  (`<module>-<version>-cyclonedx.json`); the build is reproducible (fixed archive timestamp, set
+  to the commit time of the release); the release JARs carry a GitHub build provenance
+  attestation; the GitHub release lists the JARs, SBOMs, `SHA256SUMS` (JARs and SBOMs), the OWASP
+  Dependency-Check report of the release build with `SCAN-SHA256SUMS`, and the changes of the version.
+  `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
+  release. `SECURITY.md` describes how releases are built and how to verify them.
+- Regression cases for the eight examples of iban4j #188 (FK, MN, NI, SO, HN, YE; PK and UA with a letter in
+  the account part) in the issue corpus `issue-cases.tsv`, now 32 original issue/IBAN pairs, with the
+  negative counterparts NI04 (wrong check digits) and a PK IBAN with a numeric bank code, also under GWT
+  (`GwtTestNational`). Tests only; the validation is unchanged.
+- Public identifier corpus `test-pololei-corpus` (profile `corpus`, part of every CI build, never
+  published): 1165 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
+  of python-stdnum, Apache Commons Validator, schwifty, sepa_king and its successor sepa_rator, with
+  SHA-256 and license of every file, a reviewed expectation for every value and the reason for each of
+  the 49 differences
+  to the upstream statement. 67 EPC QR code cases from the tests of girocode, payme,
+  sepa-payment-qr-code and segno, including both examples of EPC069-12, compare the payloads of
+  `pololei-epc` byte for byte or the rejected inputs; 9 differences are explained. `scripts/fixtures.py`
+  verifies and restores the files.
+- The SWIFT IBAN registry file the country data is generated from is pinned by release and SHA-256
+  in `scripts/registry/registry-source.properties`; `generate-registry.sh` rejects any other file
+  and writes the SHA-256 to `IbanRegistryData`. `IbanRegistrySourceTest` keeps the pinned values,
+  the generated class and `docs/registry-audit.md` in line.
+
+### Changed
+
+- Release process: `scripts/release/check-release.sh <version>` checks release version, Git tag,
+  `pom.xml`, `SECURITY.md`, `CHANGELOG.md`, README and the versioned API reference
+  `docs/api/<version>.md`; `--site <dir>` also checks the website and `--artifacts` builds the
+  quickstart of the reference against the published artifacts. Pull requests against `main` run the
+  static checks, so an inconsistent release is found before the merge. The deploy job of `dev` and
+  `main` is one job; the release files are prepared and kept as an artifact before anything is
+  published, an interrupted release is completed by re-running the job: no second Central upload
+  (the complete publication set of JARs, POMs and SBOMs is compared, and the records and Portal
+  state of a started deployment are checked), no second GitHub release (it stays a draft until all
+  assets are there and their content is verified; a later OWASP report never replaces the original).
+- `check-release.sh --site` checks release and source commit in the sidebar of every pololei
+  documentation page of the website, as for paniolo.
+- CI: weekly build for new vulnerabilities in unchanged dependencies, dependency updates only in
+  that build, Dependabot for GitHub Actions and Maven, least-privilege permissions, and the OWASP
+  Dependency-Check version in the parent POM. The OWASP database image is pinned by digest
+  (`scripts/ci/update-owasp-image.sh` updates it); its NVD data must not be older than 14 days,
+  read from the update metadata of the database (`scripts/ci/check-owasp-db-age.sh`). Every build
+  runs the standard JavaDoc with doclint, so missing documentation fails before a release.
+- `pololei-gwt` is packaged by the `maven-jar-plugin`, because `gwt:package-lib` ignores the fixed
+  archive timestamp. The JAR has the same entries as before.
+- README dependency snippets use the published release instead of a `${pololei.version}`
+  placeholder.
+- `generate-registry.sh` takes only the registry file; release and SHA-256 come from
+  `scripts/registry/registry-source.properties`.
+- Build plugins and test dependencies on the versions of the other NaluKit projects: JUnit 6.1.3,
+  maven-compiler-plugin 3.16.0, maven-javadoc-plugin 3.12.0, flatten-maven-plugin 1.9.0,
+  maven-resources-plugin 3.5.0; gwt-maven-plugin 1.3.0.
+- Further build plugin updates (Dependabot): maven-enforcer-plugin 3.7.0, license-maven-plugin 5.1.2,
+  maven-jar-plugin 3.5.1, maven-gpg-plugin 3.2.8, maven-source-plugin 3.4.0, maven-surefire-plugin 3.6.1,
+  central-publishing-maven-plugin 0.12.0, and H2 2.5.252 for the database of OWASP Dependency-Check. They
+  affect only the build; pololei still has no runtime dependencies.
+- Documentation checked against the code: JavaDoc of `Iban`, `Bic`, `IbanBuilder` and `ValidationResult`
+  (whitespace handling of `Bic.random(...)`, positions of `ValidationResult`, exceptions of `buildRandom`);
+  `docs/bban-fields.md` (the fields are released since 1.0.0-rc01); the migration guides name
+  `pololei-creditor` and state that J2CL is not tested; README, migration guides and
+  `docs/national-checks.md` say that messages never contain the *complete* input; README sections on
+  thread safety (`CreditorIdentifier`, `Bic.random`, own `NationalCheck` rules) and contact.
+
+### Changed behaviour
+
+- `IbanRegistry.source()` returns `SWIFT IBAN Registry Release 103`. The country data is unchanged: the
+  registry file pololei is generated from is release 103 (September 2026), which was labelled release 100
+  before; see [docs/registry-audit.md](docs/registry-audit.md#release-of-the-registry-file).
+- `EpcQrPayload.Builder` rejects a text field that consists of whitespace only (spaces, tabs, no-break
+  spaces) with `<field> must not consist of whitespace only`; before, such a value was written to the
+  payload, and a name of spaces satisfied the mandatory name. `null` and empty strings still mean
+  "not set", and whitespace around a value is still kept.
+
 ## [1.0.0-rc01] - 2026-11-03
 
 Closes the functional gaps found by comparing pololei with iban4j. Remaining differences are
@@ -75,3 +175,8 @@ keep their results unless listed under *Changed behaviour*.
   registry.
 - `Iban.random(...)` does not calculate national check digits; use `Iban.builder().nationalCheckDigits(true).buildRandom(random)`.
 - Country data stays SWIFT IBAN registry release 100, prefixes of iban4j outside the registry are rejected.
+
+[Unreleased]: https://github.com/NaluKit/pololei/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/NaluKit/pololei/releases/tag/1.0.0
+[1.0.0-rc01]: https://github.com/NaluKit/pololei/releases/tag/1.0.0-rc01
+

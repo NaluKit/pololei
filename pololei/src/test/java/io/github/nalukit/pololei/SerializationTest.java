@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.OptionalInt;
 
@@ -57,6 +58,117 @@ class SerializationTest {
     assertEquals(IbanError.INVALID_BBAN, copy.error()
                                              .orElseThrow());
     assertEquals(OptionalInt.of(20), copy.position());
+  }
+
+  @Test
+  void validResultsRoundTrip() throws Exception {
+    assertEquals(Iban.validate("DE89370400440532013000").value(), ((ValidationResult<?, ?>) deserialize(serialize(Iban.validate("DE89370400440532013000")))).value());
+    assertEquals(Bic.validate("DEUTDEFF").value(), ((ValidationResult<?, ?>) deserialize(serialize(Bic.validate("DEUTDEFF")))).value());
+    ValidationResult<String, IbanError> text = Bban.validate("DE", "370400440532013000");
+    assertEquals(text.value(), ((ValidationResult<?, ?>) deserialize(serialize(text))).value());
+  }
+
+  @Test
+  void nationalDiagnosticsRoundTrip() throws Exception {
+    ValidationResult<Iban, IbanError> failed = IbanValidator.standard()
+                                                            .nationalCheck(NationalCheckMode.REQUIRED)
+                                                            .validate("ES7021000418450200051322");
+    ValidationResult<?, ?>            copy   = (ValidationResult<?, ?>) deserialize(serialize(failed));
+    assertEquals(failed.error(), copy.error());
+    assertEquals(failed.nationalCheck(), copy.nationalCheck());
+    assertEquals(failed.rule(), copy.rule());
+    assertEquals(failed.position(), copy.position());
+    assertEquals(failed.lastPosition(), copy.lastPosition());
+  }
+
+  @Test
+  void builderNationalErrorsRoundTrip() throws Exception {
+    // NO 8601 000006 has no valid national check digit (MOD 11 remainder 1)
+    InvalidIbanException built = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                    .countryCode("NO")
+                                                                                    .bban("86010000060")
+                                                                                    .nationalCheckDigits(true)
+                                                                                    .build());
+    InvalidIbanException drawn = assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                    .countryCode("NO")
+                                                                                    .bankIdentifier("8601")
+                                                                                    .field(io.github.nalukit.pololei.registry.BbanField.ACCOUNT_NUMBER, "000006")
+                                                                                    .nationalCheckDigits(true)
+                                                                                    .buildRandom(new java.util.Random(1)));
+    for (InvalidIbanException exception : java.util.List.of(built, drawn)) {
+      ValidationResult<Iban, IbanError> result = exception.result();
+      assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, exception.error());
+      assertEquals(NationalCheckStatus.FAILED, result.nationalCheck());
+      assertSameDetails(result, (ValidationResult<?, ?>) deserialize(serialize(result)));
+      InvalidIbanException copy = (InvalidIbanException) deserialize(serialize(exception));
+      assertEquals(exception.getMessage(), copy.getMessage());
+      assertSameDetails(result, copy.result());
+    }
+  }
+
+  private static void assertSameDetails(ValidationResult<?, ?> expected,
+                                        ValidationResult<?, ?> actual) {
+    assertEquals(expected.toString(), actual.toString());
+    assertEquals(expected.error(), actual.error());
+    assertEquals(expected.nationalCheck(), actual.nationalCheck());
+    assertEquals(expected.rule(), actual.rule());
+    assertEquals(expected.position(), actual.position());
+    assertEquals(expected.lastPosition(), actual.lastPosition());
+  }
+
+  @Test
+  void manipulatedResultsAreRejected() throws Exception {
+    NationalCheckStatus none = NationalCheckStatus.NOT_PERFORMED;
+    // neither value nor error
+    assertRejected(null, null, null, -1, -1, -1, none);
+    // value and error
+    assertRejected(Iban.parse("DE89370400440532013000"), IbanError.INVALID_COUNTRY_CODE, "x", -1, -1, -1, none);
+    // error without message
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, null, -1, -1, -1, none);
+    // invalid positions and lengths
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", -20, -1, -1, none);
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", 0, -1, -1, none);
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", 1, -2, -1, none);
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", 1, -1, -3, none);
+    // range without start or reversed
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", -1, -1, -1, none, 5);
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", 7, -1, -1, none, 5);
+    // contradicting national check status
+    assertRejected(null, IbanError.INVALID_NATIONAL_CHECK_DIGITS, "x", 5, -1, -1, NationalCheckStatus.PASSED);
+    assertRejected(null, IbanError.INVALID_NATIONAL_CHECK_DIGITS, "x", 5, -1, -1, none);
+    assertRejected(null, IbanError.INVALID_COUNTRY_CODE, "x", 5, -1, -1, NationalCheckStatus.FAILED);
+    assertRejected(Iban.parse("DE89370400440532013000"), null, null, -1, -1, -1, NationalCheckStatus.FAILED);
+    // details on a valid result
+    assertRejected(Iban.parse("DE89370400440532013000"), null, null, 3, -1, -1, none);
+  }
+
+  private static void assertRejected(Object value,
+                                     Enum<?> error,
+                                     String message,
+                                     int position,
+                                     int expectedLength,
+                                     int actualLength,
+                                     NationalCheckStatus status)
+      throws Exception {
+    assertRejected(value, error, message, position, expectedLength, actualLength, status, -1);
+  }
+
+  private static void assertRejected(Object value,
+                                     Enum<?> error,
+                                     String message,
+                                     int position,
+                                     int expectedLength,
+                                     int actualLength,
+                                     NationalCheckStatus status,
+                                     int lastPosition)
+      throws Exception {
+    // the factory methods and the constructor reject such states, so build the object for the
+    // stream by reflection, like a manipulated stream would contain it
+    Constructor<?> constructor = ValidationResult.class.getDeclaredConstructors()[0];
+    constructor.setAccessible(true);
+    Object result = constructor.newInstance(value, error, message, position, expectedLength, actualLength, null, lastPosition, null, status);
+    byte[] bytes  = serialize(result);
+    assertThrows(IllegalArgumentException.class, () -> deserialize(bytes));
   }
 
   @Test

@@ -31,7 +31,9 @@ public class InvalidCreditorIdentifierException
   @Serial
   private static final long serialVersionUID = 1L;
 
+  /** The error. */
   private final CreditorIdentifierError error;
+  /** The position of the error, or -1. */
   private final int                     position;
 
   InvalidCreditorIdentifierException(CreditorIdentifierError error,

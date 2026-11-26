@@ -29,10 +29,24 @@ public enum BbanField {
   BANK_IDENTIFIER_EXTENSION("bank identifier extension"),
   /** Branch identifier (branch or sort code). */
   BRANCH_IDENTIFIER("branch identifier"),
-  /** The account number in the national sense, without national check digits, types or codes. */
+  /**
+   * The account number in the national sense. Where the country layout defines separate fields for national
+   * check digits, types or codes, these are not part of it. The scope depends on the layout: the Hungarian
+   * account number is the complete 16 character account part of BBAN positions 9-24, including a check or
+   * padding position inside it, while the check digit over bank and branch is {@link #ROUTING_CHECK_DIGIT}.
+   * See {@code docs/bban-fields.md} for the layout of each country.
+   */
   ACCOUNT_NUMBER("account number"),
-  /** National check digits (for example the French RIB key or the Italian CIN). */
+  /**
+   * National check digits (for example the French RIB key or the Italian CIN). The Hungarian check digit over
+   * bank and branch is not one of them, see {@link #ROUTING_CHECK_DIGIT}.
+   */
   NATIONAL_CHECK_DIGITS("national check digits"),
+  /**
+   * Check digit over bank and branch identifier that is a position of its own between branch
+   * identifier and account number (Hungary).
+   */
+  ROUTING_CHECK_DIGIT("routing check digit"),
   /** Type of the account (Bulgaria, Brazil, Iceland). */
   ACCOUNT_TYPE("account type"),
   /** Position of the account holder, for example primary or secondary holder (Brazil). */

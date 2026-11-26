@@ -29,6 +29,8 @@ import io.github.nalukit.pololei.NationalCheckMode;
 import io.github.nalukit.pololei.ValidationResult;
 import io.github.nalukit.pololei.ValidationResult_CustomFieldSerializer;
 import io.github.nalukit.pololei.error.IbanError;
+import io.github.nalukit.pololei.error.InvalidIbanException;
+import io.github.nalukit.pololei.registry.BbanField;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
@@ -36,6 +38,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -115,6 +118,34 @@ public class CustomFieldSerializerTest {
   }
 
   @Test
+  public void builderNationalErrorRoundTrip() throws SerializationException {
+    // NO 8601 000006 has no valid national check digit
+    List<ValidationResult<Iban, IbanError>> failures = List.of(assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                                                  .countryCode("NO")
+                                                                                                                  .bban("86010000060")
+                                                                                                                  .nationalCheckDigits(true)
+                                                                                                                  .build()).result(),
+                                                               assertThrows(InvalidIbanException.class, () -> Iban.builder()
+                                                                                                                  .countryCode("NO")
+                                                                                                                  .bankIdentifier("8601")
+                                                                                                                  .field(BbanField.ACCOUNT_NUMBER, "000006")
+                                                                                                                  .nationalCheckDigits(true)
+                                                                                                                  .buildRandom(new Random(1))).result());
+    for (ValidationResult<Iban, IbanError> original : failures) {
+      List<Object> written = new ArrayList<>();
+      ValidationResult_CustomFieldSerializer.serialize(objectWriter(written), original);
+      ValidationResult<Iban, IbanError> copy = ValidationResult_CustomFieldSerializer.instantiate(objectReader(written));
+      assertEquals(original.toString(), copy.toString());
+      assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, copy.error()
+                                                                .orElseThrow());
+      assertEquals(original.nationalCheck(), copy.nationalCheck());
+      assertEquals(original.rule(), copy.rule());
+      assertEquals(original.position(), copy.position());
+      assertEquals(original.lastPosition(), copy.lastPosition());
+    }
+  }
+
+  @Test
   public void bbanValidationResultRoundTrip() throws SerializationException {
     List<Object> written = new ArrayList<>();
     ValidationResult_CustomFieldSerializer.serialize(objectWriter(written), io.github.nalukit.pololei.Bban.validate("GB", "nwbk60161331926819"));
@@ -135,6 +166,42 @@ public class CustomFieldSerializerTest {
     assertThrows(SerializationException.class, () -> instantiate("OTHER", "x", null, null, null));
     assertThrows(SerializationException.class, () -> instantiate(null, null, "IbanError", "NO_SUCH_ERROR", "x"));
     assertThrows(SerializationException.class, () -> instantiate(null, null, "OtherError", "EMPTY", "x"));
+  }
+
+  @Test
+  public void invalidDetailsAndStatusCombinationsAreRejected() throws SerializationException {
+    String e = "IbanError";
+    // each manipulated value on its own: position, lastPosition, expectedLength, actualLength
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", -20, -1, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 0, -1, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -30, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -2, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -1, -3, "NOT_PERFORMED"));
+    // range without start or ending before its start
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", -1, 5, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 7, 5, -1, -1, "NOT_PERFORMED"));
+    // error and national check status contradict each other
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "PASSED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "NOT_PERFORMED"));
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_LENGTH", 5, -1, -1, -1, "FAILED"));
+    // the combination of the whole manipulated example
+    assertThrows(SerializationException.class, () -> full(e, "INVALID_NATIONAL_CHECK_DIGITS", -20, -30, -2, -3, "PASSED"));
+    // regular results stay readable
+    assertEquals(IbanError.INVALID_NATIONAL_CHECK_DIGITS, full(e, "INVALID_NATIONAL_CHECK_DIGITS", 5, 6, -1, -1, "FAILED").error()
+                                                                                                                       .orElseThrow());
+    assertEquals(IbanError.INVALID_LENGTH, full(e, "INVALID_LENGTH", -1, -1, 22, 20, "NOT_PERFORMED").error()
+                                                                                                    .orElseThrow());
+  }
+
+  private static ValidationResult<?, ?> full(String errorKind,
+                                             String errorName,
+                                             int position,
+                                             int lastPosition,
+                                             int expectedLength,
+                                             int actualLength,
+                                             String status) throws SerializationException {
+    List<Object> all = new ArrayList<>(java.util.Arrays.asList(null, null, errorKind, errorName, "x", position, expectedLength, actualLength, null, lastPosition, null, status));
+    return ValidationResult_CustomFieldSerializer.instantiate(objectReader(all));
   }
 
   private static ValidationResult<?, ?> instantiate(Object... values) throws SerializationException {

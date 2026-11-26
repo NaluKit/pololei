@@ -105,11 +105,16 @@ public final class IbanBuilder {
   }
 
   static IbanCountry country(String countryCode) {
-    if (countryCode == null || countryCode.isEmpty()) {
+    String code = countryCode == null ? "" : Text.normalize(countryCode);
+    if (code.isEmpty()) {
       throw new InvalidIbanException(Iban.invalid(IbanError.INVALID_COUNTRY_CODE, "country code is missing"));
     }
-    return IbanRegistry.find(Text.normalize(countryCode))
-                       .orElseThrow(() -> new InvalidIbanException(Iban.invalid(IbanError.UNSUPPORTED_COUNTRY, "country " + countryCode + " does not use IBAN")));
+    // the unchecked input never appears in a message: it may be an account number or contain control characters
+    if (code.length() != 2 || !Text.isUpperCaseLetter(code.charAt(0)) || !Text.isUpperCaseLetter(code.charAt(1))) {
+      throw new InvalidIbanException(Iban.invalid(IbanError.INVALID_COUNTRY_CODE, "country code must have two letters"));
+    }
+    return IbanRegistry.find(code)
+                       .orElseThrow(() -> new InvalidIbanException(Iban.invalid(IbanError.UNSUPPORTED_COUNTRY, "country " + code + " does not use IBAN")));
   }
 
   /**
@@ -117,7 +122,8 @@ public final class IbanBuilder {
    * {@link #build()} or {@link #buildRandom(Random)}. A {@code null} value clears the country;
    * building without one fails.
    *
-   * @param countryCode ISO 3166-1 alpha-2 country code; ASCII lower case and supported whitespace are normalized
+   * @param countryCode ISO 3166-1 alpha-2 country code; ASCII lower case letters and whitespace
+   *                    are normalized as in {@link Iban#parse(CharSequence)}
    * @return this builder
    */
   public IbanBuilder countryCode(String countryCode) {
@@ -210,7 +216,8 @@ public final class IbanBuilder {
    * account number (for example the Italian CIN) cannot be padded, use the field instead. An empty
    * value is not padded.
    *
-   * @param padAccountNumber {@code true} to enable padding (disabled by default) of a short account number
+   * @param padAccountNumber {@code true} to enable padding (disabled by default) of a short
+   *                         account number
    * @return this builder
    */
   public IbanBuilder padAccountNumber(boolean padAccountNumber) {
@@ -222,7 +229,8 @@ public final class IbanBuilder {
    * Left pads a short bank identifier with the {@link #paddingCharacter(char) padding character},
    * for example {@code 123} to {@code 00000123} for Germany. An empty value is not padded.
    *
-   * @param padBankIdentifier {@code true} to enable padding (disabled by default) of a short bank identifier
+   * @param padBankIdentifier {@code true} to enable padding (disabled by default) of a short
+   *                          bank identifier
    * @return this builder
    */
   public IbanBuilder padBankIdentifier(boolean padBankIdentifier) {
@@ -234,7 +242,8 @@ public final class IbanBuilder {
    * Left pads a short branch identifier with the {@link #paddingCharacter(char) padding
    * character}. An empty value is not padded.
    *
-   * @param padBranchIdentifier {@code true} to enable padding (disabled by default) of a short branch identifier
+   * @param padBranchIdentifier {@code true} to enable padding (disabled by default) of a short
+   *                            branch identifier
    * @return this builder
    */
   public IbanBuilder padBranchIdentifier(boolean padBranchIdentifier) {
@@ -324,9 +333,9 @@ public final class IbanBuilder {
    * @param random the source of randomness; the same seed and the same settings give the same IBAN
    * @return the IBAN
    * @throws InvalidIbanException     if the country code is missing, the country does not use IBAN,
-   *                                  a given value is not valid for the country, or no valid
-   *                                  national rule is available, or national check digits cannot be
-   *                                  calculated; random generation stops after at most
+   *                                  a given value is not valid for the country, pololei has no
+   *                                  national rule for the country, or no valid national check
+   *                                  digits were found; random generation stops after at most
    *                                  {@value #MAX_RANDOM_ATTEMPTS} attempts, or after the first
    *                                  failed attempt if no BBAN positions are free
    * @throws IllegalStateException    if a complete BBAN is set, the BBAN is described in more than
@@ -351,6 +360,13 @@ public final class IbanBuilder {
     for (int attempt = 1; ; attempt++) {
       String drawn = composition.fill(random, digitsOnly);
       if (!nationalCheckDigits) {
+        return finish(country, drawn);
+      }
+      // fixed parts that violate the BBAN structure are rejected like build() does, before the
+      // national rule, which requires a valid structure, sees them
+      checkCharacters(drawn);
+      if (!country.bbanStructure()
+                  .matches(drawn)) {
         return finish(country, drawn);
       }
       Optional<String> completed = rule.complete(drawn);

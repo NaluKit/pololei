@@ -26,6 +26,7 @@ import io.github.nalukit.pololei.registry.CharacterType;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Random;
 
 /**
  * A Business Identifier Code (ISO 9362), also known as SWIFT code, with 8 or 11 characters:
@@ -45,7 +46,7 @@ public final class Bic
   private static final long   serialVersionUID = 1L;
   private static final String PRIMARY_OFFICE   = "XXX";
 
-  // GWT-RPC uses Bic_CustomFieldSerializer from pololei-gwt
+  /** The BIC in its electronic format; GWT-RPC uses Bic_CustomFieldSerializer from pololei-gwt. */
   private final String value;
 
   private Bic(String value) {
@@ -54,7 +55,8 @@ public final class Bic
 
   /**
    * Parses a BIC with 8 or 11 characters. Spaces, tabs, line feeds, carriage returns and
-   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so {@code "deut de ff"} is parsed as {@code DEUTDEFF}.
+   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so
+   * {@code "deut de ff"} is parsed as {@code DEUTDEFF}.
    * <p>
    * The country code must be a known ISO 3166-1 alpha-2 code; whether the BIC is actually
    * registered with SWIFT cannot be checked offline.
@@ -97,7 +99,186 @@ public final class Bic
   }
 
   /**
-   * Validates a BIC. Whitespace is ignored and lower case letters are accepted.
+   * Creates a BIC without branch code from its components. Shorthand for
+   * {@link #of(String, String, String, String)} with a {@code null} branch code.
+   *
+   * @param institutionCode the institution code, 4 letters or digits
+   * @param countryCode     the ISO 3166-1 alpha-2 country code
+   * @param locationCode    the location code, 2 letters or digits
+   * @return the BIC with 8 characters, for example {@code DEUTDEFF}
+   * @throws InvalidBicException if a component is {@code null}, has the wrong length or contains
+   *                             a character that is not allowed
+   */
+  public static Bic of(String institutionCode,
+                       String countryCode,
+                       String locationCode) {
+    return of(institutionCode, countryCode, locationCode, null);
+  }
+
+  /**
+   * Creates a BIC from its components, for example {@code DEUT}, {@code DE}, {@code FF} and
+   * {@code 500} give {@code DEUTDEFF500}. The components are normalized like the input of
+   * {@link #parse(CharSequence)} (whitespace is ignored, lower case letters are converted) and
+   * must have exactly their own length, so a component cannot take over characters of its
+   * neighbour. The BIC as a whole is then checked by the rules of {@link #parse(CharSequence)};
+   * an alphanumeric institution code such as {@code A1B2} is valid.
+   *
+   * @param institutionCode the institution code, 4 letters or digits
+   * @param countryCode     the ISO 3166-1 alpha-2 country code
+   * @param locationCode    the location code, 2 letters or digits
+   * @param branchCode      the branch code, 3 letters or digits, or {@code null} for a BIC with
+   *                        8 characters; an empty branch code is invalid
+   * @return the BIC
+   * @throws InvalidBicException if a component is {@code null} (except the branch code), has the
+   *                             wrong length or contains a character that is not allowed, or the
+   *                             country code is unknown; the message names the component
+   */
+  public static Bic of(String institutionCode,
+                       String countryCode,
+                       String locationCode,
+                       String branchCode) {
+    StringBuilder bic = new StringBuilder(11);
+    bic.append(component("institution code", institutionCode, 4));
+    bic.append(component("country code", countryCode, 2));
+    bic.append(component("location code", locationCode, 2));
+    if (branchCode != null) {
+      bic.append(component("branch code", branchCode, 3));
+    }
+    return parse(bic);
+  }
+
+  private static String component(String name,
+                                  String value,
+                                  int length) {
+    if (value == null) {
+      throw new InvalidBicException(ValidationResult.<Bic, BicError>invalid(BicError.EMPTY, name + " is missing"));
+    }
+    String normalized = Text.normalize(value);
+    if (normalized.length() != length) {
+      throw new InvalidBicException(ValidationResult.<Bic, BicError>invalid(BicError.INVALID_LENGTH, name + " must have " + length + " characters, but has " + normalized.length())
+                                                    .withLength(length, normalized.length()));
+    }
+    return normalized;
+  }
+
+  /**
+   * Creates a random BIC with 8 characters and a random country, for example as test data.
+   * Shorthand for {@link #random(String, Random, int)} with a random country.
+   *
+   * @param random the source of randomness, for example a seeded {@link Random} for reproducible
+   *               test data, or a {@link java.security.SecureRandom}; it is used directly
+   * @return a random BIC; see {@link #random(String, Random, int)} for what that means
+   * @throws NullPointerException if {@code random} is {@code null}
+   */
+  public static Bic random(Random random) {
+    return random(random, 8);
+  }
+
+  /**
+   * Creates a random BIC with a random country, for example as test data.
+   *
+   * @param random the source of randomness, used directly
+   * @param length 8 (without branch code) or 11 (with branch code)
+   * @return a random BIC; see {@link #random(String, Random, int)} for what that means
+   * @throws NullPointerException     if {@code random} is {@code null}
+   * @throws IllegalArgumentException if {@code length} is not 8 or 11
+   */
+  public static Bic random(Random random,
+                           int length) {
+    checkRandom(random, length);
+    return generate(IsoCountryCodes.get(random.nextInt(IsoCountryCodes.count())), random, length);
+  }
+
+  /**
+   * Creates a random BIC with 8 characters of the given country, for example as test data.
+   *
+   * @param countryCode ISO 3166-1 alpha-2 country code; whitespace is ignored and lower case
+   *                    letters are accepted
+   * @param random      the source of randomness, used directly
+   * @return a random BIC; see {@link #random(String, Random, int)} for what that means
+   * @throws InvalidBicException  if the country code is missing or unknown
+   * @throws NullPointerException if {@code random} is {@code null}
+   */
+  public static Bic random(String countryCode,
+                           Random random) {
+    return random(countryCode, random, 8);
+  }
+
+  /**
+   * Creates a random BIC of the given country, for example as test data. Institution code,
+   * location code and, for 11 characters, branch code are drawn from letters and digits. The
+   * second character of the location code is never {@code 0}, so the BIC is not a test BIC. The
+   * same seed, country and length give the same BIC for the same pololei version.
+   * <p>
+   * The BIC is syntactically valid ({@link #isValid(CharSequence)}). That says nothing about the
+   * SWIFT registration: the BIC is probably not registered, but it may by chance be the BIC of a
+   * real institution. Do not use it where an unassigned BIC must be guaranteed.
+   *
+   * @param countryCode ISO 3166-1 alpha-2 country code; whitespace is ignored and lower case
+   *                    letters are accepted
+   * @param random      the source of randomness, used directly
+   * @param length      8 (without branch code) or 11 (with branch code)
+   * @return a random BIC of the country
+   * @throws InvalidBicException      if the country code is missing or unknown
+   * @throws NullPointerException     if {@code random} is {@code null}
+   * @throws IllegalArgumentException if {@code length} is not 8 or 11
+   */
+  public static Bic random(String countryCode,
+                           Random random,
+                           int length) {
+    checkRandom(random, length);
+    if (Text.isBlank(countryCode)) {
+      throw new InvalidBicException(ValidationResult.<Bic, BicError>invalid(BicError.UNKNOWN_COUNTRY, "country code is missing"));
+    }
+    String country = Text.normalize(countryCode);
+    if (!IsoCountryCodes.isKnown(country)) {
+      throw new InvalidBicException(ValidationResult.<Bic, BicError>invalid(BicError.UNKNOWN_COUNTRY, "unknown country code " + country));
+    }
+    return generate(country, random, length);
+  }
+
+  private static void checkRandom(Random random,
+                                  int length) {
+    if (random == null) {
+      throw new NullPointerException("random");
+    }
+    if (length != 8 && length != 11) {
+      throw new IllegalArgumentException("a BIC has 8 or 11 characters, not " + length);
+    }
+  }
+
+  private static Bic generate(String country,
+                              Random random,
+                              int length) {
+    StringBuilder bic = new StringBuilder(length);
+    appendRandom(bic, random, 4, false);
+    bic.append(country);
+    appendRandom(bic, random, 1, false);
+    // 0 as second character of the location code marks a test BIC
+    appendRandom(bic, random, 1, true);
+    if (length == 11) {
+      appendRandom(bic, random, 3, false);
+    }
+    return parse(bic);
+  }
+
+  private static void appendRandom(StringBuilder bic,
+                                   Random random,
+                                   int count,
+                                   boolean notZero) {
+    for (int i = 0; i < count; i++) {
+      char c;
+      do {
+        int n = random.nextInt(36);
+        c = n < 26 ? (char) ('A' + n) : (char) ('0' + n - 26);
+      } while (notZero && c == '0');
+      bic.append(c);
+    }
+  }
+
+  /**
+   * Validates a BIC. Whitespace is ignored and lower case letters are accepted, as described for
+   * {@link #parse(CharSequence)}.
    * <p>
    * Checks run in this order: empty input, normalized length, allowed characters and known
    * country code. The result reports the first failure; character positions refer to the
@@ -200,6 +381,8 @@ public final class Bic
   /**
    * Validates a deserialized instance, so that a manipulated stream cannot create an invalid BIC.
    * Called by Java serialization; GWT-RPC validates in Bic_CustomFieldSerializer.
+   *
+   * @return the validated BIC that replaces the deserialized instance
    */
   @Serial
   private Object readResolve() {

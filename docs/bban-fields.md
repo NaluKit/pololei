@@ -2,7 +2,7 @@
 
 ## Decision: `accountNumber()` keeps its meaning, the national fields are added
 
-*Status: decided for the next minor release; no incompatible change.*
+*Status: implemented since 1.0.0-rc01; no incompatible change.*
 
 `Iban.accountNumber()` returns, as documented since the first release, **all BBAN characters outside the bank and
 branch identifier of the SWIFT IBAN registry**. For several countries that is more than the account number in the
@@ -14,6 +14,7 @@ branch code:
 | `IT60X0542811101000000123456` | `X000000123456` (CIN + account) | `000000123456` |
 | `ES9121000418450200051332` | `450200051332` (check digits + account) | `0200051332` |
 | `FR1420041010050500013M02606` | `010050500013M02606` (branch + account + RIB key) | `0500013M026` |
+| `HU42117730161111101800000000` | `61111101800000000` (routing check digit + account) | `1111101800000000` (`ROUTING_CHECK_DIGIT` `6` is separate) |
 
 Changing `accountNumber()` would silently change the results of existing callers. Instead pololei adds an
 unambiguous, additive API:
@@ -64,8 +65,9 @@ branch is only available as a field.
 | `BANK_IDENTIFIER` | bank identifier, always as in the registry |
 | `BANK_IDENTIFIER_EXTENSION` | trailing part of the bank identifier (Seychelles); lies inside the bank identifier |
 | `BRANCH_IDENTIFIER` | branch identifier |
-| `ACCOUNT_NUMBER` | national account number |
+| `ACCOUNT_NUMBER` | national account number; without the national check digits, types or codes the country layout defines as fields of their own. The scope depends on the country: the Hungarian account number is the complete account part of positions 9-24 (see HU below) |
 | `NATIONAL_CHECK_DIGITS` | national check digits; for AL and PL inside the registry branch or bank identifier |
+| `ROUTING_CHECK_DIGIT` | check digit over bank and branch identifier that is a position of its own (Hungary); not part of `NATIONAL_CHECK_DIGITS` |
 | `ACCOUNT_TYPE` | account type |
 | `OWNER_ACCOUNT_TYPE` | position of the account holder (Brazil) |
 | `IDENTIFICATION_NUMBER` | identification number of the holder (Icelandic kennitala) |
@@ -95,7 +97,7 @@ identifier) is ignored, and `BbanLayoutTest` fails. Positions are BBAN positions
 | FI | bank 1-3, account 4-13, check 14 | Finnish account number in machine format |
 | FO | bank 1-4, account 5-13, check 14 | registry structure `4!n9!n1!n` |
 | FR | bank 1-5, **branch 6-10**, account 11-21, RIB key 22-23 | RIB (CFONB); the registry defines no branch |
-| HU | bank 1-3, branch 4-7, account 8-23, check 24 | registry structure `3!n4!n1!n15!n1!n`; position 8, the check digit over bank and branch, stays in the account as in iban4j, because a layout has one check digit field |
+| HU | bank 1-3, branch 4-7, routing check digit 8, account 9-24 | registry structure `3!n4!n1!n15!n1!n`; position 8 is the check digit over bank and branch (`ROUTING_CHECK_DIGIT`). The account number is the 16 character national account number of positions 9-24; a short domestic number is padded with trailing zeros, so the last position is a check digit only for 16 digit numbers and is not exposed as `NATIONAL_CHECK_DIGITS`. iban4j puts the account at 8-23 and loses the last digit (iban4j #64, #83) |
 | IS | bank 1-2, branch 3-4, account type 5-6, account 7-12, kennitala 13-22 | registry structure `4!n2!n6!n10!n`; Icelandic account format |
 | IT | CIN 1, ABI 2-6, CAB 7-11, account 12-23 | Banca d'Italia / ABI, coordinate bancarie |
 | MC | as FR (bank, branch from the registry) | Monaco uses the French RIB |

@@ -36,6 +36,29 @@ public final class IsoCountryCodes {
   }
 
   /**
+   * Returns the number of country codes in the bundled list.
+   *
+   * @return the number of codes
+   */
+  public static int count() {
+    return CODES.length() / 2;
+  }
+
+  /**
+   * Returns a country code of the bundled list.
+   *
+   * @param index the index, from 0 to {@code count() - 1}, in alphabetical order
+   * @return the upper case country code
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public static String get(int index) {
+    if (index < 0 || index >= count()) {
+      throw new IndexOutOfBoundsException("country code index " + index);
+    }
+    return CODES.substring(index * 2, index * 2 + 2);
+  }
+
+  /**
    * Looks up an exact upper case country code in the bundled list, including XK.
    *
    * @param code the country code, without normalization

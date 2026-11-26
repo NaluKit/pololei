@@ -5,11 +5,12 @@
 | iban4g                                 | pololei                                     |
 |----------------------------------------|---------------------------------------------|
 | `io.github.nalukit:iban4g` (Java)      | `io.github.nalukit:pololei`                 |
-| `io.github.nalukit:iban4g` (GWT/J2CL)  | `io.github.nalukit:pololei-gwt`             |
+| `io.github.nalukit:iban4g` (GWT/J2CL)  | `io.github.nalukit:pololei-gwt` (GWT 2.13; J2CL is not tested) |
 | `<inherits name="...iban4g.Iban4g"/>`  | `<inherits name="io.github.nalukit.pololei.Pololei"/>` |
 | package `io.github.nalukit.iban4g.shared` | package `io.github.nalukit.pololei`, errors and exceptions in `io.github.nalukit.pololei.error` |
 
-pololei needs Java 21 or newer.
+pololei needs Java 21 or newer. EPC QR codes and SEPA Creditor Identifiers are in the optional modules
+`pololei-epc` and `pololei-creditor`.
 
 ## API
 
@@ -48,4 +49,5 @@ pololei needs Java 21 or newer.
 - National check digits are checked with `IbanValidator` (see [national-checks.md](national-checks.md)).
 - Check digits `00`, `01` and `99` are rejected.
 - A BIC may contain digits in its first four characters (ISO 9362:2022), so `DEU1DEFF` is now valid.
-- Error messages no longer contain the input.
+- Error messages no longer contain the complete input; at most a single character, the country code or the check
+  digits.

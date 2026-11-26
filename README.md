@@ -13,9 +13,9 @@
 [![Build](https://github.com/NaluKit/pololei/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/NaluKit/pololei/actions/workflows/build.yaml)
 
 IBAN and BIC validation for Java and GWT: parsing, check digits, national check digits, BBAN fields,
-formatting, IBAN creation and EPC QR code (GiroCode) payloads.
+formatting, IBAN and BIC creation, EPC QR code (GiroCode) payloads and SEPA Creditor Identifiers.
 
-- [Versioned API reference and reproducible quickstart](docs/api/1.0.0-rc01.md)
+- [Versioned API reference and reproducible quickstart](docs/api/1.0.0.md)
 
 pololei is the successor of [iban4g](https://github.com/nalukit/iban4g): a new, smaller API, country data
 generated from the SWIFT IBAN registry, and one code base for the JVM and GWT.
@@ -45,25 +45,31 @@ pololei has no runtime dependencies. `pololei-gwt` needs `gwt-user` (provided by
 
 ## Getting started
 
+The Maven group ID is `io.github.nalukit`. The current release is `1.0.0` on Maven Central; its
+exact API and a runnable quickstart with the expected output are documented in the
+[versioned reference](docs/api/1.0.0.md). This README describes the current source tree, including
+unreleased features. The development version `HEAD-SNAPSHOT` is built with `mvn install` from the
+repository root (see [building](#building)); use it consistently for all pololei dependencies.
+
 ```xml
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0</version>
 </dependency>
 
 <!-- optional: EPC QR code payloads -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-epc</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0</version>
 </dependency>
 
 <!-- optional: SEPA Creditor Identifier -->
 <dependency>
   <groupId>io.github.nalukit</groupId>
   <artifactId>pololei-creditor</artifactId>
-  <version>${pololei.version}</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -107,7 +113,7 @@ iban.bban();                // 370400440532013000
 iban.bankIdentifier();      // Optional[37040044]
 iban.branchIdentifier();    // Optional.empty
 iban.accountNumber();       // 0532013000 (all BBAN characters outside bank and branch identifier)
-iban.field(BbanField.ACCOUNT_NUMBER);   // Optional[0532013000] (the national account number)
+iban.field(BbanField.ACCOUNT_NUMBER);   // Optional[0532013000] (national account number, scope per country: docs/bban-fields.md)
 iban.isSepa();              // true
 iban.country();             // the registry definition of DE
 
@@ -283,7 +289,20 @@ bic.isTestBic();            // false (true if the location code ends with 0)
 Bic.validate(input);        // ValidationResult<Bic, BicError>
 Bic.isValid(input);         // boolean
 Bic.tryParse(input);        // Optional<Bic>
+
+Bic.of("DEUT", "DE", "FF", "500");               // DEUTDEFF500, from components; without branch code DEUTDEFF
+Bic.random(new Random(42));                      // test data: random country, 8 characters
+Bic.random(new Random(42), 11);                  // with branch code
+Bic.random("DE", new SecureRandom(), 11);        // fixed country
 ```
+
+`Bic.of(...)` checks every component for its own length (4, 2, 2 and 3 characters) and the result by the rules of
+`Bic.parse`; an invalid component throws an `InvalidBicException` that names it.
+
+`Bic.random(...)` uses the given `Random` directly, so the same seed, country and length give the same BIC for the
+same pololei version. Country and length (8 or 11) can be set; an unknown country throws an `InvalidBicException`, any
+other length an `IllegalArgumentException`. The generated BIC passes `Bic.validate` and is never a test BIC, but
+syntactic validity is neither a SWIFT registration nor a guarantee that no real institution uses it.
 
 A BIC has 8 or 11 letters or digits, and characters 5-6 must be a known ISO 3166-1 country code (including XK
 for Kosovo). Following ISO 9362:2022, the first four characters may contain digits. Whether a BIC is actually
@@ -320,8 +339,11 @@ payload.byteLength();    // 80, at most 331
 | `remittanceText(...)`           | optional, at most 140 characters; excludes `remittanceReference`                          |
 | `information(...)`              | optional, hint for the payer, at most 70 characters                                       |
 
-Texts must not contain line breaks, and the payload must not exceed 331 bytes in its character set. `build()`
-throws an `IllegalArgumentException` that names the field if a rule is violated.
+Texts must not contain line breaks, and the payload must not exceed 331 bytes in its character set. Texts are
+written exactly as given, including whitespace at the start or end; `null` and an empty string mean "not set", a value
+of whitespace only is rejected (a name of whitespace only does not satisfy the mandatory name). The purpose is not
+checked against the ISO 20022 code list and may be in lower case, as EPC069-12 allows. `build()` throws an
+`IllegalArgumentException` that names the field if a rule is violated.
 
 ## SEPA Creditor Identifier
 
@@ -353,7 +375,7 @@ authorities, and `of(...)` only calculates check digits, for example for test da
 
 ## Country data
 
-`IbanRegistry` provides the IBAN definition of every country that uses IBAN (89 countries in release 100): BBAN
+`IbanRegistry` provides the IBAN definition of every country that uses IBAN (89 countries in release 103): BBAN
 structure, length, position of bank and branch identifier, BBAN layout, SEPA membership and an example IBAN.
 
 ```java
@@ -364,18 +386,20 @@ germany.bbanLayout();       // [BANK_IDENTIFIER 1-8, ACCOUNT_NUMBER 9-18]
 germany.isSepa();           // true
 IbanRegistry.isSupported("US");   // false
 IbanRegistry.countries();   // all countries, ordered by country code
-IbanRegistry.source();      // SWIFT IBAN Registry Release 100
+IbanRegistry.source();      // SWIFT IBAN Registry Release 103
 ```
 
 The data is generated Java code (`IbanRegistryData`), so it works in GWT without resources. To update it,
 download the *IBAN Registry (TXT)* from
-[SWIFT](https://www.swift.com/standards/data-standards/iban-international-bank-account-number) and run:
+[SWIFT](https://www.swift.com/standards/data-standards/iban-international-bank-account-number), enter its
+release and SHA-256 in `scripts/registry/registry-source.properties` and run:
 
 ```bash
-scripts/registry/generate-registry.sh ~/Downloads/iban-registry.txt "SWIFT IBAN Registry Release 100"
+scripts/registry/generate-registry.sh ~/Downloads/iban-registry.txt
 ```
 
-The generator checks every example IBAN against its structure and check digits before writing the file.
+The generator rejects a file whose SHA-256 differs from the pinned one and checks every example IBAN against its
+structure and check digits before writing the file.
 [docs/registry-audit.md](docs/registry-audit.md) compares the data with iban4j and records every decision.
 
 ## Serialization
@@ -396,17 +420,21 @@ or BIC is always validated again, so a manipulated stream or request cannot crea
 pololei keeps no mutable shared state and can be used by any number of threads and users at the same time, for
 example in a servlet container or a GWT-RPC server:
 
-- `Iban`, `Bic`, `ValidationResult`, `IbanValidator`, `EpcQrPayload` and the country data (`IbanCountry`,
-  `BbanLayout`, `BbanStructure`, ...) are immutable. Keep one configured `IbanValidator` in a static field or a
-  singleton and use it from every request.
-- The static methods (`Iban.parse`, `Bic.validate`, `Bban.validate`, `IbanRegistry.find`, `NationalChecks.find`,
-  `IbanCheckDigits.calculate`, ...) are stateless; the registry and the national rules are loaded once and never
+- `Iban`, `Bic`, `ValidationResult`, `IbanValidator`, `EpcQrPayload`, `CreditorIdentifier` and the country data
+  (`IbanCountry`, `BbanLayout`, `BbanStructure`, ...) are immutable. Keep one configured `IbanValidator` in a static
+  field or a singleton and use it from every request; own `NationalCheck` rules added to it must be thread-safe
+  as well.
+- The static methods (`Iban.parse`, `Bic.validate`, `Bban.validate`, `CreditorIdentifier.validate`,
+  `IbanRegistry.find`, `NationalChecks.find`, `IbanCheckDigits.calculate`, ...) are stateless; the registry and the national rules are loaded once and never
   change.
 - `IbanBuilder` and `EpcQrPayload.Builder` are mutable and not thread-safe: create a new builder for every IBAN or
   payload instead of sharing one.
-- For random IBANs generated in parallel, pass `ThreadLocalRandom.current()` or one `Random` per thread.
+- For random IBANs or BICs generated in parallel, pass `ThreadLocalRandom.current()` or one `Random` per thread.
 
 ## Building
+
+Building needs Java 21 or newer and Maven 3.9.9 or a newer Maven 3 (checked by the build; CI uses the Maven of
+the runner image). The versions of all Maven plugins are fixed in the parent POM.
 
 ```bash
 mvn verify
@@ -415,8 +443,17 @@ mvn verify
 `pololei-gwt` compiles the sources with the GWT compiler and runs `PololeiGwtSuite` as JavaScript, including real
 GWT-RPC calls against a test servlet. CI builds and tests with Java 21 and 25.
 
-The sources of the `pololei`, `pololei-epc` and `pololei-creditor` modules are shared with GWT, which supports the Java 17 language
-level and its own JRE emulation: use Java 21 syntax such as pattern matching for `switch` or record patterns,
+The profile `corpus` adds [test-pololei-corpus](test-pololei-corpus/README.md): IBANs, BICs, Creditor Identifiers and
+EPC QR code cases from the unchanged test files of nine public projects, pinned to a commit, with a reviewed
+expectation for every value and case and the reason for every difference to the upstream statement. CI builds always
+include it:
+
+```bash
+mvn verify -P corpus
+```
+
+The sources of the `pololei`, `pololei-epc` and `pololei-creditor` modules are shared with GWT, which supports the
+Java 17 language level and its own JRE emulation: use Java 21 syntax such as pattern matching for `switch` or record patterns,
 and APIs such as `List.getFirst()`, only in tests and scripts. The GWT build catches violations.
 
 ## Migrating
@@ -424,7 +461,22 @@ and APIs such as `List.getFirst()`, only in tests and scripts. The GWT build cat
 - from iban4g: [docs/migration-iban4g.md](docs/migration-iban4g.md)
 - from iban4j: [docs/migration-iban4j.md](docs/migration-iban4j.md)
 
-Changes between versions: [CHANGELOG.md](CHANGELOG.md). Reporting security issues: [SECURITY.md](SECURITY.md).
+## Releases and security
+
+A release is published to Maven Central under group ID `io.github.nalukit` and tagged with its
+version in Git. Release version, tag, Maven artifacts, the versioned API reference
+`docs/api/<version>.md` and its runnable quickstart describe the same commit;
+[`scripts/release/check-release.sh`](scripts/release/check-release.sh) checks this before and
+after publishing; its header describes the static checks, the `--site` check of the website
+(maintained in [NaluKit/nalukit-web-site](https://github.com/NaluKit/nalukit-web-site)) and the
+`--artifacts` check against Maven Central. The CI build runs the static checks for every pull
+request against `main`. `HEAD-SNAPSHOT` is the development build of the `dev` branch and is not supported
+for production use. Changes per release, and those not yet released, are listed in
+[CHANGELOG.md](CHANGELOG.md).
+
+Supported release lines, how releases are built and how to verify them, and how to report a
+vulnerability privately are described in [SECURITY.md](SECURITY.md). Please do not report
+vulnerabilities in public issues.
 
 ## License
 
@@ -444,7 +496,7 @@ any applicable upstream `NOTICE` with distributions as required by that license.
 | --- | --- | --- |
 | `pololei`, `pololei-epc`, `pololei-creditor` | JVM library modules | No third-party compile/runtime dependencies; the latter two depend on `pololei`. |
 | GWT 2.13.1 (`gwt-user`) | `provided` dependency of `pololei-gwt`, including its RPC serializers | GWT code uses Apache-2.0; bundled components and transitive dependencies have their own terms. See [GWT licensing](https://www.gwtproject.org/terms.html). |
-| JUnit Jupiter 5.14.4 / JUnit 4.13.2 | Tests only | EPL-2.0 / EPL-1.0. |
+| JUnit Jupiter 6.1.3 / JUnit 4.13.2 | Tests only | EPL-2.0 / EPL-1.0. |
 | GWT compiler and test dependencies (`gwt-dev`) | Build/tests only | Multiple licenses, including Apache-2.0, EPL, MPL, BSD and MIT; these are not all covered by the project license. |
 
 **Build/test license exception:** `gwt-dev:2.13.1` transitively resolves `colt:colt:1.2.0`. Its
@@ -458,7 +510,7 @@ Classpath Exception. Preserve the applicable licenses and notices when distribut
 ### External data and specifications
 
 - **SWIFT IBAN Registry:** `IbanRegistryData.java` contains country definitions and example IBANs generated from
-  the registry labelled release 100; derived values also occur in test fixtures and the registry audit.
+  the registry labelled release 103 (September 2026); derived values also occur in test fixtures and the registry audit.
   The original registry download is not included. SWIFT's publications and
   [website terms](https://www.swift.com/about-us/legal/online-services/swift-website-terms-use) reserve rights;
   public download availability is not an Apache-2.0 grant. No permission establishing unrestricted redistribution
@@ -474,3 +526,9 @@ Classpath Exception. Preserve the applicable licenses and notices when distribut
   records its upstream commit and getter output. These are test data sources, not library dependencies.
   Their provenance does not by itself grant permission to relicense copied code or documentation as Apache-2.0;
   review any substantial reused material under its original terms.
+
+## Contact
+
+Questions and feedback are welcome in the NaluKit chat room on Element,
+[#Nalukit42_Lobby:gitter.im](https://app.element.io/#/room/#Nalukit42_Lobby:gitter.im) (the former Gitter room).
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

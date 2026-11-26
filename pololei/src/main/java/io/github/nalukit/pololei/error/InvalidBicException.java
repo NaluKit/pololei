@@ -31,6 +31,7 @@ public class InvalidBicException
   @Serial
   private static final long serialVersionUID = 1L;
 
+  /** The validation result with the details of the error. */
   private final ValidationResult<Bic, BicError> result;
 
   /**

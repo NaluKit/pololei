@@ -54,16 +54,26 @@ public final class ValidationResult<T, E extends Enum<E>>
 
   // final, so that a result is safely published to other threads even without synchronization;
   // GWT-RPC uses ValidationResult_CustomFieldSerializer from pololei-gwt
-  @SuppressWarnings("serial") // T is Iban or Bic, both serializable
+  /** The validated value, {@code null} if invalid. */
+  @SuppressWarnings("serial") // T is Iban, Bic or String, all serializable
   private final T                   value;
+  /** The error, {@code null} if valid. */
   private final E                   error;
+  /** The message, {@code null} if valid. */
   private final String              message;
+  /** 1-based position of the error in what was validated, or -1. */
   private final int                 position;
+  /** Expected length, or -1. */
   private final int                 expectedLength;
+  /** Actual length, or -1. */
   private final int                 actualLength;
+  /** Expected character type, or {@code null}. */
   private final CharacterType       expectedType;
+  /** Last position of the affected range, or -1. */
   private final int                 lastPosition;
+  /** Id of the national rule, or {@code null}. */
   private final String              rule;
+  /** The national check status, {@code null} if not performed. */
   private final NationalCheckStatus nationalCheck;
 
   private ValidationResult(T value,
@@ -92,14 +102,24 @@ public final class ValidationResult<T, E extends Enum<E>>
     return new ValidationResult<>(Objects.requireNonNull(value), null, null, NONE, NONE, NONE, null, NONE, null, NationalCheckStatus.NOT_PERFORMED);
   }
 
+  /**
+   * Creates an invalid result. {@link IbanError#INVALID_NATIONAL_CHECK_DIGITS} always comes with
+   * {@link NationalCheckStatus#FAILED}, whether the validator found wrong check digits or the
+   * builder found no valid ones; every other error starts with
+   * {@link NationalCheckStatus#NOT_PERFORMED}. This keeps every result created by pololei
+   * consistent with {@link #checkConsistency()}.
+   */
   static <T, E extends Enum<E>> ValidationResult<T, E> invalid(E error,
                                                                String message) {
-    return new ValidationResult<>(null, Objects.requireNonNull(error), Objects.requireNonNull(message), NONE, NONE, NONE, null, NONE, null, NationalCheckStatus.NOT_PERFORMED);
+    NationalCheckStatus nationalCheck = Objects.requireNonNull(error) == IbanError.INVALID_NATIONAL_CHECK_DIGITS ? NationalCheckStatus.FAILED : NationalCheckStatus.NOT_PERFORMED;
+    return new ValidationResult<>(null, error, Objects.requireNonNull(message), NONE, NONE, NONE, null, NONE, null, nationalCheck);
   }
 
   /**
    * Recreates a result from its parts; used by the GWT-RPC serializer of pololei-gwt. Absent
    * positions and lengths are {@link #NONE}.
+   *
+   * @throws IllegalArgumentException if the parts do not form a valid or an invalid result
    */
   static <T, E extends Enum<E>> ValidationResult<T, E> restore(T value,
                                                                E error,
@@ -111,7 +131,73 @@ public final class ValidationResult<T, E extends Enum<E>>
                                                                int lastPosition,
                                                                String rule,
                                                                NationalCheckStatus nationalCheck) {
-    return new ValidationResult<>(value, error, message, position, expectedLength, actualLength, expectedType, lastPosition, rule, nationalCheck);
+    ValidationResult<T, E> result = new ValidationResult<>(value, error, message, position, expectedLength, actualLength, expectedType, lastPosition, rule, nationalCheck);
+    result.checkConsistency();
+    return result;
+  }
+
+  /**
+   * Rejects a result whose fields contradict each other, for example one that is valid and has no
+   * value, or has a value and an error. Used for results created from outside, that is by the
+   * Java deserialization and the GWT-RPC serializer.
+   *
+   * @throws IllegalArgumentException if the fields do not form a valid or an invalid result
+   */
+  private void checkConsistency() {
+    if ((value == null) == (error == null)) {
+      throw new IllegalArgumentException("invalid ValidationResult: either a value or an error is required");
+    }
+    if (error == null) {
+      if (message != null || position != NONE || expectedLength != NONE || actualLength != NONE || expectedType != null || lastPosition != NONE || rule != null) {
+        throw new IllegalArgumentException("invalid ValidationResult: a valid result has no error details");
+      }
+      if (!(value instanceof Iban || value instanceof Bic || value instanceof String)) {
+        throw new IllegalArgumentException("invalid ValidationResult: unsupported value type");
+      }
+      if (nationalCheck == NationalCheckStatus.FAILED) {
+        throw new IllegalArgumentException("invalid ValidationResult: a valid result has no failed national check");
+      }
+    } else {
+      if (!(error instanceof IbanError || error instanceof BicError)) {
+        throw new IllegalArgumentException("invalid ValidationResult: unsupported error type");
+      }
+      if (message == null || message.isEmpty()) {
+        throw new IllegalArgumentException("invalid ValidationResult: an error needs a message");
+      }
+      if (nationalCheck == NationalCheckStatus.PASSED) {
+        throw new IllegalArgumentException("invalid ValidationResult: an error has no passed national check");
+      }
+      if ((nationalCheck == NationalCheckStatus.FAILED) != (error == IbanError.INVALID_NATIONAL_CHECK_DIGITS)) {
+        throw new IllegalArgumentException("invalid ValidationResult: national check status does not match the error");
+      }
+    }
+    if (nationalCheck == null) {
+      throw new IllegalArgumentException("invalid ValidationResult: national check status is missing");
+    }
+    if (position != NONE && position < 1 || lastPosition != NONE && lastPosition < 1) {
+      throw new IllegalArgumentException("invalid ValidationResult: positions are 1-based");
+    }
+    if (lastPosition != NONE && (position == NONE || lastPosition < position)) {
+      throw new IllegalArgumentException("invalid ValidationResult: invalid position range");
+    }
+    if (expectedLength < NONE || actualLength < NONE) {
+      throw new IllegalArgumentException("invalid ValidationResult: lengths must not be negative");
+    }
+    if (rule != null && (rule.isEmpty() || error == null)) {
+      throw new IllegalArgumentException("invalid ValidationResult: invalid rule");
+    }
+  }
+
+  /**
+   * Rejects inconsistent results read from a Java serialization stream.
+   *
+   * @return this result, if its fields are consistent
+   * @throws IllegalArgumentException if the fields do not form a valid or an invalid result
+   */
+  @Serial
+  private Object readResolve() {
+    checkConsistency();
+    return this;
   }
 
   /** Returns a copy with the 1-based position of the offending character. */

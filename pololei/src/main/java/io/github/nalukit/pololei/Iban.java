@@ -64,7 +64,7 @@ public final class Iban
   @Serial
   private static final long serialVersionUID = 1L;
 
-  // the electronic format; GWT-RPC uses Iban_CustomFieldSerializer from pololei-gwt
+  /** The IBAN in its electronic format; GWT-RPC uses Iban_CustomFieldSerializer from pololei-gwt. */
   private final String value;
 
   private Iban(String value) {
@@ -73,7 +73,8 @@ public final class Iban
 
   /**
    * Parses an IBAN in electronic or print format. Spaces, tabs, line feeds, carriage returns and
-   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so {@code "de89 3704 0044 0532 0130 00"} is parsed as well.
+   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so
+   * {@code "de89 3704 0044 0532 0130 00"} is parsed as well.
    * <p>
    * Only the international rules are checked; use {@link IbanValidator} to verify national check
    * digits too.
@@ -129,7 +130,7 @@ public final class Iban
 
   /**
    * Validates an IBAN in electronic or print format. Whitespace is ignored and lower case
-   * letters are accepted.
+   * letters are accepted, as described for {@link #parse(CharSequence)}.
    * <p>
    * Checks run in this order: empty input, allowed characters, country code syntax, supported
    * country, country-specific length, check digit syntax, BBAN structure and MOD 97 check digits.
@@ -255,7 +256,8 @@ public final class Iban
    * digits inside the BBAN are not calculated; use {@link IbanBuilder#buildRandom(Random)} with
    * {@link IbanBuilder#nationalCheckDigits(boolean)} for that.
    *
-   * @param random the source of randomness; the same initial state gives the same IBAN for the same registry data
+   * @param random the source of randomness; the same initial state gives the same IBAN for the
+   *               same registry data
    * @return a random IBAN
    * @throws NullPointerException if {@code random} is {@code null}
    */
@@ -271,7 +273,8 @@ public final class Iban
    * {@link IbanBuilder#nationalCheckDigits(boolean)} for that.
    *
    * @param countryCode ISO 3166-1 alpha-2 country code, lower case is accepted
-   * @param random      the source of randomness; the same initial state gives the same IBAN for the same registry data
+   * @param random      the source of randomness; the same initial state gives the same IBAN for
+   *                    the same registry data
    * @return a random IBAN
    * @throws InvalidIbanException if the country code is missing or the country does not use IBAN
    * @throws NullPointerException if {@code random} is {@code null}
@@ -383,6 +386,11 @@ public final class Iban
    * iban.field(BbanField.NATIONAL_CHECK_DIGITS);  // Optional[06]
    * }</pre>
    *
+   * <p>
+   * The scope of a field depends on the country layout. {@link BbanField#ACCOUNT_NUMBER} is the national account
+   * number as the layout defines it; for Hungary it is the complete account part of BBAN positions 9-24 and the
+   * check digit over bank and branch is {@link BbanField#ROUTING_CHECK_DIGIT}.
+   *
    * @param field the field, or {@code null} to return an empty optional
    * @return the value of the field, empty if the BBAN of the country has no such field
    * @see IbanCountry#bbanLayout()
@@ -462,6 +470,8 @@ public final class Iban
   /**
    * Validates a deserialized instance, so that a manipulated stream cannot create an invalid IBAN.
    * Called by Java serialization; GWT-RPC validates in Iban_CustomFieldSerializer.
+   *
+   * @return the validated IBAN that replaces the deserialized instance
    */
   @Serial
   private Object readResolve() {

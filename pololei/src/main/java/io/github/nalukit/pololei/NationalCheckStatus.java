@@ -26,7 +26,10 @@ public enum NationalCheckStatus {
   NOT_PERFORMED,
   /** The national check digits are correct. */
   PASSED,
-  /** The national check digits are wrong ({@code IbanError.INVALID_NATIONAL_CHECK_DIGITS}). */
+  /**
+   * The national check digits are wrong, or the builder found no valid ones for the given BBAN
+   * ({@code IbanError.INVALID_NATIONAL_CHECK_DIGITS}; that error always has this status).
+   */
   FAILED,
   /** pololei has no rule for the country, or the rule cannot judge this BBAN. */
   NOT_SUPPORTED

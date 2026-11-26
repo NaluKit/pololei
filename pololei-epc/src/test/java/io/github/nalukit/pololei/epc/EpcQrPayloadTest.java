@@ -177,6 +177,65 @@ class EpcQrPayloadTest {
                                                                 .build());
   }
 
+  /** Spaces, tab and the no-break spaces U+00A0, U+2007 and U+202F. */
+  @ParameterizedTest
+  @ValueSource(strings = { " ", "    ", "\t", " ", "    " })
+  void valuesOfWhitespaceOnlyAreRejected(String blank) {
+    List<String> fields = List.of("beneficiaryName", "purpose", "remittanceReference", "remittanceText", "information");
+    for (String field : fields) {
+      EpcQrPayload.Builder builder = belgian();
+      switch (field) {
+        case "beneficiaryName" -> builder.beneficiaryName(blank);
+        case "purpose" -> builder.purpose(blank);
+        case "remittanceReference" -> builder.remittanceReference(blank);
+        case "remittanceText" -> builder.remittanceText(blank);
+        default -> builder.information(blank);
+      }
+      IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, builder::build, field);
+      assertEquals(field + " must not consist of whitespace only", exception.getMessage());
+    }
+  }
+
+  @Test
+  void blankReferenceAndTextAreRejectedBeforeTheyExcludeEachOther() {
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> belgian().remittanceReference("    ")
+                                                                                                       .remittanceText(" ")
+                                                                                                       .build());
+    assertEquals("remittanceReference must not consist of whitespace only", exception.getMessage());
+  }
+
+  @Test
+  void emptyValuesAreNotSet() {
+    assertEquals(belgian().build(), belgian().purpose("")
+                                             .remittanceReference("")
+                                             .remittanceText("")
+                                             .information("")
+                                             .build());
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> belgian().beneficiaryName("")
+                                                                                                       .build());
+    assertEquals("beneficiaryName is mandatory", exception.getMessage());
+  }
+
+  @Test
+  void whitespaceAroundAValueIsKept() {
+    assertEquals(List.of("BCD", "002", "1", "SCT", "BPOTBEB1", " Red Cross ", "BE72000000001616", "", "", "", " Urgency fund", " thanks"),
+                 belgian().beneficiaryName(" Red Cross ")
+                          .remittanceText(" Urgency fund")
+                          .information(" thanks")
+                          .build()
+                          .lines());
+  }
+
+  /** EPC069-12 allows 1 to 4 alphanumeric characters; the ISO 20022 code list is not enforced. */
+  @ParameterizedTest
+  @ValueSource(strings = { "x", "DE1", "abc", "GDDS" })
+  void purposeOfOneToFourLettersOrDigits(String purpose) {
+    assertEquals(purpose, belgian().purpose(purpose)
+                                   .build()
+                                   .lines()
+                                   .get(8));
+  }
+
   @Test
   void referenceAndTextExcludeEachOther() {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> belgian().remittanceReference("RF18539007547034")

@@ -50,6 +50,12 @@ import java.util.Set;
  * two decimals. A structured reference (35 characters) and an unstructured text (140 characters)
  * exclude each other.
  * <p>
+ * Text fields are written exactly as given: whitespace at the start or end is kept, because the
+ * payer's app takes the values unchanged (EPC069-12 marks name, IBAN, BIC and structured reference
+ * as fixed). {@code null} and an empty string mean "not set". A value that consists of whitespace
+ * only is rejected, because it would fill a field without content; a name of whitespace only does
+ * not satisfy the mandatory name.
+ * <p>
  * A payload is immutable and thread-safe. Its {@link Builder} is mutable and not thread-safe; create
  * one per payload.
  */
@@ -379,7 +385,7 @@ public final class EpcQrPayload {
     /**
      * Sets the name of the beneficiary; mandatory and checked by {@link #build()}.
      * Text is preserved exactly: whitespace is not trimmed and character limits count Unicode
-     * code points. A {@code null} or empty name fails when building.
+     * code points. A {@code null}, empty or whitespace-only name fails when building.
      *
      * @param beneficiaryName name of the beneficiary, at most 70 characters, without line breaks
      * @return this builder
@@ -418,8 +424,9 @@ public final class EpcQrPayload {
     /**
      * Sets the purpose of the credit transfer; optional.
      *
-     * @param purpose purpose code (ISO 20022 ExternalPurpose1Code), 1 to 4 letters or digits, for
-     *                example {@code CHAR} for a charity payment; {@code null} to leave it out
+     * @param purpose purpose code (ISO 20022 ExternalPurpose1Code), 1 to 4 letters or digits as in
+     *                EPC069-12, for example {@code CHAR} for a charity payment; the code list and
+     *                upper case are not enforced; {@code null} or empty to leave it out
      * @return this builder
      */
     public Builder purpose(String purpose) {
@@ -469,15 +476,17 @@ public final class EpcQrPayload {
     /**
      * Checks the data against EPC069-12 and builds the payload. The builder is not changed and can
      * be used again. Text fields are preserved without trimming; optional {@code null} and empty
-     * strings are omitted. Length limits count Unicode code points, while the total payload limit
-     * counts encoded bytes. This checks the supported payload constraints; it does not verify
-     * account existence, BIC-to-IBAN correspondence or structured reference check digits.
+     * strings are omitted, values of whitespace only are rejected. Length limits count Unicode code
+     * points, while the total payload limit counts encoded bytes. This checks the supported payload
+     * constraints; it does not verify account existence, BIC-to-IBAN correspondence or structured
+     * reference check digits.
      *
      * @return the payload
      * @throws IllegalArgumentException if the data violates EPC069-12, for example a missing
-     *                                  mandatory field, a value that is too long or contains a line
-     *                                  break, an amount out of range, both remittance fields set,
-     *                                  a missing BIC, characters not representable in the selected
+     *                                  mandatory field, a value that is too long, contains a line
+     *                                  break or consists of whitespace only, an amount out of range,
+     *                                  both remittance fields set, a missing BIC, characters not
+     *                                  representable in the selected
      *                                  character set (including unpaired UTF-16 surrogates for UTF-8),
      *                                  or a payload over {@value EpcQrPayload#MAX_BYTES} bytes
      */
@@ -549,9 +558,26 @@ public final class EpcQrPayload {
       if (value.indexOf('\n') >= 0 || value.indexOf('\r') >= 0) {
         throw new IllegalArgumentException(name + " must not contain line breaks");
       }
+      if (isBlank(value)) {
+        throw new IllegalArgumentException(name + " must not consist of whitespace only");
+      }
       if (value.codePointCount(0, value.length()) > maxLength) {
         throw new IllegalArgumentException(name + " must not exceed " + maxLength + " characters");
       }
+    }
+
+    /**
+     * Whitespace as {@link Character#isWhitespace(char)} and the no-break spaces U+00A0, U+2007
+     * and U+202F, which that method excludes.
+     */
+    private static boolean isBlank(String value) {
+      for (int i = 0; i < value.length(); i++) {
+        char c = value.charAt(i);
+        if (!Character.isWhitespace(c) && c != '\u00A0' && c != '\u2007' && c != '\u202F') {
+          return false;
+        }
+      }
+      return true;
     }
 
     private static boolean present(String value) {
