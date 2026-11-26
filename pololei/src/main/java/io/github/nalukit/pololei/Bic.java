@@ -55,7 +55,8 @@ public final class Bic
 
   /**
    * Parses a BIC with 8 or 11 characters. Spaces, tabs, line feeds, carriage returns and
-   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so {@code "deut de ff"} is parsed as {@code DEUTDEFF}.
+   * non-breaking spaces (U+00A0) are ignored; ASCII letters a-z are converted to A-Z, so
+   * {@code "deut de ff"} is parsed as {@code DEUTDEFF}.
    * <p>
    * The country code must be a known ISO 3166-1 alpha-2 code; whether the BIC is actually
    * registered with SWIFT cannot be checked offline.
@@ -191,7 +192,8 @@ public final class Bic
   /**
    * Creates a random BIC with 8 characters of the given country, for example as test data.
    *
-   * @param countryCode ISO 3166-1 alpha-2 country code, lower case and surrounding whitespace are accepted
+   * @param countryCode ISO 3166-1 alpha-2 country code; whitespace is ignored and lower case
+   *                    letters are accepted
    * @param random      the source of randomness, used directly
    * @return a random BIC; see {@link #random(String, Random, int)} for what that means
    * @throws InvalidBicException  if the country code is missing or unknown
@@ -212,7 +214,8 @@ public final class Bic
    * SWIFT registration: the BIC is probably not registered, but it may by chance be the BIC of a
    * real institution. Do not use it where an unassigned BIC must be guaranteed.
    *
-   * @param countryCode ISO 3166-1 alpha-2 country code, lower case and surrounding whitespace are accepted
+   * @param countryCode ISO 3166-1 alpha-2 country code; whitespace is ignored and lower case
+   *                    letters are accepted
    * @param random      the source of randomness, used directly
    * @param length      8 (without branch code) or 11 (with branch code)
    * @return a random BIC of the country
@@ -274,7 +277,8 @@ public final class Bic
   }
 
   /**
-   * Validates a BIC. Whitespace is ignored and lower case letters are accepted.
+   * Validates a BIC. Whitespace is ignored and lower case letters are accepted, as described for
+   * {@link #parse(CharSequence)}.
    * <p>
    * Checks run in this order: empty input, normalized length, allowed characters and known
    * country code. The result reports the first failure; character positions refer to the

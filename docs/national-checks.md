@@ -18,7 +18,7 @@ validator.isValid("FR8420041010050500013M02607");   // false: RIB key 07 is wron
 
 `ValidationResult.nationalCheck()` returns the status. A failed check reports the rule (`rule()`, for example
 `FR_RIB_KEY`) and the IBAN positions of the check digits (`position()` to `lastPosition()`); the message never
-contains the input. The national check runs after all international checks, so its error comes last.
+contains the complete input. The national check runs after all international checks, so its error comes last.
 
 `IbanBuilder.nationalCheckDigits(true)` calculates the national check digits when building, also together with
 `buildRandom(Random)`.

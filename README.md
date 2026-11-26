@@ -13,7 +13,7 @@
 [![Build](https://github.com/NaluKit/pololei/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/NaluKit/pololei/actions/workflows/build.yaml)
 
 IBAN and BIC validation for Java and GWT: parsing, check digits, national check digits, BBAN fields,
-formatting, IBAN creation and EPC QR code (GiroCode) payloads.
+formatting, IBAN and BIC creation, EPC QR code (GiroCode) payloads and SEPA Creditor Identifiers.
 
 - [Versioned API reference and reproducible quickstart](docs/api/1.0.0-rc01.md)
 
@@ -420,15 +420,16 @@ or BIC is always validated again, so a manipulated stream or request cannot crea
 pololei keeps no mutable shared state and can be used by any number of threads and users at the same time, for
 example in a servlet container or a GWT-RPC server:
 
-- `Iban`, `Bic`, `ValidationResult`, `IbanValidator`, `EpcQrPayload` and the country data (`IbanCountry`,
-  `BbanLayout`, `BbanStructure`, ...) are immutable. Keep one configured `IbanValidator` in a static field or a
-  singleton and use it from every request.
-- The static methods (`Iban.parse`, `Bic.validate`, `Bban.validate`, `IbanRegistry.find`, `NationalChecks.find`,
-  `IbanCheckDigits.calculate`, ...) are stateless; the registry and the national rules are loaded once and never
+- `Iban`, `Bic`, `ValidationResult`, `IbanValidator`, `EpcQrPayload`, `CreditorIdentifier` and the country data
+  (`IbanCountry`, `BbanLayout`, `BbanStructure`, ...) are immutable. Keep one configured `IbanValidator` in a static
+  field or a singleton and use it from every request; own `NationalCheck` rules added to it must be thread-safe
+  as well.
+- The static methods (`Iban.parse`, `Bic.validate`, `Bban.validate`, `CreditorIdentifier.validate`,
+  `IbanRegistry.find`, `NationalChecks.find`, `IbanCheckDigits.calculate`, ...) are stateless; the registry and the national rules are loaded once and never
   change.
 - `IbanBuilder` and `EpcQrPayload.Builder` are mutable and not thread-safe: create a new builder for every IBAN or
   payload instead of sharing one.
-- For random IBANs generated in parallel, pass `ThreadLocalRandom.current()` or one `Random` per thread.
+- For random IBANs or BICs generated in parallel, pass `ThreadLocalRandom.current()` or one `Random` per thread.
 
 ## Building
 
@@ -451,8 +452,8 @@ include it:
 mvn verify -P corpus
 ```
 
-The sources of the `pololei`, `pololei-epc` and `pololei-creditor` modules are shared with GWT, which supports the Java 17 language
-level and its own JRE emulation: use Java 21 syntax such as pattern matching for `switch` or record patterns,
+The sources of the `pololei`, `pololei-epc` and `pololei-creditor` modules are shared with GWT, which supports the
+Java 17 language level and its own JRE emulation: use Java 21 syntax such as pattern matching for `switch` or record patterns,
 and APIs such as `List.getFirst()`, only in tests and scripts. The GWT build catches violations.
 
 ## Migrating
@@ -495,7 +496,7 @@ any applicable upstream `NOTICE` with distributions as required by that license.
 | --- | --- | --- |
 | `pololei`, `pololei-epc`, `pololei-creditor` | JVM library modules | No third-party compile/runtime dependencies; the latter two depend on `pololei`. |
 | GWT 2.13.1 (`gwt-user`) | `provided` dependency of `pololei-gwt`, including its RPC serializers | GWT code uses Apache-2.0; bundled components and transitive dependencies have their own terms. See [GWT licensing](https://www.gwtproject.org/terms.html). |
-| JUnit Jupiter 5.14.4 / JUnit 4.13.2 | Tests only | EPL-2.0 / EPL-1.0. |
+| JUnit Jupiter 6.1.3 / JUnit 4.13.2 | Tests only | EPL-2.0 / EPL-1.0. |
 | GWT compiler and test dependencies (`gwt-dev`) | Build/tests only | Multiple licenses, including Apache-2.0, EPL, MPL, BSD and MIT; these are not all covered by the project license. |
 
 **Build/test license exception:** `gwt-dev:2.13.1` transitively resolves `colt:colt:1.2.0`. Its
@@ -525,8 +526,9 @@ Classpath Exception. Preserve the applicable licenses and notices when distribut
   records its upstream commit and getter output. These are test data sources, not library dependencies.
   Their provenance does not by itself grant permission to relicense copied code or documentation as Apache-2.0;
   review any substantial reused material under its original terms.
-  
-## To get in touch with the developer
-Please visit us [nalu@element.io](https://app.element.io/#/room/#Nalukit42_Lobby:gitter.im) (former Gitter room).
 
+## Contact
 
+Questions and feedback are welcome in the NaluKit chat room on Element,
+[#Nalukit42_Lobby:gitter.im](https://app.element.io/#/room/#Nalukit42_Lobby:gitter.im) (the former Gitter room).
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

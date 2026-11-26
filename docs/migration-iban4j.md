@@ -15,8 +15,8 @@ on any difference, or any changed value of a difference, not listed under [Field
 | Topic | iban4j | pololei |
 |-------|--------|---------|
 | Java | 11+ | **21+** (GWT: the `pololei-gwt` module, Java 17 language level) |
-| Artifacts | `org.iban4j:iban4j` | `io.github.nalukit:pololei`, plus `pololei-epc` for EPC QR codes, `pololei-gwt` for GWT |
-| JPMS module | `org.iban4j` (module-info) | `io.github.nalukit.pololei` and `io.github.nalukit.pololei.epc` (`Automatic-Module-Name`) |
+| Artifacts | `org.iban4j:iban4j` | `io.github.nalukit:pololei`, plus `pololei-epc` for EPC QR codes, `pololei-creditor` for SEPA Creditor Identifiers, `pololei-gwt` for GWT |
+| JPMS module | `org.iban4j` (module-info) | `io.github.nalukit.pololei`, `io.github.nalukit.pololei.epc` and `io.github.nalukit.pololei.creditor` (`Automatic-Module-Name`) |
 | Country codes | enum `CountryCode` (ISO 3166, ~250 values) | `String`, upper case; `IbanRegistry.find(code)` for IBAN countries |
 | Country data | own table, 106 prefixes | SWIFT IBAN registry release 103, 89 prefixes; see [registry-audit.md](registry-audit.md) |
 | Errors | exceptions (`IbanFormatException`, `InvalidCheckDigitException`, `UnsupportedCountryException`) | `ValidationResult` without exceptions, or `InvalidIbanException` with an `IbanError` |
@@ -113,7 +113,7 @@ on any difference, or any changed value of a difference, not listed under [Field
 | `getActual()`, `getExpected()`, `getInvalidCharacter()` | `actualLength()`, `expectedLength()`, `expectedType()`, `position()` |
 
 `InvalidIbanException` extends `IllegalArgumentException`, like iban4j's exceptions; `result()` gives all details.
-Messages never contain the input.
+Messages never contain the complete input; at most a single character, the country code or the check digits.
 
 ## BIC
 
@@ -148,6 +148,12 @@ Add `io.github.nalukit:pololei-epc` (GWT: inherit `io.github.nalukit.pololei.epc
 | `.build().getPayload()`, `.buildPayload()` | `.build().text()` |
 
 Differences: pololei requires an IBAN of a SEPA country and reports the byte size (`byteLength()`).
+
+## SEPA Creditor Identifier
+
+iban4j has no Creditor Identifier (iban4j issue #27). pololei offers it in `io.github.nalukit:pololei-creditor`
+(GWT: inherit `io.github.nalukit.pololei.creditor.PololeiCreditor`): `CreditorIdentifier.parse(s)`, `validate(s)`,
+`of(country, businessCode, nationalIdentifier)` and `isSameCreditor(other)`; see the README.
 
 ## Fields that differ
 

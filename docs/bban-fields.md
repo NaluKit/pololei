@@ -2,7 +2,7 @@
 
 ## Decision: `accountNumber()` keeps its meaning, the national fields are added
 
-*Status: decided for the next minor release; no incompatible change.*
+*Status: implemented since 1.0.0-rc01; no incompatible change.*
 
 `Iban.accountNumber()` returns, as documented since the first release, **all BBAN characters outside the bank and
 branch identifier of the SWIFT IBAN registry**. For several countries that is more than the account number in the
