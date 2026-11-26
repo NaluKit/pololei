@@ -65,7 +65,7 @@ branch is only available as a field.
 | `BANK_IDENTIFIER` | bank identifier, always as in the registry |
 | `BANK_IDENTIFIER_EXTENSION` | trailing part of the bank identifier (Seychelles); lies inside the bank identifier |
 | `BRANCH_IDENTIFIER` | branch identifier |
-| `ACCOUNT_NUMBER` | national account number |
+| `ACCOUNT_NUMBER` | national account number; without the national check digits, types or codes the country layout defines as fields of their own. The scope depends on the country: the Hungarian account number is the complete account part of positions 9-24 (see HU below) |
 | `NATIONAL_CHECK_DIGITS` | national check digits; for AL and PL inside the registry branch or bank identifier |
 | `ROUTING_CHECK_DIGIT` | check digit over bank and branch identifier that is a position of its own (Hungary); not part of `NATIONAL_CHECK_DIGITS` |
 | `ACCOUNT_TYPE` | account type |

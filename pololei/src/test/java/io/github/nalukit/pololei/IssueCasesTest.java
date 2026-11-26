@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The IBANs of the iban4j issues (iban4j-issues-2026-11-15, {@code issue-cases.tsv}): 24 distinct
+ * The IBANs of the iban4j issues (iban4j-issues-2026-11-26, {@code issue-cases.tsv}): 32 distinct
  * issue/IBAN pairs from the texts and comments, each with its source, and the expected result of
  * the international validation, of the validation with {@link NationalCheckMode#REQUIRED} and, for
  * valid IBANs, of {@link Iban#fields()}. Some values of old issues are wrong or contradict their
@@ -55,12 +55,14 @@ class IssueCasesTest {
   void originalCasesAreComplete() throws IOException {
     Set<String> pairs = new HashSet<>();
     for (Case c : cases()) {
-      assertTrue(c.source.startsWith("https://github.com/arturmkrtchyan/iban4j/issues/" + c.issue), c.input);
+      String issueUrl = "https://github.com/arturmkrtchyan/iban4j/issues/" + c.issue;
+      assertTrue(c.source.equals(issueUrl) || c.source.startsWith(issueUrl + "#"), c.input);
+      assertTrue(c.kind.equals("original") || c.kind.equals("counterpart"), c.input);
       if (c.kind.equals("original")) {
         assertTrue(pairs.add(c.issue + " " + c.input), "duplicate " + c.input);
       }
     }
-    assertEquals(24, pairs.size());
+    assertEquals(32, pairs.size());
   }
 
   @Test

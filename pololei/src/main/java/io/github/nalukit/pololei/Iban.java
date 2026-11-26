@@ -383,6 +383,11 @@ public final class Iban
    * iban.field(BbanField.NATIONAL_CHECK_DIGITS);  // Optional[06]
    * }</pre>
    *
+   * <p>
+   * The scope of a field depends on the country layout. {@link BbanField#ACCOUNT_NUMBER} is the national account
+   * number as the layout defines it; for Hungary it is the complete account part of BBAN positions 9-24 and the
+   * check digit over bank and branch is {@link BbanField#ROUTING_CHECK_DIGIT}.
+   *
    * @param field the field, or {@code null} to return an empty optional
    * @return the value of the field, empty if the BBAN of the country has no such field
    * @see IbanCountry#bbanLayout()

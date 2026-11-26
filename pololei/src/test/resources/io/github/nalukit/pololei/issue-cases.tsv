@@ -1,5 +1,5 @@
-# Original IBANs of the iban4j issues (https://github.com/arturmkrtchyan/iban4j/issues): the 24 distinct issue/IBAN pairs extracted from the issue texts and comments, checked 2026-11-15.
-# kind: original = value from the issue; counterpart = canonical or current value that belongs to an original.
+# Original IBANs of the iban4j issues (https://github.com/arturmkrtchyan/iban4j/issues): the 32 distinct issue/IBAN pairs extracted from the issue texts and comments, checked 2026-11-26 (the 24 pairs of 2026-11-15 and the 8 examples of #188).
+# kind: original = value from the issue; counterpart = canonical, current or deliberately broken value that belongs to an original; counterparts are not counted as original pairs.
 # base = IbanValidator.standard(); national = IbanValidator with NationalCheckMode.REQUIRED; fields = Iban.fields() of a valid IBAN.
 # A national result NATIONAL_CHECK_NOT_SUPPORTED only says pololei has no rule for the country; the IBAN is valid internationally.
 issue	kind	source	input	base	national	fields	note
@@ -30,3 +30,13 @@ issue	kind	source	input	base	national	fields	note
 29	counterpart	https://github.com/arturmkrtchyan/iban4j/issues/29	NI45BAPR00000013000003558124	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=BAPR, ACCOUNT_NUMBER=00000013000003558124}	current NI registry example, 28 characters
 17	counterpart	https://github.com/arturmkrtchyan/iban4j/issues/17	TR980012300882101517977799	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=00123, RESERVED=0, ACCOUNT_NUMBER=0882101517977799}	canonical check digits 98 of the TR01 original
 64	counterpart	https://github.com/arturmkrtchyan/iban4j/issues/64	HU42117730161111101800000000	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=117, BRANCH_IDENTIFIER=7301, ROUTING_CHECK_DIGIT=6, ACCOUNT_NUMBER=1111101800000000}	HU registry example with a correct IBAN check digit
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	FK88SC123456789012	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=SC, ACCOUNT_NUMBER=123456789012}	FK is in the registry
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	MN121234123456789123	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=1234, ACCOUNT_NUMBER=123456789123}	
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	NI45BAPR00000013000003558124	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=BAPR, ACCOUNT_NUMBER=00000013000003558124}	same value as the #29 counterpart
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	SO211000001001000100141	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=1000, BRANCH_IDENTIFIER=001, ACCOUNT_NUMBER=001000100141}	
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	HN88CABF00000000000250005469	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=CABF, ACCOUNT_NUMBER=00000000000250005469}	
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	YE15CBYE0001018861234567891234	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=CBYE, BRANCH_IDENTIFIER=0001, ACCOUNT_NUMBER=018861234567891234}	
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	PK86SCBL0000001123A56702	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=SCBL, ACCOUNT_NUMBER=0000001123A56702}	letter in the account part is kept
+188	original	https://github.com/arturmkrtchyan/iban4j/issues/188	UA063223130000026007233566A01	VALID	NATIONAL_CHECK_NOT_SUPPORTED	{BANK_IDENTIFIER=322313, ACCOUNT_NUMBER=0000026007233566A01}	letter in the account part is kept
+188	counterpart	https://github.com/arturmkrtchyan/iban4j/issues/188	NI04BAPR00000013000003558124	INVALID_CHECK_DIGITS	INVALID_CHECK_DIGITS		NI45 original with the wrong IBAN check digits 04
+188	counterpart	https://github.com/arturmkrtchyan/iban4j/issues/188	PK4412340000001123A56702	INVALID_BBAN	INVALID_BBAN		PK with a numeric bank code and correct IBAN check digits: the bank code must be 4 letters

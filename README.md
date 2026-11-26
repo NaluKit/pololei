@@ -113,7 +113,7 @@ iban.bban();                // 370400440532013000
 iban.bankIdentifier();      // Optional[37040044]
 iban.branchIdentifier();    // Optional.empty
 iban.accountNumber();       // 0532013000 (all BBAN characters outside bank and branch identifier)
-iban.field(BbanField.ACCOUNT_NUMBER);   // Optional[0532013000] (the national account number)
+iban.field(BbanField.ACCOUNT_NUMBER);   // Optional[0532013000] (national account number, scope per country: docs/bban-fields.md)
 iban.isSepa();              // true
 iban.country();             // the registry definition of DE
 

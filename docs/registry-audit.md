@@ -53,7 +53,7 @@ release 100 for the same data.
 | Prefixes in iban4j | 106 | |
 | Common prefixes | 83 | |
 | Union | 112 | |
-| Only pololei: FK, HN, MN, NI, SO, YE | 6 | **kept**: part of release 103; their registry examples are valid (`prefixesOnlyPololeiAccepts`) |
+| Only pololei: FK, HN, MN, NI, SO, YE | 6 | **kept**: part of release 103; their registry examples are valid (`prefixesOnlyPololeiAccepts`); iban4j #188 reports them as missing, its examples are regression cases in `issue-cases.tsv` |
 | Only iban4j: AO, AX, BL, CV, GA, GF, GG, GP, IM, IR, JE, MA, MF, MQ, MZ, NC, PF, PM, RE, SN, TF, WF, YT | 23 | **rejected** (`UNSUPPORTED_COUNTRY`): territories that the registry lists under FR, GB or FI use those prefixes; the others have no registry entry (`prefixesOnlyIban4jAccepts`) |
 | Different character mask: AE, BR, MU, PK, TR, UA | 6 | **registry kept**, see below (`characterMasks`) |
 | Different bank or branch position: AL, BY, FI, FR, PL, PT, SI | 7 | **registry kept** (`bankAndBranchPositions`); FR and PT get a branch in the national layout |

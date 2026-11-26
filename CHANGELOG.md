@@ -16,6 +16,8 @@ reference in `docs/api/<version>.md`.
   BBAN positions 9-24. It started at position 8 with the routing check digit and lost the last digit
   (iban4j #64, #83). The check digit over bank and branch is the new field
   `BbanField.ROUTING_CHECK_DIGIT`; HU has no `NATIONAL_CHECK_DIGITS` field any more.
+  The JavaDoc of `BbanField.ACCOUNT_NUMBER` and `docs/bban-fields.md` now state that the scope of the account
+  number depends on the country layout.
 
 ### Added
 
@@ -30,6 +32,10 @@ reference in `docs/api/<version>.md`.
   Dependency-Check report of the release build with `SCAN-SHA256SUMS`, and the changes of the version.
   `scripts/release/collect-release-files.sh` collects these files, also to rebuild and compare a
   release. `SECURITY.md` describes how releases are built and how to verify them.
+- Regression cases for the eight examples of iban4j #188 (FK, MN, NI, SO, HN, YE; PK and UA with a letter in
+  the account part) in the issue corpus `issue-cases.tsv`, now 32 original issue/IBAN pairs, with the
+  negative counterparts NI04 (wrong check digits) and a PK IBAN with a numeric bank code, also under GWT
+  (`GwtTestNational`). Tests only; the validation is unchanged.
 - Public identifier corpus `test-pololei-corpus` (profile `corpus`, part of every CI build, never
   published): 1165 IBANs, BICs and Creditor Identifiers from the unchanged, commit-pinned test files
   of python-stdnum, Apache Commons Validator, schwifty, sepa_king and its successor sepa_rator, with

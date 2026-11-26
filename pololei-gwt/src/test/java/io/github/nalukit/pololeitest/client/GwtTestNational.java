@@ -164,7 +164,7 @@ public class GwtTestNational
                              .build());
   }
 
-  /** Small cases of IssueCasesTest (iban4j issues #17, #29, #34, #64, #83, #145). */
+  /** Small cases of IssueCasesTest (iban4j issues #17, #29, #34, #64, #83, #145, #188). */
   public void testIssueCases() {
     IbanValidator base     = IbanValidator.standard();
     IbanValidator national = IbanValidator.standard()
@@ -200,6 +200,21 @@ public class GwtTestNational
     assertEquals(IbanError.NATIONAL_CHECK_NOT_SUPPORTED, national.validate("DE89370400440532013000")
                                                                  .error()
                                                                  .orElseThrow());
+    // #188: FK, MN, NI, SO, HN, YE are in the registry; PK and UA keep a letter in the account part
+    for (String iban : new String[] {"FK88SC123456789012", "MN121234123456789123", "NI45BAPR00000013000003558124",
+                                     "SO211000001001000100141", "HN88CABF00000000000250005469",
+                                     "YE15CBYE0001018861234567891234", "PK86SCBL0000001123A56702",
+                                     "UA063223130000026007233566A01"}) {
+      assertTrue(base.isValid(iban));
+    }
+    assertEquals("0000001123A56702", Iban.parse("PK86SCBL0000001123A56702").field(BbanField.ACCOUNT_NUMBER).orElseThrow());
+    assertEquals("0000026007233566A01", Iban.parse("UA063223130000026007233566A01").field(BbanField.ACCOUNT_NUMBER).orElseThrow());
+    assertEquals(IbanError.INVALID_CHECK_DIGITS, base.validate("NI04BAPR00000013000003558124")
+                                                     .error()
+                                                     .orElseThrow());
+    assertEquals(IbanError.INVALID_BBAN, base.validate("PK4412340000001123A56702")
+                                             .error()
+                                             .orElseThrow());
   }
 
   public void testOwnNationalRule() {

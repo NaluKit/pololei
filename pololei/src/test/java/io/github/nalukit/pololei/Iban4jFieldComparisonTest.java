@@ -112,7 +112,7 @@ class Iban4jFieldComparisonTest {
    * check digit and misses the last digit, and returns position 24 as national check digit. pololei
    * has the routing check digit as a field of its own and the 16 characters 9-24 as account number.
    * The values of the first example are those of iban4j-fields.tsv; those of the second follow
-   * from the same positions of iban4j, they were not generated with iban4j.
+   * from the same positions of iban4j, they were not produced by iban4j.
    */
   @Test
   void hungarianFieldsDifferFromIban4jOnPurpose() {
